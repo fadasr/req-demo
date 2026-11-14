@@ -21,7 +21,8 @@ empty traceability matrix. See [`FINDINGS.md`](FINDINGS.md) for everything the d
 | `.req/completeness` | the variant roots and the orphaned coffee-machine root, declared unrelated on purpose |
 | `.req/projections` | the two committed views `req check` verifies |
 | `docs/spec.md`, `docs/trace.md` | generated projections; never edited by hand |
-| `tools/needs_import.py` | the importer from req, at the commit that added `--links` |
+| `tools/needs_import.py` | the importer from req, at the commit that added `--links` and `--tests` |
+| `data/coffee_machine_junit.xml` | the upstream JUnit report, committed so the test links are reproducible |
 | `scripts/` | rebuild, import, and the drift walkthrough |
 | `upstream/` | the source checkout (ignored; pinned by `scripts/build-upstream.sh`) |
 | `build/` | generated reports (`needs.json`, command captures; ignored) |
@@ -86,7 +87,7 @@ links: 220 relation(s) on 101 of 135 drafted needs
        119 target(s) not carried (self 2, target skipped 1, target type not selected 116)
 tests: 7 test link(s) on 4 of 135 drafted needs; 69 test need(s) (4 with a case, 65 without);
        6 test case(s) (6 passed, 0 failed, 0 skipped, 0 malformed, 0 naming no test need)
-       in upstream/docs/testsuites/coffee_machine_junit.xml;
+       in data/coffee_machine_junit.xml;
        1 target(s) not carried (target not drafted 1)
 ```
 
@@ -102,7 +103,7 @@ req canon                                  # 135 claims, 80 unstructured, 20 wit
 req trace | head -40                       # 220 stored edges, 66 targets receive one
 req impact REQ-0038                        # 7 dependents, nearest first
 req select steering_side=right             # REQ-0136 applies, REQ-0113 does not
-req gate steering_side=left --test-report upstream/docs/testsuites/coffee_machine_junit.xml
+req gate steering_side=left --test-report data/coffee_machine_junit.xml
 req check                                  # both variants, both projections, completeness; one verdict
 req audit                                  # coverage and provenance, unratified by design
 ```

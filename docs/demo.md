@@ -15,13 +15,16 @@ still part of the demo: it is what "reject the draft" looks like.
 $ python3 tools/needs_import.py --from build/needs.json \
     --origin https://github.com/useblocks/sphinx-needs-demo@3c602bf \
     --date 2026-11-14 --type req --type sysreq --type swreq --type fsr \
-    --type safety_goal --type need --links --areas --area-depth 2
+    --type safety_goal --type need --links --areas --area-depth 2 \
+    --tests data/coffee_machine_junit.xml --test-type test --test-link specs
 ...
 not carried: asil, constraints, ... status, tags, title, ...; typed links on 134 of 135
 drafted needs (...) — carried as `relations`
 links: 220 relation(s) on 101 of 135 drafted needs
        (derives_from 152, implements 19, links 44, reqs 5);
        119 target(s) not carried (self 2, target skipped 1, target type not selected 116)
+tests: 7 test link(s) on 4 of 135 drafted needs; 69 test need(s) (4 with a case, 65
+       without); 6 test case(s) (6 passed, 0 failed, ...); 1 target(s) not carried
 needs 362 = drafted 135 + skipped 8 + not selected 219
            (by type: arch 10, ... test 69, ...)
 ```
@@ -89,7 +92,7 @@ it would be `UNKNOWN`, not excluded.
 
 ```console
 $ req gate steering_side=left \
-    --test-report upstream/docs/testsuites/coffee_machine_junit.xml
+    --test-report data/coffee_machine_junit.xml
 [PASS] pins_hold
 [PASS] relations_resolve
 [PASS] dependencies_decided

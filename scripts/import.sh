@@ -35,8 +35,8 @@ done
 # The Coffee Machine JUnit report proves three of its claims. Point --tests at it when it is
 # available; the flag is optional so the script still rehearses without the upstream checkout.
 test_args=()
-if [ -f "$ROOT/upstream/docs/testsuites/coffee_machine_junit.xml" ]; then
-  test_args=(--tests "upstream/docs/testsuites/coffee_machine_junit.xml"
+if [ -f "$ROOT/data/coffee_machine_junit.xml" ]; then
+  test_args=(--tests "data/coffee_machine_junit.xml"
              --test-type test --test-link specs --test-link links)
 fi
 
