@@ -1,0 +1,6 @@
+# Committed projections (ADR 0018): one repo-relative path per line, `#` comments, blank lines
+# skipped. `req check` runs `req render --check` (or `req trace --check`) for each and fails on a
+# stale or hand-edited file. Regenerate with `req render --out docs/spec.md` and
+# `req trace --out docs/trace.md`; never edit them by hand.
+docs/spec.md
+docs/trace.md

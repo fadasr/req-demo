@@ -26,5 +26,5 @@ echo
 echo "== req diff --base HEAD~1 (the weakening is a change in meaning, not an edit)"
 "$REQ" diff --base HEAD~1
 echo
-echo "== the pin the commit did not update"
-"$REQ" gate --fail-on pin-flagged 2>&1 | grep -A2 pins_hold || true
+echo "== the pin the commit did not update (the gate refuses)"
+"$REQ" gate 2>&1 | sed -n '/pins_hold/,+2p' || true

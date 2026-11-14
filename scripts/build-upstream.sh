@@ -27,20 +27,22 @@ fi
 git -C "$UPSTREAM" fetch -q --depth 1 origin "$PIN" 2>/dev/null || true
 git -C "$UPSTREAM" checkout -q "$PIN"
 
-variant_args=()
 if [ "$VARIANT" != "eu_left" ]; then
   if [ ! -f "$UPSTREAM/docs/variants/$VARIANT.json" ]; then
     echo "build-upstream: no docs/variants/$VARIANT.json upstream" >&2
     exit 1
   fi
-  variant_args=(-D "needs_variant_data_file=variants/$VARIANT.json")
 fi
 
 uv sync -q --project "$UPSTREAM"
 out="$ROOT/build/sphinx-$VARIANT"
 mkdir -p "$ROOT/build"
-uv run -q --project "$UPSTREAM" sphinx-build -q -b html "${variant_args[@]}" \
-  "$UPSTREAM/docs" "$out"
+if [ "$VARIANT" = "eu_left" ]; then
+  uv run -q --project "$UPSTREAM" sphinx-build -q -b html "$UPSTREAM/docs" "$out"
+else
+  uv run -q --project "$UPSTREAM" sphinx-build -q -b html \
+    -D "needs_variant_data_file=variants/$VARIANT.json" "$UPSTREAM/docs" "$out"
+fi
 
 if [ "$VARIANT" = "eu_left" ]; then
   target="$ROOT/build/needs.json"

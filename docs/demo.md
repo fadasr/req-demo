@@ -107,12 +107,16 @@ $ req check
 [UNVERIFIABLE] gate steering_side=right (exit 3)
 [UNVERIFIABLE] completeness structural omissions (4 checks) (exit 3)
     no signed Baseline under baselines/: nothing in this repository is ratified
+[PASS] render docs/spec.md (exit 0)
+[PASS] trace docs/trace.md (exit 0)
 ...
 verdict: UNVERIFIABLE
 ```
 
-Both declared variants ran, and completeness ran once over the union. The absent Baseline is the
-expected answer for a demo without a signing key: `req` never signs, a human does.
+Both declared variants ran, both committed projections are current, and completeness ran once over
+the union. The absent Baseline is the expected answer for a demo without a signing key: `req`
+never signs, a human does. `docs/spec.md` and `docs/trace.md` are generated deliverables, not
+caches: `req check` fails if either was hand-edited or left stale.
 
 ## 8. A meaning change, not an edit
 
@@ -120,16 +124,18 @@ expected answer for a demo without a signing key: `req` never signs, a human doe
 $ scripts/demo-drift.sh
 ...
 == req diff --base HEAD~1 (the weakening is a change in meaning, not an edit)
-weakened REQ-0115
-  value 0.1 -> 0.5 s
-  pins-changed
-...
+# req diff: HEAD~1 (51645d452996) -> working-tree
+registry: unchanged
+weakened REQ-0115 numeric_loosening pin-flagged
+counts: added 0, removed 0, weakened 1, tightened 0, reshaped 0, not-judged 0,
+        reworded 0, metadata 0, unchanged 134
 ```
 
 The script clones the corpus into a temporary directory, changes `100ms` to `500ms`, and asks
 `req diff`. The class is `weakened` because `LE` with a larger bound is a looser obligation. The
-pin still says `0.1 s`, so `pins-changed` rides along: the authored intent did not move, the
-statement did, and the next gate fails `pins_hold` until a person decides which one is right.
+pin still says `0.1 s`, so the change is also `pin-flagged`: the authored intent did not move, the
+statement did, and the next gate fails `pins_hold` (`pin value 0.1 contradicts the parse (0.5)`)
+until a person decides which one is right.
 
 ## 9. What is still a proposal
 

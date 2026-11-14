@@ -1,0 +1,297 @@
+<!-- req projection: generator=req trace | rules_v=9 | selection=none | claims=133 | identity=sha256:57a3f1b9c6fc92945baef7e58d208f3b39bc08df78e73ea7228d4ccb7c397ce6 -->
+# Traceability: (no context: nothing is decided by the caller)
+edges are stored once, on the outgoing side (REQ-0020); the incoming
+view below is derived by traversal, never stored
+
+## Edges
+- REQ-0002 -derives_from-> REQ-0080
+- REQ-0002 -derives_from-> REQ-0081
+- REQ-0003 -derives_from-> REQ-0080
+- REQ-0003 -derives_from-> REQ-0081
+- REQ-0004 -derives_from-> REQ-0080
+- REQ-0004 -derives_from-> REQ-0081
+- REQ-0005 -derives_from-> REQ-0070
+- REQ-0005 -derives_from-> REQ-0071
+- REQ-0005 -derives_from-> REQ-0080
+- REQ-0005 -derives_from-> REQ-0081
+- REQ-0006 -derives_from-> REQ-0080
+- REQ-0006 -derives_from-> REQ-0081
+- REQ-0007 -derives_from-> REQ-0078
+- REQ-0007 -derives_from-> REQ-0079
+- REQ-0008 -derives_from-> REQ-0078
+- REQ-0008 -derives_from-> REQ-0079
+- REQ-0009 -derives_from-> REQ-0078
+- REQ-0009 -derives_from-> REQ-0079
+- REQ-0010 -derives_from-> REQ-0072
+- REQ-0010 -derives_from-> REQ-0073
+- REQ-0010 -derives_from-> REQ-0078
+- REQ-0010 -derives_from-> REQ-0079
+- REQ-0011 -derives_from-> REQ-0078
+- REQ-0011 -derives_from-> REQ-0079
+- REQ-0012 -derives_from-> REQ-0078
+- REQ-0012 -derives_from-> REQ-0079
+- REQ-0012 -derives_from-> REQ-0080
+- REQ-0012 -derives_from-> REQ-0081
+- REQ-0012 -derives_from-> REQ-0082
+- REQ-0012 -derives_from-> REQ-0083
+- REQ-0012 -derives_from-> REQ-0084
+- REQ-0012 -derives_from-> REQ-0085
+- REQ-0013 -derives_from-> REQ-0066
+- REQ-0013 -derives_from-> REQ-0067
+- REQ-0013 -derives_from-> REQ-0068
+- REQ-0013 -derives_from-> REQ-0069
+- REQ-0013 -derives_from-> REQ-0070
+- REQ-0013 -derives_from-> REQ-0071
+- REQ-0013 -derives_from-> REQ-0072
+- REQ-0013 -derives_from-> REQ-0073
+- REQ-0014 -derives_from-> REQ-0066
+- REQ-0014 -derives_from-> REQ-0067
+- REQ-0014 -derives_from-> REQ-0068
+- REQ-0014 -derives_from-> REQ-0069
+- REQ-0015 -derives_from-> REQ-0070
+- REQ-0015 -derives_from-> REQ-0071
+- REQ-0015 -derives_from-> REQ-0072
+- REQ-0015 -derives_from-> REQ-0073
+- REQ-0016 -derives_from-> REQ-0082
+- REQ-0016 -derives_from-> REQ-0083
+- REQ-0016 -derives_from-> REQ-0084
+- REQ-0016 -derives_from-> REQ-0085
+- REQ-0017 -derives_from-> REQ-0082
+- REQ-0017 -derives_from-> REQ-0083
+- REQ-0017 -derives_from-> REQ-0084
+- REQ-0017 -derives_from-> REQ-0085
+- REQ-0018 -derives_from-> REQ-0082
+- REQ-0018 -derives_from-> REQ-0083
+- REQ-0018 -derives_from-> REQ-0084
+- REQ-0018 -derives_from-> REQ-0085
+- REQ-0019 -derives_from-> REQ-0082
+- REQ-0019 -derives_from-> REQ-0083
+- REQ-0019 -derives_from-> REQ-0084
+- REQ-0019 -derives_from-> REQ-0085
+- REQ-0020 -derives_from-> REQ-0082
+- REQ-0020 -derives_from-> REQ-0083
+- REQ-0020 -derives_from-> REQ-0084
+- REQ-0020 -derives_from-> REQ-0085
+- REQ-0021 -derives_from-> REQ-0082
+- REQ-0021 -derives_from-> REQ-0083
+- REQ-0021 -derives_from-> REQ-0084
+- REQ-0021 -derives_from-> REQ-0085
+- REQ-0022 -derives_from-> REQ-0082
+- REQ-0022 -derives_from-> REQ-0083
+- REQ-0022 -derives_from-> REQ-0084
+- REQ-0022 -derives_from-> REQ-0085
+- REQ-0023 -derives_from-> REQ-0082
+- REQ-0023 -derives_from-> REQ-0083
+- REQ-0023 -derives_from-> REQ-0084
+- REQ-0023 -derives_from-> REQ-0085
+- REQ-0024 -derives_from-> REQ-0082
+- REQ-0024 -derives_from-> REQ-0083
+- REQ-0024 -derives_from-> REQ-0084
+- REQ-0024 -derives_from-> REQ-0085
+- REQ-0025 -derives_from-> REQ-0066
+- REQ-0025 -derives_from-> REQ-0067
+- REQ-0025 -derives_from-> REQ-0068
+- REQ-0025 -derives_from-> REQ-0069
+- REQ-0026 -derives_from-> REQ-0066
+- REQ-0026 -derives_from-> REQ-0067
+- REQ-0026 -derives_from-> REQ-0068
+- REQ-0026 -derives_from-> REQ-0069
+- REQ-0027 -derives_from-> REQ-0066
+- REQ-0027 -derives_from-> REQ-0067
+- REQ-0027 -derives_from-> REQ-0068
+- REQ-0027 -derives_from-> REQ-0069
+- REQ-0028 -derives_from-> REQ-0066
+- REQ-0028 -derives_from-> REQ-0067
+- REQ-0028 -derives_from-> REQ-0068
+- REQ-0028 -derives_from-> REQ-0069
+- REQ-0029 -derives_from-> REQ-0066
+- REQ-0029 -derives_from-> REQ-0067
+- REQ-0029 -derives_from-> REQ-0068
+- REQ-0029 -derives_from-> REQ-0069
+- REQ-0030 -derives_from-> REQ-0066
+- REQ-0030 -derives_from-> REQ-0067
+- REQ-0030 -derives_from-> REQ-0068
+- REQ-0030 -derives_from-> REQ-0069
+- REQ-0031 -derives_from-> REQ-0066
+- REQ-0031 -derives_from-> REQ-0067
+- REQ-0031 -derives_from-> REQ-0068
+- REQ-0031 -derives_from-> REQ-0069
+- REQ-0032 -derives_from-> REQ-0074
+- REQ-0032 -derives_from-> REQ-0075
+- REQ-0032 -derives_from-> REQ-0076
+- REQ-0032 -derives_from-> REQ-0077
+- REQ-0033 -derives_from-> REQ-0074
+- REQ-0033 -derives_from-> REQ-0075
+- REQ-0033 -derives_from-> REQ-0076
+- REQ-0033 -derives_from-> REQ-0077
+- REQ-0034 -derives_from-> REQ-0070
+- REQ-0034 -derives_from-> REQ-0071
+- REQ-0034 -derives_from-> REQ-0072
+- REQ-0034 -derives_from-> REQ-0073
+- REQ-0034 -derives_from-> REQ-0074
+- REQ-0034 -derives_from-> REQ-0075
+- REQ-0034 -derives_from-> REQ-0076
+- REQ-0034 -derives_from-> REQ-0077
+- REQ-0035 -derives_from-> REQ-0070
+- REQ-0035 -derives_from-> REQ-0071
+- REQ-0035 -derives_from-> REQ-0072
+- REQ-0035 -derives_from-> REQ-0073
+- REQ-0035 -derives_from-> REQ-0074
+- REQ-0035 -derives_from-> REQ-0075
+- REQ-0035 -derives_from-> REQ-0076
+- REQ-0035 -derives_from-> REQ-0077
+- REQ-0036 -derives_from-> REQ-0070
+- REQ-0036 -derives_from-> REQ-0071
+- REQ-0036 -derives_from-> REQ-0072
+- REQ-0036 -derives_from-> REQ-0073
+- REQ-0036 -derives_from-> REQ-0074
+- REQ-0036 -derives_from-> REQ-0075
+- REQ-0036 -derives_from-> REQ-0076
+- REQ-0036 -derives_from-> REQ-0077
+- REQ-0037 -derives_from-> REQ-0070
+- REQ-0037 -derives_from-> REQ-0071
+- REQ-0037 -derives_from-> REQ-0072
+- REQ-0037 -derives_from-> REQ-0073
+- REQ-0037 -derives_from-> REQ-0074
+- REQ-0037 -derives_from-> REQ-0075
+- REQ-0037 -derives_from-> REQ-0076
+- REQ-0037 -derives_from-> REQ-0077
+- REQ-0046 -links-> REQ-0038
+- REQ-0047 -links-> REQ-0038
+- REQ-0048 -links-> REQ-0039
+- REQ-0049 -links-> REQ-0039
+- REQ-0050 -links-> REQ-0040
+- REQ-0051 -links-> REQ-0040
+- REQ-0052 -links-> REQ-0041
+- REQ-0053 -links-> REQ-0041
+- REQ-0054 -links-> REQ-0041
+- REQ-0055 -links-> REQ-0042
+- REQ-0056 -links-> REQ-0043
+- REQ-0057 -links-> REQ-0043
+- REQ-0058 -links-> REQ-0044
+- REQ-0059 -links-> REQ-0044
+- REQ-0060 -links-> REQ-0045
+- REQ-0061 -links-> REQ-0045
+- REQ-0086 -links-> REQ-0046
+- REQ-0087 -links-> REQ-0047
+- REQ-0088 -links-> REQ-0047
+- REQ-0089 -links-> REQ-0048
+- REQ-0090 -links-> REQ-0049
+- REQ-0091 -links-> REQ-0050
+- REQ-0092 -links-> REQ-0051
+- REQ-0093 -links-> REQ-0052
+- REQ-0094 -links-> REQ-0053
+- REQ-0095 -links-> REQ-0054
+- REQ-0096 -links-> REQ-0046
+- REQ-0096 -links-> REQ-0086
+- REQ-0097 -links-> REQ-0046
+- REQ-0098 -links-> REQ-0049
+- REQ-0099 -links-> REQ-0048
+- REQ-0100 -links-> REQ-0050
+- REQ-0101 -links-> REQ-0051
+- REQ-0102 -links-> REQ-0052
+- REQ-0103 -links-> REQ-0053
+- REQ-0104 -links-> REQ-0054
+- REQ-0105 -links-> REQ-0052
+- REQ-0106 -links-> REQ-0055
+- REQ-0107 -links-> REQ-0056
+- REQ-0108 -links-> REQ-0057
+- REQ-0109 -links-> REQ-0058
+- REQ-0110 -links-> REQ-0059
+- REQ-0111 -links-> REQ-0060
+- REQ-0112 -links-> REQ-0061
+- REQ-0114 -reqs-> REQ-0065
+- REQ-0115 -reqs-> REQ-0063
+- REQ-0115 -reqs-> REQ-0064
+- REQ-0116 -reqs-> REQ-0063
+- REQ-0117 -reqs-> REQ-0064
+- REQ-0118 -implements-> REQ-0003
+- REQ-0119 -implements-> REQ-0002
+- REQ-0120 -implements-> REQ-0006
+- REQ-0121 -implements-> REQ-0007
+- REQ-0122 -implements-> REQ-0009
+- REQ-0123 -implements-> REQ-0011
+- REQ-0124 -implements-> REQ-0016
+- REQ-0125 -implements-> REQ-0017
+- REQ-0126 -implements-> REQ-0018
+- REQ-0127 -implements-> REQ-0024
+- REQ-0128 -implements-> REQ-0025
+- REQ-0129 -implements-> REQ-0027
+- REQ-0130 -implements-> REQ-0029
+- REQ-0130 -implements-> REQ-0030
+- REQ-0131 -implements-> REQ-0028
+- REQ-0132 -implements-> REQ-0034
+- REQ-0133 -implements-> REQ-0036
+- REQ-0134 -implements-> REQ-0034
+- REQ-0135 -implements-> REQ-0037
+
+## Incoming (derived)
+- REQ-0002 <- implements: REQ-0119
+- REQ-0003 <- implements: REQ-0118
+- REQ-0006 <- implements: REQ-0120
+- REQ-0007 <- implements: REQ-0121
+- REQ-0009 <- implements: REQ-0122
+- REQ-0011 <- implements: REQ-0123
+- REQ-0016 <- implements: REQ-0124
+- REQ-0017 <- implements: REQ-0125
+- REQ-0018 <- implements: REQ-0126
+- REQ-0024 <- implements: REQ-0127
+- REQ-0025 <- implements: REQ-0128
+- REQ-0027 <- implements: REQ-0129
+- REQ-0028 <- implements: REQ-0131
+- REQ-0029 <- implements: REQ-0130
+- REQ-0030 <- implements: REQ-0130
+- REQ-0034 <- implements: REQ-0132, implements: REQ-0134
+- REQ-0036 <- implements: REQ-0133
+- REQ-0037 <- implements: REQ-0135
+- REQ-0038 <- links: REQ-0046, links: REQ-0047
+- REQ-0039 <- links: REQ-0048, links: REQ-0049
+- REQ-0040 <- links: REQ-0050, links: REQ-0051
+- REQ-0041 <- links: REQ-0052, links: REQ-0053, links: REQ-0054
+- REQ-0042 <- links: REQ-0055
+- REQ-0043 <- links: REQ-0056, links: REQ-0057
+- REQ-0044 <- links: REQ-0058, links: REQ-0059
+- REQ-0045 <- links: REQ-0060, links: REQ-0061
+- REQ-0046 <- links: REQ-0086, links: REQ-0096, links: REQ-0097
+- REQ-0047 <- links: REQ-0087, links: REQ-0088
+- REQ-0048 <- links: REQ-0089, links: REQ-0099
+- REQ-0049 <- links: REQ-0090, links: REQ-0098
+- REQ-0050 <- links: REQ-0091, links: REQ-0100
+- REQ-0051 <- links: REQ-0092, links: REQ-0101
+- REQ-0052 <- links: REQ-0093, links: REQ-0102, links: REQ-0105
+- REQ-0053 <- links: REQ-0094, links: REQ-0103
+- REQ-0054 <- links: REQ-0095, links: REQ-0104
+- REQ-0055 <- links: REQ-0106
+- REQ-0056 <- links: REQ-0107
+- REQ-0057 <- links: REQ-0108
+- REQ-0058 <- links: REQ-0109
+- REQ-0059 <- links: REQ-0110
+- REQ-0060 <- links: REQ-0111
+- REQ-0061 <- links: REQ-0112
+- REQ-0063 <- reqs: REQ-0115, reqs: REQ-0116
+- REQ-0064 <- reqs: REQ-0115, reqs: REQ-0117
+- REQ-0065 <- reqs: REQ-0114
+- REQ-0066 <- derives_from: REQ-0013, derives_from: REQ-0014, derives_from: REQ-0025, derives_from: REQ-0026, derives_from: REQ-0027, derives_from: REQ-0028, derives_from: REQ-0029, derives_from: REQ-0030, derives_from: REQ-0031
+- REQ-0067 <- derives_from: REQ-0013, derives_from: REQ-0014, derives_from: REQ-0025, derives_from: REQ-0026, derives_from: REQ-0027, derives_from: REQ-0028, derives_from: REQ-0029, derives_from: REQ-0030, derives_from: REQ-0031
+- REQ-0068 <- derives_from: REQ-0013, derives_from: REQ-0014, derives_from: REQ-0025, derives_from: REQ-0026, derives_from: REQ-0027, derives_from: REQ-0028, derives_from: REQ-0029, derives_from: REQ-0030, derives_from: REQ-0031
+- REQ-0069 <- derives_from: REQ-0013, derives_from: REQ-0014, derives_from: REQ-0025, derives_from: REQ-0026, derives_from: REQ-0027, derives_from: REQ-0028, derives_from: REQ-0029, derives_from: REQ-0030, derives_from: REQ-0031
+- REQ-0070 <- derives_from: REQ-0005, derives_from: REQ-0013, derives_from: REQ-0015, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0071 <- derives_from: REQ-0005, derives_from: REQ-0013, derives_from: REQ-0015, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0072 <- derives_from: REQ-0010, derives_from: REQ-0013, derives_from: REQ-0015, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0073 <- derives_from: REQ-0010, derives_from: REQ-0013, derives_from: REQ-0015, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0074 <- derives_from: REQ-0032, derives_from: REQ-0033, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0075 <- derives_from: REQ-0032, derives_from: REQ-0033, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0076 <- derives_from: REQ-0032, derives_from: REQ-0033, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0077 <- derives_from: REQ-0032, derives_from: REQ-0033, derives_from: REQ-0034, derives_from: REQ-0035, derives_from: REQ-0036, derives_from: REQ-0037
+- REQ-0078 <- derives_from: REQ-0007, derives_from: REQ-0008, derives_from: REQ-0009, derives_from: REQ-0010, derives_from: REQ-0011, derives_from: REQ-0012
+- REQ-0079 <- derives_from: REQ-0007, derives_from: REQ-0008, derives_from: REQ-0009, derives_from: REQ-0010, derives_from: REQ-0011, derives_from: REQ-0012
+- REQ-0080 <- derives_from: REQ-0002, derives_from: REQ-0003, derives_from: REQ-0004, derives_from: REQ-0005, derives_from: REQ-0006, derives_from: REQ-0012
+- REQ-0081 <- derives_from: REQ-0002, derives_from: REQ-0003, derives_from: REQ-0004, derives_from: REQ-0005, derives_from: REQ-0006, derives_from: REQ-0012
+- REQ-0082 <- derives_from: REQ-0012, derives_from: REQ-0016, derives_from: REQ-0017, derives_from: REQ-0018, derives_from: REQ-0019, derives_from: REQ-0020, derives_from: REQ-0021, derives_from: REQ-0022, derives_from: REQ-0023, derives_from: REQ-0024
+- REQ-0083 <- derives_from: REQ-0012, derives_from: REQ-0016, derives_from: REQ-0017, derives_from: REQ-0018, derives_from: REQ-0019, derives_from: REQ-0020, derives_from: REQ-0021, derives_from: REQ-0022, derives_from: REQ-0023, derives_from: REQ-0024
+- REQ-0084 <- derives_from: REQ-0012, derives_from: REQ-0016, derives_from: REQ-0017, derives_from: REQ-0018, derives_from: REQ-0019, derives_from: REQ-0020, derives_from: REQ-0021, derives_from: REQ-0022, derives_from: REQ-0023, derives_from: REQ-0024
+- REQ-0085 <- derives_from: REQ-0012, derives_from: REQ-0016, derives_from: REQ-0017, derives_from: REQ-0018, derives_from: REQ-0019, derives_from: REQ-0020, derives_from: REQ-0021, derives_from: REQ-0022, derives_from: REQ-0023, derives_from: REQ-0024
+- REQ-0086 <- links: REQ-0096
+
+## Findings
+(none)

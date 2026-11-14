@@ -124,6 +124,9 @@ variant claims, and `REQ-0062` (the coffee machine's top-level "brew coffee" req
 only downstream requirement upstream is `SWREQ_BREW_STRENGTH`, one of the eight skipped needs).
 Without the roots, `req check` names them as unrelated; it reports, it does not judge.
 
+The two committed projections (`docs/spec.md`, `docs/trace.md`) load and verify as current in
+`req check`, which is the cheap way to keep a deliverable honest: regenerate, never hand-edit.
+
 ## What I would change next, in order
 
 1. **`needs_import.py --test-links <junit.xml>`** — propose `tests:` links from test-need `specs`

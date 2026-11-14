@@ -18,7 +18,9 @@ empty traceability matrix. See [`FINDINGS.md`](FINDINGS.md) for everything the d
 | `claims/` | 135 req claims, drafted from the export and then edited (one rejection, two variant claims, three test links, one pin) |
 | `.req/areas` | the reading layout, one area per source document |
 | `.req/variants` | `steering_side=left` and `steering_side=right`, the upstream's vehicle variants as selectors |
-| `.req/completeness` | the two variant roots, declared unrelated on purpose |
+| `.req/completeness` | the variant roots and the orphaned coffee-machine root, declared unrelated on purpose |
+| `.req/projections` | the two committed views `req check` verifies |
+| `docs/spec.md`, `docs/trace.md` | generated projections; never edited by hand |
 | `tools/needs_import.py` | the importer from req, at the commit that added `--links` |
 | `scripts/` | rebuild, import, and the drift walkthrough |
 | `upstream/` | the source checkout (ignored; pinned by `scripts/build-upstream.sh`) |
@@ -78,7 +80,7 @@ req trace | head -40                       # 220 stored edges, 66 targets receiv
 req impact REQ-0038                        # 7 dependents, nearest first
 req select steering_side=right             # REQ-0136 applies, REQ-0113 does not
 req gate steering_side=left --test-report upstream/docs/testsuites/coffee_machine_junit.xml
-req check                                  # both variants + completeness, one verdict
+req check                                  # both variants, both projections, completeness; one verdict
 req audit                                  # coverage and provenance, unratified by design
 ```
 
