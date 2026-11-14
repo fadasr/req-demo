@@ -124,7 +124,7 @@ caches: `req check` fails if either was hand-edited or left stale.
 $ scripts/demo-drift.sh
 ...
 == req diff --base HEAD~1 (the weakening is a change in meaning, not an edit)
-# req diff: HEAD~1 (51645d452996) -> working-tree
+# req diff: HEAD~1 -> working-tree
 registry: unchanged
 weakened REQ-0115 numeric_loosening pin-flagged
 counts: added 0, removed 0, weakened 1, tightened 0, reshaped 0, not-judged 0,
