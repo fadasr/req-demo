@@ -166,12 +166,16 @@ The two committed projections (`docs/spec.md`, `docs/trace.md`) load and verify 
 
 ## What I would change next, in order
 
-1. **A canon work list by area** — `req canon` already lints; a per-area summary would make the
-   80-claim authoring pass a plan instead of a scroll. The ADAS example (7 of 53 structured) is
-   where it would pay.
+1. **A design-element view** — `req satisfy` lists links, but design elements are not nodes in
+   `req trace`; the demo's matrix joins them outside req. If adopters need the upstream's
+   design ↔ design graph, that is a new view and an ADR, not a patch.
 2. **A documented variant-expansion recipe** — not a flag. The export has the resolved fields;
    the missing piece is the project's convention, which belongs in a project-local script like
    `adopt.py`, not in req's core.
 3. **A test-report reader for other generators** — the `--tests` join assumes Sphinx-Test-Reports
    (`name` = test need id). Another generator's report is deliberately counted, not converted;
    a mapping flag would be the next step if an adopter needs it.
+
+The canon work list suggested here is now [`req#89`](https://github.com/autox-my/req/pull/89):
+`req canon --by-area` puts the authoring pass in order (ADAS software requirements 0/29
+structured, ADAS SYS.2 0/16, ISO FSR 13/36).
