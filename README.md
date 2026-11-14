@@ -64,9 +64,10 @@ scripts/build-upstream.sh eu_right        # the right-hand-drive variant; writes
 
 ## Reproduce the corpus
 
-`req` must be on `PATH` (this demo was made with `req 0.1.0`, rules_v 9, built from `dd78c81`;
-`req --version` is the provenance). The importer refuses to draft over an existing corpus, so a
-fresh import means a fresh `claims/`:
+`req` must be on `PATH` (this demo was drafted with `req 0.1.0`, rules_v 9, built from `dd78c81`;
+it was re-verified with `cc35d81` — latest `main` plus PR #86 — same rules_v 9, and no address or
+projection moved. `req --version` is the provenance). The importer refuses to draft over an
+existing corpus, so a fresh import means a fresh `claims/`:
 
 ```bash
 req init                                  # only for a fresh corpus

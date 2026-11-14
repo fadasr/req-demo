@@ -1,8 +1,9 @@
 # What this demo found
 
-One corpus, measured on 2026-11-14 with `req 0.1.0` (rules_v 9, built from `dd78c81`) and the
-Sphinx-Needs demo at `3c602bf`. These are observations from **one** real project, not a
-benchmark; where a number is a count, the command that produced it is named.
+One corpus, measured on 2026-11-14 with `req 0.1.0` (rules_v 9, built from `dd78c81`), then
+re-verified on 2026-11-15 with `cc35d81` (latest `main` plus PR #86), same rules_v 9 and no
+address moved, and the Sphinx-Needs demo at `3c602bf`. These are observations from **one** real
+project, not a benchmark; where a number is a count, the command that produced it is named.
 
 ## Fixed: typed links were dropped, so traceability was empty
 
