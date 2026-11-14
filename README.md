@@ -35,7 +35,7 @@ counts below are this corpus; `structured` means `req canon` derived a modality 
 | upstream example | claims | structured | trace edges | notes |
 | --- | ---: | ---: | ---: | --- |
 | 🧰 Basic Example | 0 | — | — | feature showcase, not obligations: `EX_REQ_002` is "Some content"; `EX_REQ_001` contains images and bold markup and is skipped as `rst directive`; the imported needs have no content; external needs are not in a Sphinx-Needs export at all |
-| ☕️ Coffee Machine | 8 | 7 | 5 | system requirements + software requirements; `SWREQ_BREW_STRENGTH` is skipped (multi-paragraph); 5 JUnit test links |
+| ☕️ Coffee Machine | 8 | 7 | 5 | system requirements + software requirements; `SWREQ_BREW_STRENGTH` is skipped (multi-paragraph); 7 JUnit test links on 4 claims |
 | 🚗 Automotive ADAS | 53 | 7 | 44 | stakeholder needs + SYS/SWE requirements + one authored right-hand-drive variant claim; the task-style prose ("Develop…", "Implement…") is mostly unstructured |
 | 🛡️ ISO 26262 Safety | 74 | 41 | 171 | HARA → safety goals → FSR → system-requirement chain; the best-structured example, and most of the corpus's edges |
 | **total** | **135** | **55** | **220** | |
@@ -84,6 +84,10 @@ needs 362 = drafted 135 + skipped 8 + not selected 219
 links: 220 relation(s) on 101 of 135 drafted needs
        (derives_from 152, implements 19, links 44, reqs 5);
        119 target(s) not carried (self 2, target skipped 1, target type not selected 116)
+tests: 7 test link(s) on 4 of 135 drafted needs; 69 test need(s) (4 with a case, 65 without);
+       6 test case(s) (6 passed, 0 failed, 0 skipped, 0 malformed, 0 naming no test need)
+       in upstream/docs/testsuites/coffee_machine_junit.xml;
+       1 target(s) not carried (target not drafted 1)
 ```
 
 Eight selected needs are skipped, each named by reason by the importer: three reStructuredText
@@ -105,8 +109,10 @@ req audit                                  # coverage and provenance, unratified
 
 The gate's flagship answer is **UNVERIFIABLE**, and that is the correct answer here: 131 of 134
 applying claims have no linked test, so `tests_linked` cannot be confirmed even though every
-structural policy passes. The demo links three coffee-machine claims to the upstream's real JUnit
-report (`3 linked · 3 passed · 0 failed`) to show the other side of the same policy.
+structural policy passes. The demo links four coffee-machine claims to the upstream's real JUnit
+report (`4 linked · 4 passed · 0 failed`) to show the other side of the same policy. The links can
+be drafted automatically now: `needs_import.py --tests <junit.xml> --test-type test --test-link
+specs` proposes them from the test need's own `specs` links.
 
 `req diff` is in `scripts/demo-drift.sh`: it clones this repository into a temporary directory,
 weakens the 100 ms over-temperature shutdown to 500 ms, and asks req what moved:

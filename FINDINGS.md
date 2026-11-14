@@ -36,27 +36,36 @@ reason instead of vanishing.
 ...
 ```
 
-## Open: test evidence is not carried from the export
+## Fixed: test evidence was dropped from the import
 
 **Observation.** The upstream has 69 test needs with real JUnit reports; the tests link to the
 requirements they prove (`specs`/`links`) and to test runs. The importer correctly does not draft
-test needs as requirements, but the **evidence links** are lost with them. After import, 131 of
-134 applying claims had no linked test, so `req gate --test-report` answered:
+test needs as requirements, but the **evidence links** were lost with them. After a plain import,
+all 134 applying claims had no linked test, so `req gate --test-report` answered:
 
 ```text
 [UNVERIFIABLE] tests_linked
-  counts: 134 applying · 3 linked · 131 unlinked · 3 passed · 0 failed
+  counts: 134 applying · 0 linked · 134 unlinked · 0 passed · 0 failed
 ```
 
-The demo re-linked three coffee-machine claims by hand to the upstream's
-`coffee_machine_junit.xml` (a claim's `tests:` is `classname::name`, which a Sphinx-Needs test
-need does not carry). A future reader could map test-need ids to JUnit cases from the report and
-propose `tests:` links, the same way `--links` proposes relations. It is not done here because
-the mapping is a judgement: the report's `classname` and the need id are not the same namespace.
+**Change.** `--tests <junit.xml> --test-type test --test-link specs` joins a JUnit `<testcase>` to
+the test need it names (Sphinx-Test-Reports writes the test need's id as `name`) and the test need
+to the draft its `specs` points at, writing `classname::name` into the draft's `tests:`. The
+report counts cases that are malformed, cases that name no test need, test needs with no case,
+and targets that are not drafts. A failing case is linked all the same — the gate is what reports
+it.
+
+**After.** The demo's four coffee-machine claims are linked to the upstream's
+`coffee_machine_junit.xml` (7 test ids, 4 claims):
+
+```text
+counts: 134 applying · 4 linked · 130 unlinked · 4 passed · 0 failed
+```
 
 **This is the adoption cost, not a req defect.** A claim with no proven test is exactly what
-`UNVERIFIABLE` is for; the demo shows the policy working, and the hand-linked three show the
-other side (`3 passed`).
+`UNVERIFIABLE` is for; the demo shows the policy working, and the linked four show the other
+side (`4 passed`). The limit is the namespace: `name` must be the test need id, and a case that
+does not match is counted, never guessed at.
 
 ## Open: the variant requirements are the ones the importer skips
 

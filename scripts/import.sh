@@ -32,11 +32,30 @@ for type in "${types[@]}"; do
   type_args+=(--type "$type")
 done
 
+# The Coffee Machine JUnit report proves three of its claims. Point --tests at it when it is
+# available; the flag is optional so the script still rehearses without the upstream checkout.
+test_args=()
+if [ -f "$ROOT/upstream/docs/testsuites/coffee_machine_junit.xml" ]; then
+  test_args=(--tests "upstream/docs/testsuites/coffee_machine_junit.xml"
+             --test-type test --test-link specs --test-link links)
+fi
+
 cd "$ROOT"
-python3 tools/needs_import.py \
-  --from build/needs.json \
-  --origin "$ORIGIN" \
-  --date "$DATE" \
-  "${type_args[@]}" \
-  --links --areas --area-depth 2 \
-  "$@"
+if [ ${#test_args[@]} -gt 0 ]; then
+  python3 tools/needs_import.py \
+    --from build/needs.json \
+    --origin "$ORIGIN" \
+    --date "$DATE" \
+    "${type_args[@]}" \
+    --links --areas --area-depth 2 \
+    "${test_args[@]}" \
+    "$@"
+else
+  python3 tools/needs_import.py \
+    --from build/needs.json \
+    --origin "$ORIGIN" \
+    --date "$DATE" \
+    "${type_args[@]}" \
+    --links --areas --area-depth 2 \
+    "$@"
+fi

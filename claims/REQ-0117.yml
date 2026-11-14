@@ -7,6 +7,9 @@ claim_id: REQ-0117
 area: coffee-machine/sw-requirements
 statement: "The software shall continuously monitor the water level sensor and prevent brewing operations when water level is below minimum threshold."
 applicability: []
+tests:
+  - interfaces::tests::test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN
+  - interfaces::tests::test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_WATER_LEVEL"
   date: 2026-11-14

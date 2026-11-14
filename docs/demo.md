@@ -95,14 +95,14 @@ $ req gate steering_side=left \
 [PASS] dependencies_decided
 [PASS] rationale_present
 [UNVERIFIABLE] tests_linked
-  counts: 134 applying · 3 linked · 131 unlinked · 3 passed · 0 failed · 0 not in the report
+  counts: 134 applying · 4 linked · 130 unlinked · 4 passed · 0 failed · 0 not in the report
 ...
 verdict: UNVERIFIABLE — nothing is wrong, but something cannot be confirmed
 ```
 
 `UNVERIFIABLE` is not a shy PASS and not a FAIL. The structural policies pass; the evidence policy
-cannot be confirmed for 131 claims. The demo linked three coffee-machine claims by hand to show a
-`passed` outcome. A CI step must go red on exit 3 (see req's own workflow template), which is how
+cannot be confirmed for 130 claims. The demo linked four coffee-machine claims by hand to show a
+`passed` outcome; `needs_import.py --tests` now drafts those links from the test need's `specs`. A CI step must go red on exit 3 (see req's own workflow template), which is how
 "we could not tell" stays visible.
 
 ## 7. The whole repository in one verdict
