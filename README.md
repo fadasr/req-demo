@@ -42,9 +42,9 @@ counts below are this corpus; `structured` means `req canon` derived a modality 
 | --- | ---: | ---: | ---: | --- |
 | 🧰 Basic Example | 0 | — | — | feature showcase, not obligations: `EX_REQ_002` is "Some content"; `EX_REQ_001` contains images and bold markup and is skipped as `rst directive`; the imported needs have no content; external needs are not in a Sphinx-Needs export at all |
 | ☕️ Coffee Machine | 8 | 7 | 5 | system requirements + software requirements; `SWREQ_BREW_STRENGTH` is skipped (multi-paragraph); 7 JUnit test links on 4 claims |
-| 🚗 Automotive ADAS | 53 | 7 | 44 | stakeholder needs + SYS/SWE requirements + one authored right-hand-drive variant claim; 9 qualification test links, 3 failing; the task-style prose ("Develop…", "Implement…") is mostly unstructured |
+| 🚗 Automotive ADAS | 53 | 48 | 44 | stakeholder needs + SYS/SWE requirements + one authored right-hand-drive variant claim; the task-style prose was re-worded into obligations; 9 qualification test links, 3 failing |
 | 🛡️ ISO 26262 Safety | 74 | 41 | 171 | HARA → safety goals → FSR → system-requirement chain; the best-structured example, and most of the corpus's edges |
-| **total** | **135** | **55** | **220** | |
+| **total** | **135** | **96** | **220** | |
 
 The Basic Example is deliberately zero claims. Its Sphinx-Needs objects demonstrate directives,
 filtering, imported needs and external needs; none of them is an obligation a person would
@@ -153,8 +153,8 @@ not a bug: the skipped item is a decision for a person.
 ## What the corpus says
 
 ```bash
-req canon                                  # 135 claims, 80 unstructured, 20 with lints
-req canon --by-area                        # the work list (req#89): ADAS SW reqs 0/29 structured
+req canon                                  # 135 claims, 39 unstructured, 22 with lints
+req canon --by-area                        # the work list (req#89): ISO FSR 13/36 structured
 req trace | head -40                       # 220 stored edges, 66 targets receive one
 req impact REQ-0038                        # 7 dependents, nearest first
 req satisfy                                # 56 design/code links, all HOLD
@@ -184,15 +184,17 @@ scripts/demo-drift.sh
 
 The import is a draft, never a ratification (ADR 0004). In this corpus the useful next edits are:
 
-1. **Re-word the 80 unstructured claims** so they carry a modality and a bound. "Develop
-   functionality to…" is a task, not an obligation; `req canon` lints it but never invents a
-   `shall`. The 20 lint findings are the work list (`untestable_qualifier`, `multiple_obligations`,
-   `uncovered_content`, …).
+1. **Re-word the remaining 39 unstructured claims** so they carry a modality and a bound. The ADAS
+   pass is done (48/53); ISO FSR 23/36 and ISO system requirements 10/18 are now the work list.
+   "Develop functionality to…" is a task, not an obligation; `req canon` lints it but never
+   invents a `shall`. The 22 lint findings are the first edits (`untestable_qualifier`,
+   `multiple_obligations`, `uncovered_content`, …).
 2. **Pin the load-bearing bounds** (the demo pins REQ-0115 at `LE 0.1 s`).
 3. **Link the remaining tests.** The importer now drafts the JUnit links it can prove
    (`--tests`); 121 claims still have no test, and not every upstream test need has a report.
-4. **Curate the subject registry.** `aliases/subjects.yml` still holds the `req init` starter; the
-   VDC/WRDC/steering vocabulary is exactly what a registry is for.
+4. **Curate the subject registry.** Done: 30 subjects, `version: 2`, with the abbreviated and
+   spelled-out controller names as one subject. It moved addresses (no Baseline here), which is
+   the documented cost of a registry bump.
 
 ## Licence and provenance
 

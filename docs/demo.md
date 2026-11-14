@@ -40,16 +40,17 @@ no claim id exists to point at. Those are design elements, not claims; section 1
 
 ```console
 $ req canon | tail -1
-claims: 135 (80 unstructured); pins: 3 on 1 claim(s), 0 flagged; lints on 20 claim(s)
+claims: 135 (39 unstructured); pins: 3 on 1 claim(s), 0 flagged; lints on 22 claim(s)
 ```
 
-80 of 135 statements have no modality req can hold. That is the corpus, not the tool: it is
-written as tasks and sentence clusters. The 20 lints are the first authoring work list.
+After the authoring pass, 39 of 135 statements have no modality req can hold (it was 80). The
+remaining ones are honest: the ISO FSRs and system requirements are sentence clusters, and a few
+ADAS qualifiers ("smooth", "robust") need a person to state a bound.
 
-`req canon --by-area` (landing in [`req#89`](https://github.com/autox-my/req/pull/89)) puts that
-work in order: ADAS software requirements are **0 of 29** structured, ADAS SYS.2 **0 of 16**, the
-ISO FSRs **13 of 36**, while the coffee-machine requirements are 7 of 8. The authoring pass starts
-with the ADAS prose, and the output now says so.
+`req canon --by-area` (landing in [`req#89`](https://github.com/autox-my/req/pull/89)) showed the
+work in order: ADAS software requirements **0 of 29** structured, ADAS SYS.2 **0 of 16**, ISO FSRs
+**13 of 36** — and after the pass: **27 of 29**, **14 of 16**, ISO still **13 of 36**. The work
+list now points at the ISO examples.
 
 ## 3. The traceability matrix
 

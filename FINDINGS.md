@@ -118,27 +118,45 @@ person writes the selector.
 A claim a context cannot decide would be **UNKNOWN**, never silently excluded; this corpus has
 none because the two variant claims are the only selectors.
 
-## Not a defect: real prose is mostly unstructured
+## The authoring pass: 80 unstructured → 39
 
-**Observation.** `req canon` reads 135 claims and finds **80 unstructured** — 59%. The upstream's
-requirements are written as tasks ("Develop a lane detection algorithm…", "Implement turn signal
-logic…") or as sentence clusters with two obligations. Only 55 have a modality and a parseable
-structure, and the split is by example: ISO 26262 Safety is 41/74 structured, Coffee Machine 7/8,
-Automotive ADAS 7/53. The ADAS prose is the problem, and it is the example with the most
-requirements.
+**Observation.** The upstream's requirements are written as tasks ("Develop a lane detection
+algorithm…", "Implement turn signal logic…") or as sentence clusters with two obligations. On the
+first import `req canon` read **80 of 135 unstructured** (59%), and the split was by example: ISO
+26262 Safety 41/74, Coffee Machine 7/8, Automotive ADAS **7/53**. The ADAS prose was the problem,
+and it is the example with the most requirements.
 
-**Consequence.** Drift-and-direction applies only where there is structure. The demo's drift case
-uses `REQ-0115`, one of the 55:
+**Change.** The 45 ADAS task statements were re-worded as obligations ("Develop software to process
+camera inputs…" → "The lane detection software shall process camera inputs…"), without inventing
+bounds; the two variant claims kept their `steering_side` selectors. `req canon` now reads **39
+unstructured** (29%), and ADAS is **48/53 structured**. The 39 that remain are honest: ISO FSR
+23/36, ISO system requirements 10/18, Coffee Machine one multi-paragraph gap, and five ADAS
+statements whose lints (`untestable_qualifier` on "smooth"/"robust", `uncovered_content`,
+`multiple_obligations`) need a person to decide a bound or a split.
+
+**Consequence.** Drift-and-direction now applies to 96 claims instead of 55. The demo's drift case
+uses `REQ-0115`, which was already structured:
 
 ```text
 The software shall continuously monitor water temperature and trigger an emergency
 shutdown within 100ms if temperature exceeds 100°C ...
 ```
 
-Weakening `100ms` to `500ms` is classified **weakened** (a larger `LE` bound). The other 80 claims
-can be reported as `not-judged`, which is honest and is the authoring work list. `req canon`'s 20
-lint findings (`untestable_qualifier`, `multiple_obligations`, `uncovered_content`, …) name the
-first edits.
+Weakening `100ms` to `500ms` is classified **weakened** (a larger `LE` bound). The remaining 39
+are `not-judged`, which is the honest answer; `req canon --by-area` names their areas.
+
+## The subject registry: one subject per thing
+
+`aliases/subjects.yml` starts as the `req init` starter (one `API` subject). The demo replaces it
+with 30 domain subjects: the vehicle controllers (`VDC`/`the vdc`/`the vehicle dynamics
+controller`, `WRDC`, brake, steering, drive), the software subsystems (lane detection, pedestrian
+detection, parking, drowsiness, …), and the coffee machine. Registered surfaces become the subject
+id — `the VDC` and `the vehicle dynamics controller` now parse as one subject — while an
+unregistered surface stays literal.
+
+This is a **registry version bump** (`version: 2`) and moves the addresses of the claims whose
+subject resolved, exactly as a rules bump does. There is no signed Baseline in this demo, so there
+is no re-ratification to run; a real corpus would see the movement as drift against its manifest.
 
 ## Not a defect: source statuses are deliberately not carried
 
@@ -177,5 +195,6 @@ The two committed projections (`docs/spec.md`, `docs/trace.md`) load and verify 
    a mapping flag would be the next step if an adopter needs it.
 
 The canon work list suggested here is now [`req#89`](https://github.com/autox-my/req/pull/89):
-`req canon --by-area` puts the authoring pass in order (ADAS software requirements 0/29
-structured, ADAS SYS.2 0/16, ISO FSR 13/36).
+`req canon --by-area` put the authoring pass in order (ADAS software requirements 0/29 structured,
+ADAS SYS.2 0/16, ISO FSR 13/36) and now shows the result: ADAS software requirements 27/29, ADAS
+SYS.2 14/16, ISO FSR 13/36 — the remaining work is the ISO examples.
