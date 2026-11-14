@@ -1,0 +1,136 @@
+# What this demo found
+
+One corpus, measured on 2026-11-14 with `req 0.1.0` (rules_v 9, built from `dd78c81`) and the
+Sphinx-Needs demo at `3c602bf`. These are observations from **one** real project, not a
+benchmark; where a number is a count, the command that produced it is named.
+
+## Fixed: typed links were dropped, so traceability was empty
+
+**Observation.** 134 of the 135 drafted needs carried typed links in the export; the importer
+wrote `relations: []` for every one. `req trace` on the imported corpus said:
+
+```text
+## Edges
+(none)
+## Incoming (derived)
+(none)
+```
+
+The `not carried` report line named the link fields (`derives_from`, `implements`, `links`,
+`reqs`, …) and counted the needs, but an adopter had to rebuild 220 edges by hand.
+
+**Change.** [`req#86`](https://github.com/autox-my/req/pull/86) adds `--links`: an edge whose
+target is also drafted in the same run becomes a `relations:` entry (`type` = source link field,
+`to` = the target's claim id). Backlinks are not duplicated (req stores an edge once), link
+filters (`<id>[version==1]`) are stripped, and every target that cannot be carried is counted by
+reason instead of vanishing.
+
+**After.** `req trace` stores 220 edges, 66 targets receive one, and `req impact REQ-0038`
+(the lane-marking stakeholder need) walks the chain:
+
+```text
+7 dependent(s), nearest first:
+- REQ-0046  distance 1  applies
+- REQ-0047  distance 1  applies
+- REQ-0086  distance 2  applies
+...
+```
+
+## Open: test evidence is not carried from the export
+
+**Observation.** The upstream has 69 test needs with real JUnit reports; the tests link to the
+requirements they prove (`specs`/`links`) and to test runs. The importer correctly does not draft
+test needs as requirements, but the **evidence links** are lost with them. After import, 131 of
+134 applying claims had no linked test, so `req gate --test-report` answered:
+
+```text
+[UNVERIFIABLE] tests_linked
+  counts: 134 applying · 3 linked · 131 unlinked · 3 passed · 0 failed
+```
+
+The demo re-linked three coffee-machine claims by hand to the upstream's
+`coffee_machine_junit.xml` (a claim's `tests:` is `classname::name`, which a Sphinx-Needs test
+need does not carry). A future reader could map test-need ids to JUnit cases from the report and
+propose `tests:` links, the same way `--links` proposes relations. It is not done here because
+the mapping is a judgement: the report's `classname` and the need id are not the same namespace.
+
+**This is the adoption cost, not a req defect.** A claim with no proven test is exactly what
+`UNVERIFIABLE` is for; the demo shows the policy working, and the hand-linked three show the
+other side (`3 passed`).
+
+## Open: the variant requirements are the ones the importer skips
+
+**Observation.** The upstream's variant showcase is `REQ_017` (maximum speed, field
+`max_speed: 130` vs `75`) and `REQ_018` (warning side). Both are skipped as `rst role`, because
+their content keeps the template text:
+
+```text
+The adaptive cruise control shall not exceed the configured maximum speed
+of <{ var.region.speed_limit_highway }> :variant:`region.speed_unit` ...
+```
+
+The *resolved* values are in custom fields (`max_speed`, `speed_unit`, `driver_side`), not in the
+content, and the export does not declare which template variable produced which field. Expanding
+them would be a guess about the project's convention, so the importer names and skips them.
+
+**What the demo does instead.** The left/right turn-signal pair is modeled as two claims with
+authored applicability (`steering_side == left` / `== right`), and `.req/variants` gates both
+contexts. `REQ-0136` was authored from the `eu_right` build, where the upstream's conditional
+block includes it. This is the intended req workflow: variants are selectors, not forks, and the
+person writes the selector.
+
+`req select` decides every claim in both contexts, and `req check` runs both gates in one verdict.
+A claim a context cannot decide would be **UNKNOWN**, never silently excluded; this corpus has
+none because the two variant claims are the only selectors.
+
+## Not a defect: real prose is mostly unstructured
+
+**Observation.** `req canon` reads 135 claims and finds **80 unstructured** — 59%. The upstream's
+requirements are written as tasks ("Develop a lane detection algorithm…", "Implement turn signal
+logic…") or as sentence clusters with two obligations. Only 55 have a modality and a parseable
+structure.
+
+**Consequence.** Drift-and-direction applies only where there is structure. The demo's drift case
+uses `REQ-0115`, one of the 55:
+
+```text
+The software shall continuously monitor water temperature and trigger an emergency
+shutdown within 100ms if temperature exceeds 100°C ...
+```
+
+Weakening `100ms` to `500ms` is classified **weakened** (a larger `LE` bound). The other 80 claims
+can be reported as `not-judged`, which is honest and is the authoring work list. `req canon`'s 20
+lint findings (`untestable_qualifier`, `multiple_obligations`, `uncovered_content`, …) name the
+first edits.
+
+## Not a defect: source statuses are deliberately not carried
+
+The export has `open` / `in progress` / `closed`, authors, releases, ASIL, tags and Jira ids. The
+importer writes none of them: a source status is not a ratification, and req's authority is a
+signed Decision or a signed Baseline. `req check` therefore says `no signed Baseline under
+baselines/: nothing in this repository is ratified`, which is true. The demo leaves it that way;
+signing needs a maintainer's key, not a demo script.
+
+## Worked: the importer's accounting is auditable
+
+`needs 362 = drafted 135 + skipped 8 + not selected 219` is a line you can check against the
+export by hand. The eight skips are named one per reason, and the 219 are broken down by type.
+The demo deletes one of the 135 drafts (`EX_REQ_002`, "Some content" — a documentation example,
+not an obligation), which is the point of a draft.
+
+`--areas` filed the drafts under 9 source documents, and `req check` reads the registry: the
+demo's only completeness edits are the three declared roots in `.req/completeness` — the two
+variant claims, and `REQ-0062` (the coffee machine's top-level "brew coffee" requirement, whose
+only downstream requirement upstream is `SWREQ_BREW_STRENGTH`, one of the eight skipped needs).
+Without the roots, `req check` names them as unrelated; it reports, it does not judge.
+
+## What I would change next, in order
+
+1. **`needs_import.py --test-links <junit.xml>`** — propose `tests:` links from test-need `specs`
+   plus the report's `classname::name`, counted and never guessed. It would turn the biggest open
+   number (131 unlinked) into a reviewed list.
+2. **A canon work list by area** — `req canon` already lints; a per-area summary would make the
+   80-claim authoring pass a plan instead of a scroll.
+3. **A documented variant-expansion recipe** — not a flag. The export has the resolved fields;
+   the missing piece is the project's convention, which belongs in a project-local script like
+   `adopt.py`, not in req's core.

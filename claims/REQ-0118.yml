@@ -1,0 +1,17 @@
+# A draft claim, drafted from the Sphinx-Needs export /tmp/sn-demo-build/needs.json (safety_example/system_requirements:182). The need's id is kept
+# in rationale.source. Nothing derived is stored: `req canon` shows the parse this statement
+# derives. A draft is a proposal (ADR 0004): edit the statement, add the applicability and
+# relations it needs, and pin a load-bearing bound under `pins:` if it has one.
+schema: req.claim/3
+claim_id: REQ-0118
+area: safety-example/system-requirements
+statement: "The brake system shall implement X-split dual hydraulic circuits (FL-RR, FR-RL) with independent pressure generation and control. Each circuit shall be capable of achieving minimum 0.3g deceleration independently. Electronic control units are dual-redundant with independent power supplies."
+applicability: []
+rationale:
+  source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_BRAKE_01"
+  date: 2026-11-14
+  rejected_alternatives: []
+  assumptions: []
+relations:
+  - type: "implements"
+    to: "REQ-0003"

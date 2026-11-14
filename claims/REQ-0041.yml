@@ -1,0 +1,15 @@
+# A draft claim, drafted from the Sphinx-Needs export /tmp/sn-demo-build/needs.json (automotive-adas/sys_1_req_elicitation:43). The need's id is kept
+# in rationale.source. Nothing derived is stored: `req canon` shows the parse this statement
+# derives. A draft is a proposal (ADR 0004): edit the statement, add the applicability and
+# relations it needs, and pin a load-bearing bound under `pins:` if it has one.
+schema: req.claim/3
+claim_id: REQ-0041
+area: automotive-adas/sys-1-req-elicitation
+statement: "The system shall identify pedestrians in the vehicle's path and issue warnings or initiate braking to prevent collisions."
+applicability: []
+rationale:
+  source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_004"
+  date: 2026-11-14
+  rejected_alternatives: []
+  assumptions: []
+relations: []

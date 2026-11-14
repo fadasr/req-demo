@@ -1,0 +1,26 @@
+# A draft claim, drafted from the Sphinx-Needs export /tmp/sn-demo-build/needs.json (coffee-machine/sw_requirements:26). The need's id is kept
+# in rationale.source. Nothing derived is stored: `req canon` shows the parse this statement
+# derives. A draft is a proposal (ADR 0004): edit the statement, add the applicability and
+# relations it needs, and pin a load-bearing bound under `pins:` if it has one.
+schema: req.claim/3
+claim_id: REQ-0115
+area: coffee-machine/sw-requirements
+statement: "The software shall continuously monitor water temperature and trigger an emergency shutdown within 100ms if temperature exceeds 100°C to prevent boiling and potential hazards."
+applicability: []
+tests:
+  - interfaces::tests::test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN
+  - interfaces::tests::test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN
+rationale:
+  source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_OVERTEMP_SHUTDOWN"
+  date: 2026-11-14
+  rejected_alternatives: []
+  assumptions: []
+pins:
+  operator: LE
+  value: "0.1"
+  unit: s
+relations:
+  - type: "reqs"
+    to: "REQ-0063"
+  - type: "reqs"
+    to: "REQ-0064"

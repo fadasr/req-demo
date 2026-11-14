@@ -1,0 +1,7 @@
+# Root claims (ADR 0039), read by `req check`'s completeness step and `req audit`.
+# The two turn-signal requirements are variant-scoped roots: their upstream links point at
+# REQ_018 (variant-templated, skipped by the importer) and ARCH_001 (architecture, not a
+# requirement), so they have no relation here on purpose.
+REQ-0113
+REQ-0136
+REQ-0062

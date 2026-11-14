@@ -1,0 +1,7 @@
+# Generated and vendored material: the demo rebuilds it, it is not the corpus.
+build/
+upstream/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store

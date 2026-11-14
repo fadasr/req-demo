@@ -1,0 +1,15 @@
+# A draft claim, drafted from the Sphinx-Needs export /tmp/sn-demo-build/needs.json (coffee-machine/requirements:12). The need's id is kept
+# in rationale.source. Nothing derived is stored: `req canon` shows the parse this statement
+# derives. A draft is a proposal (ADR 0004): edit the statement, add the applicability and
+# relations it needs, and pin a load-bearing bound under `pins:` if it has one.
+schema: req.claim/3
+claim_id: REQ-0062
+area: coffee-machine/requirements
+statement: "The coffee machine shall be able to brew coffee with user-selected strength (weak, medium, strong)."
+applicability: []
+rationale:
+  source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_BREW_COFFEE"
+  date: 2026-11-14
+  rejected_alternatives: []
+  assumptions: []
+relations: []

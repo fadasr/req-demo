@@ -1,0 +1,23 @@
+# A draft claim, drafted from the Sphinx-Needs export /tmp/sn-demo-build/needs.json (safety_example/fsr:122). The need's id is kept
+# in rationale.source. Nothing derived is stored: `req canon` shows the parse this statement
+# derives. A draft is a proposal (ADR 0004): edit the statement, add the applicability and
+# relations it needs, and pin a load-bearing bound under `pins:` if it has one.
+schema: req.claim/3
+claim_id: REQ-0020
+area: safety-example/fsr
+statement: "Electrical and mechanical design according to state of the art. Components shall meet automotive standards (ISO 26262, ISO 16750)."
+applicability: []
+rationale:
+  source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_PROC_01"
+  date: 2026-11-14
+  rejected_alternatives: []
+  assumptions: []
+relations:
+  - type: "derives_from"
+    to: "REQ-0082"
+  - type: "derives_from"
+    to: "REQ-0083"
+  - type: "derives_from"
+    to: "REQ-0084"
+  - type: "derives_from"
+    to: "REQ-0085"

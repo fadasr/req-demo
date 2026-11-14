@@ -1,0 +1,5 @@
+# The two vehicle variants the upstream demo builds, as selectors rather than branches.
+# The upstream ships eu_left / eu_right / america; america shares steering_side=left with
+# eu_left for every requirement that is imported here, so two contexts decide the corpus.
+steering_side=left
+steering_side=right
