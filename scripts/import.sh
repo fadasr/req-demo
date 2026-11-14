@@ -32,12 +32,14 @@ for type in "${types[@]}"; do
   type_args+=(--type "$type")
 done
 
-# The Coffee Machine JUnit report proves three of its claims. Point --tests at it when it is
-# available; the flag is optional so the script still rehearses without the upstream checkout.
+# The Coffee Machine report proves four claims; the ADAS qualification report proves nine more
+# and fails three of them, which is the point: the gate reports a failing test, not UNVERIFIABLE.
 test_args=()
-if [ -f "$ROOT/data/coffee_machine_junit.xml" ]; then
-  test_args=(--tests "data/coffee_machine_junit.xml"
+if [ -f "$ROOT/data/coffee_machine_junit.xml" ] && [ -f "$ROOT/data/adas_junit.xml" ]; then
+  test_args=(--tests data/coffee_machine_junit.xml --tests data/adas_junit.xml
              --test-type test --test-link specs --test-link links)
+elif [ -f "$ROOT/data/coffee_machine_junit.xml" ]; then
+  test_args=(--tests data/coffee_machine_junit.xml --test-type test --test-link specs)
 fi
 
 cd "$ROOT"

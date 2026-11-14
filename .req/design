@@ -1,0 +1,3 @@
+# The design roots `req satisfy` reads (ADR 0040). A file under one of these declares a link
+# with `req-satisfies: <claim-id>`; `req satisfy --record` is the human act that ratifies it.
+design

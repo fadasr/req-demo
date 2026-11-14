@@ -7,6 +7,8 @@ claim_id: REQ-0051
 area: automotive-adas/sys-2-req-analysis
 statement: "Implement logic to autonomously apply brakes when a collision is imminent based on predictions from the collision detection module."
 applicability: []
+tests:
+  - "com.example.tests.ExampleTest::TEST_SYS_QUAL_003"
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_006"
   date: 2026-11-14

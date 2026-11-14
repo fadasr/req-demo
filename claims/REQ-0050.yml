@@ -7,6 +7,8 @@ claim_id: REQ-0050
 area: automotive-adas/sys-2-req-analysis
 statement: "Develop a module to identify potential collisions using sensor data and predict the time-to-impact."
 applicability: []
+tests:
+  - "com.example.tests.ExampleTest::TEST_SYS_QUAL_003"
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_005"
   date: 2026-11-14

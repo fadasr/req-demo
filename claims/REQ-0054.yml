@@ -7,6 +7,8 @@ claim_id: REQ-0054
 area: automotive-adas/sys-2-req-analysis
 statement: "Develop functionality to initiate emergency braking when a pedestrian is in the collision path."
 applicability: []
+tests:
+  - "com.example.tests.ExampleTest::TEST_SYS_QUAL_004"
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_009"
   date: 2026-11-14
