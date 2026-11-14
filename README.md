@@ -26,6 +26,9 @@ corpus had 220 trace edges, an empty traceability matrix, and no test evidence. 
 | `docs/spec.md`, `docs/trace.md` | generated projections; never edited by hand |
 | `docs/traceability.md` | the full V-model matrix: requirement ↔ design/code ↔ test |
 | `docs/v-model.html` | a rendered architecture graph of the same three views (`archify`) |
+| `docs/components.html` | the req-native component overlay: `arch_overlay.py` colors each software component by its satisfaction outcome |
+| `component-coverage.md` | the overlay's coverage matrix, one row per claim |
+| `docs/components.archify.json` | the component diagram the overlay is built from |
 | `docs/design.md` | how `design/` maps to `req satisfy`, and the token trap |
 | `tools/needs_import.py` | the importer from req, at the commit that added `--links` and `--tests` |
 | `data/` | the two upstream JUnit reports, committed so the test links are reproducible |
@@ -80,6 +83,14 @@ claim's design/code elements, linked tests and derived requirements, plus the co
 `docs/v-model.html` is the same shape as a rendered architecture graph, built with
 [`archify`](https://github.com/tt-a1i/archify) from `docs/v-model.archify.json`; it is a reader's
 view, not a req projection.
+
+The req-native version is `docs/components.html`, produced by req's own
+[`tools/graph/arch_overlay.py`](https://github.com/autox-my/req/blob/main/tools/graph/arch_overlay.py)
+from `docs/components.archify.json`, `req satisfy --format json` and `req trace --format json`.
+Each of the 10 software components cites the design files it is built from; the overlay sets its
+status to the worst satisfaction outcome and lists the claims. All 10 are **HOLDS**, with 1–5
+claims each; `component-coverage.md` is the tool's claim-by-claim matrix. It was validated,
+delivered and browser-checked by archify **7e45f36** (the version req pins).
 
 There is one honest limit: **design ↔ design is not a req edge.** The upstream chain
 `ARCH_001 → SWARCH_001 → IMPL_LKA_*` is flattened — the arch file, the swarch file and the C file

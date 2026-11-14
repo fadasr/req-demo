@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "req-demo \u2014 software components and the claims they satisfy",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/fadasr/req-demo",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "e97ea3df41bac5761028c1f104c19e68b0be665f"
+    },
+    "output": "components.html"
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 5,
+    "gapX": 50,
+    "gapY": 120,
+    "cellW": 220,
+    "cellH": 80
+  },
+  "components": [
+    {
+      "id": "lane",
+      "type": "backend",
+      "label": "Lane detection",
+      "sublabel": "SWARCH_001",
+      "row": 0,
+      "col": 0,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_001.md"
+        },
+        {
+          "path": "design/code/lane_keeping.c"
+        }
+      ]
+    },
+    {
+      "id": "acc",
+      "type": "backend",
+      "label": "Adaptive cruise",
+      "sublabel": "SWARCH_002",
+      "row": 0,
+      "col": 1,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_002.md"
+        },
+        {
+          "path": "design/code/acc.c"
+        }
+      ]
+    },
+    {
+      "id": "collision",
+      "type": "backend",
+      "label": "Collision avoidance",
+      "sublabel": "SWARCH_003",
+      "row": 0,
+      "col": 2,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_003.md"
+        }
+      ]
+    },
+    {
+      "id": "pedestrian",
+      "type": "backend",
+      "label": "Pedestrian detection",
+      "sublabel": "SWARCH_004",
+      "row": 0,
+      "col": 3,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_004.md"
+        }
+      ]
+    },
+    {
+      "id": "alerting",
+      "type": "backend",
+      "label": "Driver alerting",
+      "sublabel": "SWARCH_005",
+      "row": 0,
+      "col": 4,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_005.md"
+        }
+      ]
+    },
+    {
+      "id": "traffic",
+      "type": "backend",
+      "label": "Traffic sign recognition",
+      "sublabel": "SWARCH_007",
+      "row": 1,
+      "col": 0,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_007.md"
+        }
+      ]
+    },
+    {
+      "id": "blind",
+      "type": "backend",
+      "label": "Blind spot monitoring",
+      "sublabel": "SWARCH_008",
+      "row": 1,
+      "col": 1,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_008.md"
+        }
+      ]
+    },
+    {
+      "id": "drowsy",
+      "type": "backend",
+      "label": "Drowsiness monitoring",
+      "sublabel": "SWARCH_009",
+      "row": 1,
+      "col": 2,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_009.md"
+        }
+      ]
+    },
+    {
+      "id": "parking",
+      "type": "backend",
+      "label": "Parking assist",
+      "sublabel": "SWARCH_010",
+      "row": 1,
+      "col": 3,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/architecture/SWARCH_010.md"
+        }
+      ]
+    },
+    {
+      "id": "coffee",
+      "type": "backend",
+      "label": "Coffee machine control",
+      "sublabel": "COMP_*",
+      "row": 1,
+      "col": 4,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/components/COMP_SAFETY_MON.md"
+        },
+        {
+          "path": "design/components/COMP_TEMP_CTRL.md"
+        },
+        {
+          "path": "design/components/COMP_UI_MODULE.md"
+        }
+      ]
+    }
+  ],
+  "connections": []
+}
