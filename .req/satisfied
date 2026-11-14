@@ -2,160 +2,160 @@ schema: req.satisfied/1
 links:
 - element: design/architecture/ARCH_001.md
   claim_id: REQ-0046
-  statement: Develop a lane detection algorithm to process camera input and accurately identify lane markings under various lighting conditions.
+  statement: The lane detection software shall process camera input and accurately identify lane markings under various lighting conditions.
 - element: design/architecture/ARCH_001.md
   claim_id: REQ-0047
-  statement: Implement a control logic module to provide smooth and precise steering corrections based on detected lane positions.
+  statement: The steering control software shall provide smooth and precise steering corrections based on detected lane positions.
 - element: design/architecture/ARCH_002.md
   claim_id: REQ-0048
-  statement: Design a system to measure the distance to the vehicle ahead using radar or LiDAR sensors for adaptive cruise control.
+  statement: The distance measurement software shall measure the distance to the vehicle ahead using radar or LiDAR sensors for adaptive cruise control.
 - element: design/architecture/ARCH_002.md
   claim_id: REQ-0049
-  statement: Create an algorithm to adjust vehicle speed dynamically while maintaining a safe following distance.
+  statement: The speed control software shall adjust vehicle speed dynamically while maintaining a safe following distance.
 - element: design/architecture/ARCH_003.md
   claim_id: REQ-0050
-  statement: Develop a module to identify potential collisions using sensor data and predict the time-to-impact.
+  statement: The collision detection software shall identify potential collisions using sensor data and predict the time-to-impact.
 - element: design/architecture/ARCH_003.md
   claim_id: REQ-0051
-  statement: Implement logic to autonomously apply brakes when a collision is imminent based on predictions from the collision detection module.
+  statement: The autonomous braking software shall apply the brakes autonomously when a collision is imminent, based on predictions from the collision detection module.
 - element: design/architecture/ARCH_004.md
   claim_id: REQ-0052
-  statement: Create a system to detect pedestrians in the vehicle's path using machine learning and sensor fusion.
+  statement: The pedestrian detection software shall detect pedestrians in the vehicle's path using machine learning and sensor fusion.
 - element: design/architecture/ARCH_004.md
   claim_id: REQ-0053
-  statement: Design a mechanism to issue audio or visual alerts when pedestrians are detected near the vehicle.
+  statement: The alerting software shall issue audio or visual alerts when pedestrians are detected near the vehicle.
 - element: design/architecture/ARCH_004.md
   claim_id: REQ-0054
-  statement: Develop functionality to initiate emergency braking when a pedestrian is in the collision path.
+  statement: The emergency braking software shall initiate emergency braking when a pedestrian is in the collision path.
 - element: design/architecture/ARCH_005.md
   claim_id: REQ-0053
-  statement: Design a mechanism to issue audio or visual alerts when pedestrians are detected near the vehicle.
+  statement: The alerting software shall issue audio or visual alerts when pedestrians are detected near the vehicle.
 - element: design/architecture/ARCH_006.md
   claim_id: REQ-0054
-  statement: Develop functionality to initiate emergency braking when a pedestrian is in the collision path.
+  statement: The emergency braking software shall initiate emergency braking when a pedestrian is in the collision path.
 - element: design/architecture/ARCH_007.md
   claim_id: REQ-0055
-  statement: Develop functionality to detect posted speed limit signs from camera input and provide the extracted limit to driver assistance functions.
+  statement: The speed limit recognition software shall detect posted speed limit signs from camera input and provide the extracted limit to driver assistance functions.
 - element: design/architecture/ARCH_008.md
   claim_id: REQ-0056
-  statement: Develop functionality to detect vehicles, motorcycles, and bicycles entering the blind spot zones using rear-corner radar sensors and side-view cameras.
+  statement: The blind spot detection software shall detect vehicles, motorcycles, and bicycles entering the blind spot zones using rear-corner radar sensors and side-view cameras.
 - element: design/architecture/ARCH_008.md
   claim_id: REQ-0057
-  statement: Issue a driver warning when the turn signal is engaged toward a blind spot zone that is currently occupied by another road user.
+  statement: The blind spot warning software shall issue a driver warning when the turn signal is engaged toward a blind spot zone that is currently occupied by another road user.
 - element: design/architecture/ARCH_009.md
   claim_id: REQ-0058
-  statement: Develop functionality to estimate driver eye-aspect ratio and gaze direction from the cabin camera at the cadence required for drowsiness scoring.
+  statement: The drowsiness monitoring software shall estimate driver eye-aspect ratio and gaze direction from the cabin camera at the cadence required for drowsiness scoring.
 - element: design/architecture/ARCH_009.md
   claim_id: REQ-0059
-  statement: Issue progressive driver alerts and propose a break when the drowsiness score exceeds the configured threshold for longer than the calibrated dwell time.
+  statement: The drowsiness alerting software shall issue progressive driver alerts and propose a break when the drowsiness score exceeds the configured threshold for longer than the calibrated dwell time.
 - element: design/architecture/ARCH_010.md
   claim_id: REQ-0060
-  statement: Develop functionality to detect parallel and perpendicular parking slots from ultrasonic distance sensors fused with the surround-view camera system.
+  statement: The parking slot detection software shall detect parallel and perpendicular parking slots from ultrasonic distance sensors fused with the surround-view camera system.
 - element: design/architecture/ARCH_010.md
   claim_id: REQ-0061
-  statement: Plan a feasible park trajectory into the chosen slot and command steering, throttle, and braking actuators to follow it within configured speed and clearance bounds.
+  statement: The parking control software shall plan a feasible park trajectory into the chosen slot and command steering, throttle, and braking actuators to follow it within configured speed and clearance bounds.
 - element: design/architecture/SWARCH_001.md
   claim_id: REQ-0086
-  statement: Develop software to process camera inputs and accurately identify lane markings under various environmental conditions.
+  statement: The lane detection software shall process camera inputs and accurately identify lane markings under various environmental conditions.
 - element: design/architecture/SWARCH_001.md
   claim_id: REQ-0087
-  statement: Implement a feature to trigger warnings if the vehicle deviates from its lane without proper signaling.
+  statement: The lane keeping software shall trigger a warning if the vehicle deviates from its lane without proper signaling.
 - element: design/architecture/SWARCH_001.md
   claim_id: REQ-0088
-  statement: Create an algorithm to calculate and apply corrective steering actions to maintain the vehicle within the detected lane boundaries.
+  statement: The lane keeping software shall calculate and apply corrective steering actions to maintain the vehicle within the detected lane boundaries.
 - element: design/architecture/SWARCH_002.md
   claim_id: REQ-0089
-  statement: Design software to process radar inputs and measure the distance to objects ahead with high precision.
+  statement: The distance measurement software shall process radar inputs and measure the distance to objects ahead with high precision.
 - element: design/architecture/SWARCH_002.md
   claim_id: REQ-0090
-  statement: Implement a module to dynamically adjust the vehicle's speed based on distance measurements and desired following distance.
+  statement: The speed control software shall dynamically adjust the vehicle's speed based on distance measurements and the desired following distance.
 - element: design/architecture/SWARCH_002.md
   claim_id: REQ-0098
-  statement: Implement a feature to adjust vehicle speed based on detected speed limits and road conditions.
+  statement: The speed control software shall adjust vehicle speed based on detected speed limits and road conditions.
 - element: design/architecture/SWARCH_003.md
   claim_id: REQ-0091
-  statement: Develop a feature to estimate collision risk using real-time sensor data and predictive analytics.
+  statement: The collision risk software shall estimate collision risk using real-time sensor data and predictive analytics.
 - element: design/architecture/SWARCH_003.md
   claim_id: REQ-0092
-  statement: Implement a software module to autonomously apply brakes when a collision is imminent.
+  statement: The emergency braking software shall autonomously apply the brakes when a collision is imminent.
 - element: design/architecture/SWARCH_003.md
   claim_id: REQ-0101
-  statement: Develop algorithms to optimize braking force during emergency stops to minimize impact risks.
+  statement: The emergency braking software shall optimize braking force during emergency stops to minimize impact risks.
 - element: design/architecture/SWARCH_004.md
   claim_id: REQ-0093
-  statement: Develop an algorithm to detect pedestrians using sensor fusion techniques, combining camera, LiDAR, and radar data.
+  statement: The pedestrian detection software shall detect pedestrians using sensor fusion techniques that combine camera, LiDAR, and radar data.
 - element: design/architecture/SWARCH_004.md
   claim_id: REQ-0102
-  statement: Implement machine learning models to predict pedestrian movements and improve detection accuracy.
+  statement: The pedestrian detection software shall use machine learning models to predict pedestrian movements and improve detection accuracy.
 - element: design/architecture/SWARCH_004.md
   claim_id: REQ-0105
-  statement: Create functionality to identify crosswalks and prioritize pedestrian safety in such zones.
+  statement: The pedestrian detection software shall identify crosswalks and prioritize pedestrian safety in such zones.
 - element: design/architecture/SWARCH_005.md
   claim_id: REQ-0094
-  statement: Create a system to issue audio and visual alerts when pedestrians are detected near the vehicle's path.
+  statement: The alerting software shall issue audio and visual alerts when pedestrians are detected near the vehicle's path.
 - element: design/architecture/SWARCH_005.md
   claim_id: REQ-0099
-  statement: Create alerts for the driver when objects come within a critical distance.
+  statement: The driver alert software shall create alerts when objects come within a critical distance.
 - element: design/architecture/SWARCH_005.md
   claim_id: REQ-0103
-  statement: Combine audio, visual, and haptic alerts into a unified system for enhanced driver awareness.
+  statement: The alerting software shall combine audio, visual, and haptic alerts into a unified system for enhanced driver awareness.
 - element: design/architecture/SWARCH_006.md
   claim_id: REQ-0095
-  statement: Implement functionality to apply emergency braking when a pedestrian is detected in the collision path.
+  statement: The emergency braking software shall apply emergency braking when a pedestrian is detected in the collision path.
 - element: design/architecture/SWARCH_006.md
   claim_id: REQ-0100
-  statement: Implement tracking software to monitor multiple objects simultaneously and evaluate their threat level.
+  statement: The object tracking software shall track multiple objects simultaneously and evaluate their threat level.
 - element: design/architecture/SWARCH_006.md
   claim_id: REQ-0104
-  statement: Develop software to anticipate emergencies and initiate braking earlier to prevent accidents.
+  statement: The emergency braking software shall anticipate emergencies and initiate braking earlier to prevent accidents.
 - element: design/architecture/SWARCH_007.md
   claim_id: REQ-0106
-  statement: Implement software to detect speed limit signs in camera frames and publish the recognized limit.
+  statement: The speed limit recognition software shall detect speed limit signs in camera frames and publish the recognized limit.
 - element: design/architecture/SWARCH_008.md
   claim_id: REQ-0107
-  statement: Implement sensor fusion software that combines rear-corner radar tracks and side-view camera detections into a single per-zone occupancy state with confidence scoring.
+  statement: The blind spot detection software shall fuse rear-corner radar tracks and side-view camera detections into a single per-zone occupancy state with confidence scoring.
 - element: design/architecture/SWARCH_008.md
   claim_id: REQ-0108
-  statement: Implement arbitration logic that activates the blind spot warning only when the turn signal points toward an occupied zone, suppressing nuisance alerts otherwise.
+  statement: The blind spot warning software shall activate the blind spot warning only when the turn signal points toward an occupied zone, suppressing nuisance alerts otherwise.
 - element: design/architecture/SWARCH_009.md
   claim_id: REQ-0109
-  statement: Implement software to estimate per-frame eye-aspect ratio and gaze direction from cabin camera input under varying lighting conditions.
+  statement: The drowsiness monitoring software shall estimate per-frame eye-aspect ratio and gaze direction from cabin camera input under varying lighting conditions.
 - element: design/architecture/SWARCH_009.md
   claim_id: REQ-0110
-  statement: Aggregate per-frame eye-state observations into a smoothed drowsiness score and emit progressive alerts when the score exceeds calibrated thresholds for the required dwell time.
+  statement: The drowsiness monitoring software shall aggregate per-frame eye-state observations into a smoothed drowsiness score and emit progressive alerts when the score exceeds calibrated thresholds for the required dwell time.
 - element: design/architecture/SWARCH_010.md
   claim_id: REQ-0111
-  statement: Implement software to recognize parallel and perpendicular parking slots from fused ultrasonic ranging and surround-view camera input, and rank them by feasibility.
+  statement: The parking slot detection software shall recognize parallel and perpendicular parking slots from fused ultrasonic ranging and surround-view camera input and rank them by feasibility.
 - element: design/architecture/SWARCH_010.md
   claim_id: REQ-0112
-  statement: Plan and follow a smooth park trajectory into the selected slot, respecting clearance margins, maximum speed, and steering rate limits, with abort behavior on detected obstacles.
+  statement: The parking control software shall plan and follow a smooth park trajectory into the selected slot, respecting clearance margins, maximum speed, and steering rate limits, with abort behavior on detected obstacles.
 - element: design/architecture/SWARCH_011.md
   claim_id: REQ-0086
-  statement: Develop software to process camera inputs and accurately identify lane markings under various environmental conditions.
+  statement: The lane detection software shall process camera inputs and accurately identify lane markings under various environmental conditions.
 - element: design/code/acc.c
   claim_id: REQ-0089
-  statement: Design software to process radar inputs and measure the distance to objects ahead with high precision.
+  statement: The distance measurement software shall process radar inputs and measure the distance to objects ahead with high precision.
 - element: design/code/acc.c
   claim_id: REQ-0090
-  statement: Implement a module to dynamically adjust the vehicle's speed based on distance measurements and desired following distance.
+  statement: The speed control software shall dynamically adjust the vehicle's speed based on distance measurements and the desired following distance.
 - element: design/code/acc.c
   claim_id: REQ-0091
-  statement: Develop a feature to estimate collision risk using real-time sensor data and predictive analytics.
+  statement: The collision risk software shall estimate collision risk using real-time sensor data and predictive analytics.
 - element: design/code/acc.c
   claim_id: REQ-0092
-  statement: Implement a software module to autonomously apply brakes when a collision is imminent.
+  statement: The emergency braking software shall autonomously apply the brakes when a collision is imminent.
 - element: design/code/acc.c
   claim_id: REQ-0098
-  statement: Implement a feature to adjust vehicle speed based on detected speed limits and road conditions.
+  statement: The speed control software shall adjust vehicle speed based on detected speed limits and road conditions.
 - element: design/code/lane_keeping.c
   claim_id: REQ-0086
-  statement: Develop software to process camera inputs and accurately identify lane markings under various environmental conditions.
+  statement: The lane detection software shall process camera inputs and accurately identify lane markings under various environmental conditions.
 - element: design/code/lane_keeping.c
   claim_id: REQ-0087
-  statement: Implement a feature to trigger warnings if the vehicle deviates from its lane without proper signaling.
+  statement: The lane keeping software shall trigger a warning if the vehicle deviates from its lane without proper signaling.
 - element: design/code/lane_keeping.c
   claim_id: REQ-0088
-  statement: Create an algorithm to calculate and apply corrective steering actions to maintain the vehicle within the detected lane boundaries.
+  statement: The lane keeping software shall calculate and apply corrective steering actions to maintain the vehicle within the detected lane boundaries.
 - element: design/components/COMP_SAFETY_MON.md
   claim_id: REQ-0115
   statement: The software shall continuously monitor water temperature and trigger an emergency shutdown within 100ms if temperature exceeds 100°C to prevent boiling and potential hazards.

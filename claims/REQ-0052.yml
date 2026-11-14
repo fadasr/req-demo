@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0052
 area: automotive-adas/sys-2-req-analysis
-statement: "Create a system to detect pedestrians in the vehicle's path using machine learning and sensor fusion."
+statement: "The pedestrian detection software shall detect pedestrians in the vehicle's path using machine learning and sensor fusion."
 applicability: []
 tests:
   - "com.example.tests.ExampleTest::TEST_SYS_QUAL_004"

@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0053
 area: automotive-adas/sys-2-req-analysis
-statement: "Design a mechanism to issue audio or visual alerts when pedestrians are detected near the vehicle."
+statement: "The alerting software shall issue audio or visual alerts when pedestrians are detected near the vehicle."
 applicability: []
 tests:
   - "com.example.tests.ExampleTest::TEST_SYS_QUAL_004"

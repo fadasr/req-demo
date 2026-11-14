@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0090
 area: automotive-adas/swe-1-sw-req-analysis
-statement: "Implement a module to dynamically adjust the vehicle's speed based on distance measurements and desired following distance."
+statement: "The speed control software shall dynamically adjust the vehicle's speed based on distance measurements and the desired following distance."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_005"

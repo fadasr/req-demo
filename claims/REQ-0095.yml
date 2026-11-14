@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0095
 area: automotive-adas/swe-1-sw-req-analysis
-statement: "Implement functionality to apply emergency braking when a pedestrian is detected in the collision path."
+statement: "The emergency braking software shall apply emergency braking when a pedestrian is detected in the collision path."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_010"

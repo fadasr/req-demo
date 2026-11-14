@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0046
 area: automotive-adas/sys-2-req-analysis
-statement: "Develop a lane detection algorithm to process camera input and accurately identify lane markings under various lighting conditions."
+statement: "The lane detection software shall process camera input and accurately identify lane markings under various lighting conditions."
 applicability: []
 tests:
   - "com.example.tests.ExampleTest::TEST_SYS_QUAL_001"

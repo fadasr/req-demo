@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0093
 area: automotive-adas/swe-1-sw-req-analysis
-statement: "Develop an algorithm to detect pedestrians using sensor fusion techniques, combining camera, LiDAR, and radar data."
+statement: "The pedestrian detection software shall detect pedestrians using sensor fusion techniques that combine camera, LiDAR, and radar data."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_008"

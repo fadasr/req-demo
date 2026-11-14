@@ -2,11 +2,136 @@
 # Alias sets must be disjoint — a surface that resolved to two subjects would be two
 # different requirements sharing a name. An unregistered surface stays literal in the
 # parse (never silently collapsed), so add an alias here before you rely on one.
+#
+# This corpus's vocabulary: the vehicle controllers, the software subsystems, and the
+# coffee machine. The abbreviations and the spelled-out names are one subject each; that
+# is what makes "the VDC" and "the vehicle dynamics controller" the same requirement
+# subject instead of two.
 schema: req.subject_registry/0
-version: 1
+version: 2
 subjects:
-  API:
-    label: The API
+  SYSTEM:
+    label: The system
     aliases:
-      - the api
-      - api
+      - the system
+  VDC:
+    label: The vehicle dynamics controller
+    aliases:
+      - the vdc
+      - vehicle dynamics controller
+      - the vehicle dynamics controller
+  WRDC:
+    label: The wheel rotational dynamics controller
+    aliases:
+      - the wrdc
+      - wheel rotational dynamics controller
+      - the wheel rotational dynamics controller
+  BRAKE_CONTROLLER:
+    label: The brake controller
+    aliases:
+      - the brake controller
+  BRAKE_SYSTEM:
+    label: The brake system
+    aliases:
+      - the brake system
+  STEERING_CONTROLLER:
+    label: The steering controller
+    aliases:
+      - the steering controller
+  STEERING_SYSTEM:
+    label: The steering system
+    aliases:
+      - the steering system
+  DRIVE_CONTROLLER:
+    label: The drive controller
+    aliases:
+      - the drive controller
+  DRIVE_SYSTEM:
+    label: The drive system
+    aliases:
+      - the drive system
+  COFFEE_MACHINE:
+    label: The coffee machine
+    aliases:
+      - the coffee machine
+      - coffee machine
+  ANTI_LOCK:
+    label: Anti-lock control
+    aliases:
+      - anti-lock control
+  ANTI_SPIN:
+    label: Anti-spin control
+    aliases:
+      - anti-spin control
+  LANE_DETECTION:
+    label: The lane detection software
+    aliases:
+      - the lane detection software
+  LANE_KEEPING:
+    label: The lane keeping software
+    aliases:
+      - the lane keeping software
+  DISTANCE_MEASUREMENT:
+    label: The distance measurement software
+    aliases:
+      - the distance measurement software
+  SPEED_CONTROL:
+    label: The speed control software
+    aliases:
+      - the speed control software
+  EMERGENCY_BRAKING:
+    label: The emergency braking software
+    aliases:
+      - the emergency braking software
+  PEDESTRIAN_DETECTION:
+    label: The pedestrian detection software
+    aliases:
+      - the pedestrian detection software
+  ALERTING:
+    label: The alerting software
+    aliases:
+      - the alerting software
+  SPEED_LIMIT_RECOGNITION:
+    label: The speed limit recognition software
+    aliases:
+      - the speed limit recognition software
+  BLIND_SPOT_DETECTION:
+    label: The blind spot detection software
+    aliases:
+      - the blind spot detection software
+  BLIND_SPOT_WARNING:
+    label: The blind spot warning software
+    aliases:
+      - the blind spot warning software
+  DROWSINESS_MONITORING:
+    label: The drowsiness monitoring software
+    aliases:
+      - the drowsiness monitoring software
+  DROWSINESS_ALERTING:
+    label: The drowsiness alerting software
+    aliases:
+      - the drowsiness alerting software
+  PARKING_SLOT_DETECTION:
+    label: The parking slot detection software
+    aliases:
+      - the parking slot detection software
+  PARKING_CONTROL:
+    label: The parking control software
+    aliases:
+      - the parking control software
+  OBJECT_TRACKING:
+    label: The object tracking software
+    aliases:
+      - the object tracking software
+  DRIVER_ALERT:
+    label: The driver alert software
+    aliases:
+      - the driver alert software
+  TURN_SIGNAL_LEFT:
+    label: The turn signal logic for left-hand drive vehicles
+    aliases:
+      - the turn signal logic for left-hand drive vehicles
+  TURN_SIGNAL_RIGHT:
+    label: The turn signal logic for right-hand drive vehicles
+    aliases:
+      - the turn signal logic for right-hand drive vehicles

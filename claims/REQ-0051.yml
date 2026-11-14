@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0051
 area: automotive-adas/sys-2-req-analysis
-statement: "Implement logic to autonomously apply brakes when a collision is imminent based on predictions from the collision detection module."
+statement: "The autonomous braking software shall apply the brakes autonomously when a collision is imminent, based on predictions from the collision detection module."
 applicability: []
 tests:
   - "com.example.tests.ExampleTest::TEST_SYS_QUAL_003"

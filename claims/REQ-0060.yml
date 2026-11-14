@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0060
 area: automotive-adas/sys-2-req-analysis
-statement: "Develop functionality to detect parallel and perpendicular parking slots from ultrasonic distance sensors fused with the surround-view camera system."
+statement: "The parking slot detection software shall detect parallel and perpendicular parking slots from ultrasonic distance sensors fused with the surround-view camera system."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_015"

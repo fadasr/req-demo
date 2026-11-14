@@ -14,35 +14,35 @@ A claim's design elements are the files under `design/` that declare `req-satisf
 
 | claim | requirement | design / code | tests | derives from |
 | --- | --- | --- | --- | --- |
-| REQ-0086 | Develop software to process camera inputs and accurately identify lane markings under v... | `design/architecture/SWARCH_001.md`<br>`design/architecture/SWARCH_011.md`<br>`design/code/lane_keeping.c` | — | links → REQ-0046 |
-| REQ-0087 | Implement a feature to trigger warnings if the vehicle deviates from its lane without p... | `design/architecture/SWARCH_001.md`<br>`design/code/lane_keeping.c` | — | links → REQ-0047 |
-| REQ-0088 | Create an algorithm to calculate and apply corrective steering actions to maintain the... | `design/architecture/SWARCH_001.md`<br>`design/code/lane_keeping.c` | — | links → REQ-0047 |
-| REQ-0089 | Design software to process radar inputs and measure the distance to objects ahead with... | `design/architecture/SWARCH_002.md`<br>`design/code/acc.c` | — | links → REQ-0048 |
-| REQ-0090 | Implement a module to dynamically adjust the vehicle's speed based on distance measurem... | `design/architecture/SWARCH_002.md`<br>`design/code/acc.c` | — | links → REQ-0049 |
-| REQ-0091 | Develop a feature to estimate collision risk using real-time sensor data and predictive... | `design/architecture/SWARCH_003.md`<br>`design/code/acc.c` | — | links → REQ-0050 |
-| REQ-0092 | Implement a software module to autonomously apply brakes when a collision is imminent. | `design/architecture/SWARCH_003.md`<br>`design/code/acc.c` | — | links → REQ-0051 |
-| REQ-0093 | Develop an algorithm to detect pedestrians using sensor fusion techniques, combining ca... | `design/architecture/SWARCH_004.md` | — | links → REQ-0052 |
-| REQ-0094 | Create a system to issue audio and visual alerts when pedestrians are detected near the... | `design/architecture/SWARCH_005.md` | — | links → REQ-0053 |
-| REQ-0095 | Implement functionality to apply emergency braking when a pedestrian is detected in the... | `design/architecture/SWARCH_006.md` | — | links → REQ-0054 |
-| REQ-0096 | Provide a visual representation of detected lane markings on the vehicle's dashboard fo... | — | — | links → REQ-0046<br>links → REQ-0086 |
-| REQ-0097 | Develop software to adapt lane marking detection under challenging conditions, such as... | — | — | links → REQ-0046 |
-| REQ-0098 | Implement a feature to adjust vehicle speed based on detected speed limits and road con... | `design/architecture/SWARCH_002.md`<br>`design/code/acc.c` | — | links → REQ-0049 |
-| REQ-0099 | Create alerts for the driver when objects come within a critical distance. | `design/architecture/SWARCH_005.md` | — | links → REQ-0048 |
-| REQ-0100 | Implement tracking software to monitor multiple objects simultaneously and evaluate the... | `design/architecture/SWARCH_006.md` | — | links → REQ-0050 |
-| REQ-0101 | Develop algorithms to optimize braking force during emergency stops to minimize impact... | `design/architecture/SWARCH_003.md` | — | links → REQ-0051 |
-| REQ-0102 | Implement machine learning models to predict pedestrian movements and improve detection... | `design/architecture/SWARCH_004.md` | — | links → REQ-0052 |
-| REQ-0103 | Combine audio, visual, and haptic alerts into a unified system for enhanced driver awar... | `design/architecture/SWARCH_005.md` | — | links → REQ-0053 |
-| REQ-0104 | Develop software to anticipate emergencies and initiate braking earlier to prevent acci... | `design/architecture/SWARCH_006.md` | — | links → REQ-0054 |
-| REQ-0105 | Create functionality to identify crosswalks and prioritize pedestrian safety in such zo... | `design/architecture/SWARCH_004.md` | — | links → REQ-0052 |
-| REQ-0106 | Implement software to detect speed limit signs in camera frames and publish the recogni... | `design/architecture/SWARCH_007.md` | — | links → REQ-0055 |
-| REQ-0107 | Implement sensor fusion software that combines rear-corner radar tracks and side-view c... | `design/architecture/SWARCH_008.md` | — | links → REQ-0056 |
-| REQ-0108 | Implement arbitration logic that activates the blind spot warning only when the turn si... | `design/architecture/SWARCH_008.md` | — | links → REQ-0057 |
-| REQ-0109 | Implement software to estimate per-frame eye-aspect ratio and gaze direction from cabin... | `design/architecture/SWARCH_009.md` | — | links → REQ-0058 |
-| REQ-0110 | Aggregate per-frame eye-state observations into a smoothed drowsiness score and emit pr... | `design/architecture/SWARCH_009.md` | — | links → REQ-0059 |
-| REQ-0111 | Implement software to recognize parallel and perpendicular parking slots from fused ult... | `design/architecture/SWARCH_010.md` | — | links → REQ-0060 |
-| REQ-0112 | Plan and follow a smooth park trajectory into the selected slot, respecting clearance m... | `design/architecture/SWARCH_010.md` | — | links → REQ-0061 |
-| REQ-0113 | Implement turn signal logic optimized for left-hand drive vehicles, prioritizing right-... | — | — | — |
-| REQ-0136 | Implement turn signal logic optimized for right-hand drive vehicles, prioritizing left-... | — | — | — |
+| REQ-0086 | The lane detection software shall process camera inputs and accurately identify lane ma... | `design/architecture/SWARCH_001.md`<br>`design/architecture/SWARCH_011.md`<br>`design/code/lane_keeping.c` | — | links → REQ-0046 |
+| REQ-0087 | The lane keeping software shall trigger a warning if the vehicle deviates from its lane... | `design/architecture/SWARCH_001.md`<br>`design/code/lane_keeping.c` | — | links → REQ-0047 |
+| REQ-0088 | The lane keeping software shall calculate and apply corrective steering actions to main... | `design/architecture/SWARCH_001.md`<br>`design/code/lane_keeping.c` | — | links → REQ-0047 |
+| REQ-0089 | The distance measurement software shall process radar inputs and measure the distance t... | `design/architecture/SWARCH_002.md`<br>`design/code/acc.c` | — | links → REQ-0048 |
+| REQ-0090 | The speed control software shall dynamically adjust the vehicle's speed based on distan... | `design/architecture/SWARCH_002.md`<br>`design/code/acc.c` | — | links → REQ-0049 |
+| REQ-0091 | The collision risk software shall estimate collision risk using real-time sensor data a... | `design/architecture/SWARCH_003.md`<br>`design/code/acc.c` | — | links → REQ-0050 |
+| REQ-0092 | The emergency braking software shall autonomously apply the brakes when a collision is... | `design/architecture/SWARCH_003.md`<br>`design/code/acc.c` | — | links → REQ-0051 |
+| REQ-0093 | The pedestrian detection software shall detect pedestrians using sensor fusion techniqu... | `design/architecture/SWARCH_004.md` | — | links → REQ-0052 |
+| REQ-0094 | The alerting software shall issue audio and visual alerts when pedestrians are detected... | `design/architecture/SWARCH_005.md` | — | links → REQ-0053 |
+| REQ-0095 | The emergency braking software shall apply emergency braking when a pedestrian is detec... | `design/architecture/SWARCH_006.md` | — | links → REQ-0054 |
+| REQ-0096 | The dashboard software shall provide a visual representation of detected lane markings... | — | — | links → REQ-0046<br>links → REQ-0086 |
+| REQ-0097 | The lane detection software shall adapt lane marking detection under challenging condit... | — | — | links → REQ-0046 |
+| REQ-0098 | The speed control software shall adjust vehicle speed based on detected speed limits an... | `design/architecture/SWARCH_002.md`<br>`design/code/acc.c` | — | links → REQ-0049 |
+| REQ-0099 | The driver alert software shall create alerts when objects come within a critical dista... | `design/architecture/SWARCH_005.md` | — | links → REQ-0048 |
+| REQ-0100 | The object tracking software shall track multiple objects simultaneously and evaluate t... | `design/architecture/SWARCH_006.md` | — | links → REQ-0050 |
+| REQ-0101 | The emergency braking software shall optimize braking force during emergency stops to m... | `design/architecture/SWARCH_003.md` | — | links → REQ-0051 |
+| REQ-0102 | The pedestrian detection software shall use machine learning models to predict pedestri... | `design/architecture/SWARCH_004.md` | — | links → REQ-0052 |
+| REQ-0103 | The alerting software shall combine audio, visual, and haptic alerts into a unified sys... | `design/architecture/SWARCH_005.md` | — | links → REQ-0053 |
+| REQ-0104 | The emergency braking software shall anticipate emergencies and initiate braking earlie... | `design/architecture/SWARCH_006.md` | — | links → REQ-0054 |
+| REQ-0105 | The pedestrian detection software shall identify crosswalks and prioritize pedestrian s... | `design/architecture/SWARCH_004.md` | — | links → REQ-0052 |
+| REQ-0106 | The speed limit recognition software shall detect speed limit signs in camera frames an... | `design/architecture/SWARCH_007.md` | — | links → REQ-0055 |
+| REQ-0107 | The blind spot detection software shall fuse rear-corner radar tracks and side-view cam... | `design/architecture/SWARCH_008.md` | — | links → REQ-0056 |
+| REQ-0108 | The blind spot warning software shall activate the blind spot warning only when the tur... | `design/architecture/SWARCH_008.md` | — | links → REQ-0057 |
+| REQ-0109 | The drowsiness monitoring software shall estimate per-frame eye-aspect ratio and gaze d... | `design/architecture/SWARCH_009.md` | — | links → REQ-0058 |
+| REQ-0110 | The drowsiness monitoring software shall aggregate per-frame eye-state observations int... | `design/architecture/SWARCH_009.md` | — | links → REQ-0059 |
+| REQ-0111 | The parking slot detection software shall recognize parallel and perpendicular parking... | `design/architecture/SWARCH_010.md` | — | links → REQ-0060 |
+| REQ-0112 | The parking control software shall plan and follow a smooth park trajectory into the se... | `design/architecture/SWARCH_010.md` | — | links → REQ-0061 |
+| REQ-0113 | The turn signal logic for left-hand drive vehicles shall prioritize right-side mirror c... | — | — | — |
+| REQ-0136 | The turn signal logic for right-hand drive vehicles shall prioritize left-side mirror c... | — | — | — |
 
 ### automotive-adas/sys-1-req-elicitation
 
@@ -61,22 +61,22 @@ A claim's design elements are the files under `design/` that declare `req-satisf
 
 | claim | requirement | design / code | tests | derives from |
 | --- | --- | --- | --- | --- |
-| REQ-0046 | Develop a lane detection algorithm to process camera input and accurately identify lane... | `design/architecture/ARCH_001.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_001` | links → REQ-0038 |
-| REQ-0047 | Implement a control logic module to provide smooth and precise steering corrections bas... | `design/architecture/ARCH_001.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_001` | links → REQ-0038 |
-| REQ-0048 | Design a system to measure the distance to the vehicle ahead using radar or LiDAR senso... | `design/architecture/ARCH_002.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_002` | links → REQ-0039 |
-| REQ-0049 | Create an algorithm to adjust vehicle speed dynamically while maintaining a safe follow... | `design/architecture/ARCH_002.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_002` | links → REQ-0039 |
-| REQ-0050 | Develop a module to identify potential collisions using sensor data and predict the tim... | `design/architecture/ARCH_003.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_003` | links → REQ-0040 |
-| REQ-0051 | Implement logic to autonomously apply brakes when a collision is imminent based on pred... | `design/architecture/ARCH_003.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_003` | links → REQ-0040 |
-| REQ-0052 | Create a system to detect pedestrians in the vehicle's path using machine learning and... | `design/architecture/ARCH_004.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
-| REQ-0053 | Design a mechanism to issue audio or visual alerts when pedestrians are detected near t... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_005.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
-| REQ-0054 | Develop functionality to initiate emergency braking when a pedestrian is in the collisi... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_006.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
-| REQ-0055 | Develop functionality to detect posted speed limit signs from camera input and provide... | `design/architecture/ARCH_007.md` | — | links → REQ-0042 |
-| REQ-0056 | Develop functionality to detect vehicles, motorcycles, and bicycles entering the blind... | `design/architecture/ARCH_008.md` | — | links → REQ-0043 |
-| REQ-0057 | Issue a driver warning when the turn signal is engaged toward a blind spot zone that is... | `design/architecture/ARCH_008.md` | — | links → REQ-0043 |
-| REQ-0058 | Develop functionality to estimate driver eye-aspect ratio and gaze direction from the c... | `design/architecture/ARCH_009.md` | — | links → REQ-0044 |
-| REQ-0059 | Issue progressive driver alerts and propose a break when the drowsiness score exceeds t... | `design/architecture/ARCH_009.md` | — | links → REQ-0044 |
-| REQ-0060 | Develop functionality to detect parallel and perpendicular parking slots from ultrasoni... | `design/architecture/ARCH_010.md` | — | links → REQ-0045 |
-| REQ-0061 | Plan a feasible park trajectory into the chosen slot and command steering, throttle, an... | `design/architecture/ARCH_010.md` | — | links → REQ-0045 |
+| REQ-0046 | The lane detection software shall process camera input and accurately identify lane mar... | `design/architecture/ARCH_001.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_001` | links → REQ-0038 |
+| REQ-0047 | The steering control software shall provide smooth and precise steering corrections bas... | `design/architecture/ARCH_001.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_001` | links → REQ-0038 |
+| REQ-0048 | The distance measurement software shall measure the distance to the vehicle ahead using... | `design/architecture/ARCH_002.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_002` | links → REQ-0039 |
+| REQ-0049 | The speed control software shall adjust vehicle speed dynamically while maintaining a s... | `design/architecture/ARCH_002.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_002` | links → REQ-0039 |
+| REQ-0050 | The collision detection software shall identify potential collisions using sensor data... | `design/architecture/ARCH_003.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_003` | links → REQ-0040 |
+| REQ-0051 | The autonomous braking software shall apply the brakes autonomously when a collision is... | `design/architecture/ARCH_003.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_003` | links → REQ-0040 |
+| REQ-0052 | The pedestrian detection software shall detect pedestrians in the vehicle's path using... | `design/architecture/ARCH_004.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
+| REQ-0053 | The alerting software shall issue audio or visual alerts when pedestrians are detected... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_005.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
+| REQ-0054 | The emergency braking software shall initiate emergency braking when a pedestrian is in... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_006.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
+| REQ-0055 | The speed limit recognition software shall detect posted speed limit signs from camera... | `design/architecture/ARCH_007.md` | — | links → REQ-0042 |
+| REQ-0056 | The blind spot detection software shall detect vehicles, motorcycles, and bicycles ente... | `design/architecture/ARCH_008.md` | — | links → REQ-0043 |
+| REQ-0057 | The blind spot warning software shall issue a driver warning when the turn signal is en... | `design/architecture/ARCH_008.md` | — | links → REQ-0043 |
+| REQ-0058 | The drowsiness monitoring software shall estimate driver eye-aspect ratio and gaze dire... | `design/architecture/ARCH_009.md` | — | links → REQ-0044 |
+| REQ-0059 | The drowsiness alerting software shall issue progressive driver alerts and propose a br... | `design/architecture/ARCH_009.md` | — | links → REQ-0044 |
+| REQ-0060 | The parking slot detection software shall detect parallel and perpendicular parking slo... | `design/architecture/ARCH_010.md` | — | links → REQ-0045 |
+| REQ-0061 | The parking control software shall plan a feasible park trajectory into the chosen slot... | `design/architecture/ARCH_010.md` | — | links → REQ-0045 |
 
 ### coffee-machine/requirements
 

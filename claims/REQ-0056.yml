@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0056
 area: automotive-adas/sys-2-req-analysis
-statement: "Develop functionality to detect vehicles, motorcycles, and bicycles entering the blind spot zones using rear-corner radar sensors and side-view cameras."
+statement: "The blind spot detection software shall detect vehicles, motorcycles, and bicycles entering the blind spot zones using rear-corner radar sensors and side-view cameras."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_011"

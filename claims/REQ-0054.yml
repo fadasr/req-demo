@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0054
 area: automotive-adas/sys-2-req-analysis
-statement: "Develop functionality to initiate emergency braking when a pedestrian is in the collision path."
+statement: "The emergency braking software shall initiate emergency braking when a pedestrian is in the collision path."
 applicability: []
 tests:
   - "com.example.tests.ExampleTest::TEST_SYS_QUAL_004"

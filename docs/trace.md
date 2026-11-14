@@ -1,4 +1,4 @@
-<!-- req projection: generator=req trace | rules_v=9 | selection=none | claims=133 | identity=sha256:57a3f1b9c6fc92945baef7e58d208f3b39bc08df78e73ea7228d4ccb7c397ce6 -->
+<!-- req projection: generator=req trace | rules_v=9 | selection=none | claims=133 | identity=sha256:0c862beca0719a270eb1966858a28b7c721e174004302a2c965bce3670fa7a10 -->
 # Traceability: (no context: nothing is decided by the caller)
 edges are stored once, on the outgoing side (REQ-0020); the incoming
 view below is derived by traversal, never stored

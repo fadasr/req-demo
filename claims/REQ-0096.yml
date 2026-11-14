@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0096
 area: automotive-adas/swe-1-sw-req-analysis
-statement: "Provide a visual representation of detected lane markings on the vehicle's dashboard for driver awareness."
+statement: "The dashboard software shall provide a visual representation of detected lane markings for driver awareness."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_011"

@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0107
 area: automotive-adas/swe-1-sw-req-analysis
-statement: "Implement sensor fusion software that combines rear-corner radar tracks and side-view camera detections into a single per-zone occupancy state with confidence scoring."
+statement: "The blind spot detection software shall fuse rear-corner radar tracks and side-view camera detections into a single per-zone occupancy state with confidence scoring."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_022"

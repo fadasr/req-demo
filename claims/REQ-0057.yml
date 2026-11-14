@@ -5,7 +5,7 @@
 schema: req.claim/3
 claim_id: REQ-0057
 area: automotive-adas/sys-2-req-analysis
-statement: "Issue a driver warning when the turn signal is engaged toward a blind spot zone that is currently occupied by another road user."
+statement: "The blind spot warning software shall issue a driver warning when the turn signal is engaged toward a blind spot zone that is currently occupied by another road user."
 applicability: []
 rationale:
   source: "https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_012"
