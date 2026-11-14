@@ -8,22 +8,27 @@ drift, gate, audit.
 
 The point is to **pressure-test req on other people's prose** and turn what hurts into small
 changes. The first such change is [PR #86](https://github.com/autox-my/req/pull/86): the importer
-now carries typed links with `--links`, because without it this corpus had 220 trace edges and an
-empty traceability matrix. See [`FINDINGS.md`](FINDINGS.md) for everything the demo exposed.
+now carries typed links (`--links`) and JUnit evidence (`--tests`), because without them this
+corpus had 220 trace edges, an empty traceability matrix, and no test evidence. See
+[`FINDINGS.md`](FINDINGS.md) for everything the demo exposed.
 
 ## What is here
 
 | path | what |
 | --- | --- |
-| `claims/` | 135 req claims, drafted from the export and then edited (one rejection, two variant claims, three test links, one pin) |
+| `claims/` | 135 req claims, drafted from the export and then edited (one rejection, two variant claims, 16 test links on 13 claims, one pin) |
 | `.req/areas` | the reading layout, one area per source document |
 | `.req/variants` | `steering_side=left` and `steering_side=right`, the upstream's vehicle variants as selectors |
 | `.req/completeness` | the variant roots and the orphaned coffee-machine root, declared unrelated on purpose |
 | `.req/projections` | the two committed views `req check` verifies |
+| `.req/design`, `.req/satisfied` | the design roots and the recorded `req-satisfies:` links (ADR 0040) |
+| `design/` | 26 architecture, component and code elements, each declaring what it satisfies |
 | `docs/spec.md`, `docs/trace.md` | generated projections; never edited by hand |
+| `docs/traceability.md` | the full V-model matrix: requirement ↔ design/code ↔ test |
+| `docs/design.md` | how `design/` maps to `req satisfy`, and the token trap |
 | `tools/needs_import.py` | the importer from req, at the commit that added `--links` and `--tests` |
-| `data/coffee_machine_junit.xml` | the upstream JUnit report, committed so the test links are reproducible |
-| `scripts/` | rebuild, import, and the drift walkthrough |
+| `data/` | the two upstream JUnit reports, committed so the test links are reproducible |
+| `scripts/` | rebuild, import, design build, satisfaction record, trace matrix, drift |
 | `upstream/` | the source checkout (ignored; pinned by `scripts/build-upstream.sh`) |
 | `build/` | generated reports (`needs.json`, command captures; ignored) |
 
@@ -37,7 +42,7 @@ counts below are this corpus; `structured` means `req canon` derived a modality 
 | --- | ---: | ---: | ---: | --- |
 | 🧰 Basic Example | 0 | — | — | feature showcase, not obligations: `EX_REQ_002` is "Some content"; `EX_REQ_001` contains images and bold markup and is skipped as `rst directive`; the imported needs have no content; external needs are not in a Sphinx-Needs export at all |
 | ☕️ Coffee Machine | 8 | 7 | 5 | system requirements + software requirements; `SWREQ_BREW_STRENGTH` is skipped (multi-paragraph); 7 JUnit test links on 4 claims |
-| 🚗 Automotive ADAS | 53 | 7 | 44 | stakeholder needs + SYS/SWE requirements + one authored right-hand-drive variant claim; the task-style prose ("Develop…", "Implement…") is mostly unstructured |
+| 🚗 Automotive ADAS | 53 | 7 | 44 | stakeholder needs + SYS/SWE requirements + one authored right-hand-drive variant claim; 9 qualification test links, 3 failing; the task-style prose ("Develop…", "Implement…") is mostly unstructured |
 | 🛡️ ISO 26262 Safety | 74 | 41 | 171 | HARA → safety goals → FSR → system-requirement chain; the best-structured example, and most of the corpus's edges |
 | **total** | **135** | **55** | **220** | |
 
@@ -45,6 +50,51 @@ The Basic Example is deliberately zero claims. Its Sphinx-Needs objects demonstr
 filtering, imported needs and external needs; none of them is an obligation a person would
 ratify. The importer drafts `EX_REQ_002` and a human rejects it — that rejection is part of the
 demo, not a gap.
+
+## The V-model, as req can express it
+
+The upstream's traceability page links requirements to architecture, design, code and tests.
+req keeps those as three separate, checkable views rather than one graph:
+
+| edge | req mechanism | this corpus |
+| --- | --- | --- |
+| requirement ↔ requirement | claim `relations` | 220 edges (`req trace`) |
+| requirement ↔ architecture / design / code | `req-satisfies:` in a design file | 26 elements, 56 links (`req satisfy`) |
+| requirement ↔ test | claim `tests:`, a JUnit `classname::name` | 16 links on 13 claims |
+
+`design/` holds the translation: one file per upstream `arch`, `swarch` and `component` need, plus
+the two annotated C files, each declaring the claims it satisfies ([details](docs/design.md)).
+`scripts/record-satisfaction.sh` is the human act (`req satisfy --record`) that writes
+`.req/satisfied`; all 56 links **HOLD**.
+
+```bash
+scripts/build-design.py --write           # (re)write design/ from the export
+scripts/record-satisfaction.sh            # record every req-satisfies: link
+req satisfy                               # 56 links declared, verdict PASS
+scripts/build-trace-matrix.py --out docs/traceability.md
+```
+
+`docs/traceability.md` joins the three views into the matrix a reader expects: per area, each
+claim's design/code elements, linked tests and derived requirements, plus the coverage gaps.
+
+There is one honest limit: **design ↔ design is not a req edge.** The upstream chain
+`ARCH_001 → SWARCH_001 → IMPL_LKA_*` is flattened — the arch file, the swarch file and the C file
+all satisfy the same requirement, and the matrix shows them side by side. A design-to-design
+relation would make the architecture needs claims, which they are not.
+
+The tests are real, and so is the failure: 4 Coffee Machine claims pass their unit tests, while
+9 ADAS claims are linked to the SYS.5 qualification report, whose three failing cases and one
+skipped case make `req gate` **FAIL**:
+
+```bash
+req gate steering_side=left \
+  --test-report data/coffee_machine_junit.xml --test-report data/adas_junit.xml
+# counts: 134 applying · 13 linked · 121 unlinked · 4 passed · 9 failed · 0 not in the report
+# verdict: FAIL — a defect in a claim this variant includes
+```
+
+With no report (the default `req check`), those links are **UNVERIFIABLE**, not a pass: the
+evidence cannot be judged, so the gate says so.
 
 ## The source, pinned
 
@@ -72,8 +122,11 @@ existing corpus, so a fresh import means a fresh `claims/`:
 ```bash
 req init                                  # only for a fresh corpus
 scripts/build-upstream.sh
-scripts/import.sh                         # types, --links, --areas; prints the accounting
+scripts/import.sh                         # types, --links, --tests, --areas; prints the accounting
 req canon                                 # the parse each claim derives
+scripts/build-design.py --write           # design/ from the arch/swarch/component/impl needs
+scripts/record-satisfaction.sh            # record the req-satisfies: links
+scripts/build-trace-matrix.py --out docs/traceability.md
 ```
 
 The import report on this export:
@@ -86,9 +139,9 @@ needs 362 = drafted 135 + skipped 8 + not selected 219
 links: 220 relation(s) on 101 of 135 drafted needs
        (derives_from 152, implements 19, links 44, reqs 5);
        119 target(s) not carried (self 2, target skipped 1, target type not selected 116)
-tests: 7 test link(s) on 4 of 135 drafted needs; 69 test need(s) (4 with a case, 65 without);
-       6 test case(s) (6 passed, 0 failed, 0 skipped, 0 malformed, 0 naming no test need)
-       in data/coffee_machine_junit.xml;
+tests: 16 test link(s) on 13 of 135 drafted needs; 69 test need(s) (8 with a case, 61 without);
+       10 test case(s) (6 passed, 3 failed, 1 skipped, 0 malformed, 0 naming no test need)
+       in data/coffee_machine_junit.xml, data/adas_junit.xml;
        1 target(s) not carried (target not drafted 1)
 ```
 
@@ -103,18 +156,21 @@ not a bug: the skipped item is a decision for a person.
 req canon                                  # 135 claims, 80 unstructured, 20 with lints
 req trace | head -40                       # 220 stored edges, 66 targets receive one
 req impact REQ-0038                        # 7 dependents, nearest first
+req satisfy                                # 56 design/code links, all HOLD
 req select steering_side=right             # REQ-0136 applies, REQ-0113 does not
-req gate steering_side=left --test-report data/coffee_machine_junit.xml
-req check                                  # both variants, both projections, completeness; one verdict
+req gate steering_side=left --test-report data/coffee_machine_junit.xml \
+    --test-report data/adas_junit.xml      # FAIL: 4 passed, 9 failed
+req check                                  # both variants, both projections, completeness
 req audit                                  # coverage and provenance, unratified by design
 ```
 
-The gate's flagship answer is **UNVERIFIABLE**, and that is the correct answer here: 131 of 134
-applying claims have no linked test, so `tests_linked` cannot be confirmed even though every
-structural policy passes. The demo links four coffee-machine claims to the upstream's real JUnit
-report (`4 linked · 4 passed · 0 failed`) to show the other side of the same policy. The links can
-be drafted automatically now: `needs_import.py --tests <junit.xml> --test-type test --test-link
-specs` proposes them from the test need's own `specs` links.
+Without a test report the gate's flagship answer is **UNVERIFIABLE**, and that is correct: 121
+of 134 applying claims have no linked test, so `tests_linked` cannot be confirmed even though
+every structural policy passes and all 56 design/code links HOLD. With the two real reports the
+answer becomes **FAIL** — nine ADAS claims are linked to three failing qualification cases — which
+is the policy doing its job, not a demo defect. The links can be drafted automatically:
+`needs_import.py --tests <junit.xml> --test-type test --test-link specs` proposes them from the
+test need's own links.
 
 `req diff` is in `scripts/demo-drift.sh`: it clones this repository into a temporary directory,
 weakens the 100 ms over-temperature shutdown to 500 ms, and asks req what moved:
@@ -132,8 +188,8 @@ The import is a draft, never a ratification (ADR 0004). In this corpus the usefu
    `shall`. The 20 lint findings are the work list (`untestable_qualifier`, `multiple_obligations`,
    `uncovered_content`, …).
 2. **Pin the load-bearing bounds** (the demo pins REQ-0115 at `LE 0.1 s`).
-3. **Link the proving tests.** The upstream already carries JUnit reports; the demo maps three by
-   hand because the importer cannot infer `classname::name` from a Sphinx-Needs test need.
+3. **Link the remaining tests.** The importer now drafts the JUnit links it can prove
+   (`--tests`); 121 claims still have no test, and not every upstream test need has a report.
 4. **Curate the subject registry.** `aliases/subjects.yml` still holds the `req init` starter; the
    VDC/WRDC/steering vocabulary is exactly what a registry is for.
 

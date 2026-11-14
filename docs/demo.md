@@ -16,15 +16,16 @@ $ python3 tools/needs_import.py --from build/needs.json \
     --origin https://github.com/useblocks/sphinx-needs-demo@3c602bf \
     --date 2026-11-14 --type req --type sysreq --type swreq --type fsr \
     --type safety_goal --type need --links --areas --area-depth 2 \
-    --tests data/coffee_machine_junit.xml --test-type test --test-link specs
+    --tests data/coffee_machine_junit.xml --tests data/adas_junit.xml \
+    --test-type test --test-link specs --test-link links
 ...
 not carried: asil, constraints, ... status, tags, title, ...; typed links on 134 of 135
 drafted needs (...) — carried as `relations`
 links: 220 relation(s) on 101 of 135 drafted needs
        (derives_from 152, implements 19, links 44, reqs 5);
        119 target(s) not carried (self 2, target skipped 1, target type not selected 116)
-tests: 7 test link(s) on 4 of 135 drafted needs; 69 test need(s) (4 with a case, 65
-       without); 6 test case(s) (6 passed, 0 failed, ...); 1 target(s) not carried
+tests: 16 test link(s) on 13 of 135 drafted needs; 69 test need(s) (8 with a case, 61
+       without); 10 test case(s) (6 passed, 3 failed, 1 skipped, ...); 1 target(s) not carried
 needs 362 = drafted 135 + skipped 8 + not selected 219
            (by type: arch 10, ... test 69, ...)
 ```
@@ -32,7 +33,8 @@ needs 362 = drafted 135 + skipped 8 + not selected 219
 Read the last line first. 362 needs in, 135 proposals out, 8 named skips, 219 not selected and
 counted by type. The importer never says "ignored"; every need has an outcome. The 116 link
 targets it cannot carry are mostly architecture and implementation needs — not requirements, so
-no claim id exists to point at.
+no claim id exists to point at. Those are design elements, not claims; section 10 maps them with
+`req-satisfies:` instead.
 
 ## 2. What the prose actually is
 
@@ -91,22 +93,30 @@ it would be `UNKNOWN`, not excluded.
 ## 6. The gate, and its honest answer
 
 ```console
-$ req gate steering_side=left \
-    --test-report data/coffee_machine_junit.xml
-[PASS] pins_hold
-[PASS] relations_resolve
-[PASS] dependencies_decided
-[PASS] rationale_present
-[UNVERIFIABLE] tests_linked
-  counts: 134 applying · 4 linked · 130 unlinked · 4 passed · 0 failed · 0 not in the report
+$ req gate steering_side=left --test-report data/coffee_machine_junit.xml
 ...
+[PASS] design_satisfied
+  ... (counts: 56 link(s) judged · 56 holding · 0 weakened)
+[UNVERIFIABLE] tests_linked
+  counts: 134 applying · 13 linked · 121 unlinked · 4 passed · 0 failed · 9 not in the report
 verdict: UNVERIFIABLE — nothing is wrong, but something cannot be confirmed
 ```
 
-`UNVERIFIABLE` is not a shy PASS and not a FAIL. The structural policies pass; the evidence policy
-cannot be confirmed for 130 claims. The demo linked four coffee-machine claims by hand to show a
-`passed` outcome; `needs_import.py --tests` now drafts those links from the test need's `specs`. A CI step must go red on exit 3 (see req's own workflow template), which is how
-"we could not tell" stays visible.
+```console
+$ req gate steering_side=left \
+    --test-report data/coffee_machine_junit.xml --test-report data/adas_junit.xml
+...
+[FAIL] tests_linked
+  - REQ-0046: linked test failed: com.example.tests.ExampleTest::TEST_SYS_QUAL_001
+  counts: 134 applying · 13 linked · 121 unlinked · 4 passed · 9 failed · 0 not in the report
+verdict: FAIL — a defect in a claim this variant includes
+```
+
+`UNVERIFIABLE` is not a shy PASS and not a FAIL. With one report, four claims pass and nine cannot
+be confirmed because their report was not supplied. With both, nine claims are linked to three
+failing qualification cases, and the gate says **FAIL** — the policy doing its job. `req check`
+runs no report by default, so it stays UNVERIFIABLE; a CI step must go red on exit 3 (see req's
+own workflow template), which is how "we could not tell" stays visible.
 
 ## 7. The whole repository in one verdict
 
@@ -160,3 +170,40 @@ baseline: none supplied — nothing in this packet is ratified, and this is a ma
 Every claim is a draft. The importer wrote statements and provenance; a human still has to
 re-word the unstructured ones, link the tests, and sign a Baseline. That is the adoption loop, and
 the demo is designed to make the size of that work visible rather than to hide it.
+
+## 10. The V-model: requirement ↔ design/code ↔ test
+
+The upstream's traceability page links requirements to architecture, design, code and tests. req
+keeps three views, and the demo now fills all three. The bridge is `req-satisfies:` in a design
+file, read by `req satisfy` (ADR 0040):
+
+```console
+$ req satisfy
+# req satisfy: 56 link(s) declared
+[HOLDS] design/architecture/ARCH_001.md -> REQ-0046
+[HOLDS] design/architecture/ARCH_001.md -> REQ-0047
+...
+[HOLDS] design/code/lane_keeping.c -> REQ-0088
+[HOLDS] design/components/COMP_SAFETY_MON.md -> REQ-0115
+verdict: PASS — every declared link holds
+```
+
+`design/` has one file per upstream `arch`, `swarch` and `component` need plus the two annotated C
+files; each declares what it satisfies. `scripts/build-design.py` writes them from the export,
+`scripts/record-satisfaction.sh` performs the human `--record` act, and `.req/satisfied` is the
+committed record. A change to a claim's meaning re-opens the link: a loosening of an admitted
+class is `HOLDS (weakened)`, anything else is `SUSPECT`.
+
+```console
+$ scripts/build-trace-matrix.py --out docs/traceability.md
+135 claims · 45 with a design/code element · 13 with a linked test (16 test link(s)) ·
+26 design element(s) · 220 requirement relation(s).
+```
+
+`docs/traceability.md` joins the three views: per area, each claim's design/code elements, its
+linked tests and its derived requirements, then the coverage gaps. It is generated, not a req
+projection, because req has no single command that merges external elements with claims.
+
+One limit is stated rather than hidden: **design ↔ design is not a req edge.** The upstream chain
+`ARCH_001 → SWARCH_001 → IMPL_LKA_*` is flattened — all three satisfy the same requirement — because
+a design-to-design relation would turn architecture needs into claims.

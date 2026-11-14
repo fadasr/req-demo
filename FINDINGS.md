@@ -49,24 +49,49 @@ all 134 applying claims had no linked test, so `req gate --test-report` answered
   counts: 134 applying · 0 linked · 134 unlinked · 0 passed · 0 failed
 ```
 
-**Change.** `--tests <junit.xml> --test-type test --test-link specs` joins a JUnit `<testcase>` to
-the test need it names (Sphinx-Test-Reports writes the test need's id as `name`) and the test need
-to the draft its `specs` points at, writing `classname::name` into the draft's `tests:`. The
-report counts cases that are malformed, cases that name no test need, test needs with no case,
-and targets that are not drafts. A failing case is linked all the same — the gate is what reports
-it.
+**Change.** `--tests <junit.xml> --test-type test --test-link specs --test-link links` joins a
+JUnit `<testcase>` to the test need it names (Sphinx-Test-Reports writes the test need's id as
+`name`) and the test need to the draft its link field points at, writing `classname::name` into
+the draft's `tests:`. The report counts cases that are malformed, cases that name no test need,
+test needs with no case, and targets that are not drafts. A failing case is linked all the same —
+the gate is what reports it.
 
-**After.** The demo's four coffee-machine claims are linked to the upstream's
-`coffee_machine_junit.xml` (7 test ids, 4 claims):
+**After.** The demo's 13 linked claims use both committed reports — 4 Coffee Machine claims whose
+unit tests pass, and 9 ADAS claims whose SYS.5 qualification has three failures and one skip:
 
 ```text
-counts: 134 applying · 4 linked · 130 unlinked · 4 passed · 0 failed
+counts: 134 applying · 13 linked · 121 unlinked · 4 passed · 9 failed · 0 not in the report
+verdict: FAIL — a defect in a claim this variant includes
 ```
 
+With no report (the default `req check`), the same links are **UNVERIFIABLE**: the evidence
+cannot be judged, which is the honest answer, not a pass.
+
 **This is the adoption cost, not a req defect.** A claim with no proven test is exactly what
-`UNVERIFIABLE` is for; the demo shows the policy working, and the linked four show the other
-side (`4 passed`). The limit is the namespace: `name` must be the test need id, and a case that
-does not match is counted, never guessed at.
+`UNVERIFIABLE` is for, and a claim whose test fails is exactly what `FAIL` is for. The limit is
+the namespace: `name` must be the test need id, and a case that does not match is counted, never
+guessed at.
+
+## Worked: the V-model as three req views
+
+The upstream puts requirements, architecture/design, code and tests on one traceability page.
+req keeps three checkable views, and the demo now populates all three:
+
+| edge | req mechanism | this corpus |
+| --- | --- | --- |
+| requirement ↔ requirement | claim `relations` | 220 edges |
+| requirement ↔ architecture/design/code | `req-satisfies:` + `req satisfy` | 26 elements, 56 links, all HOLD |
+| requirement ↔ test | claim `tests:` | 16 links on 13 claims |
+
+`scripts/build-design.py` turns the upstream `arch`, `swarch`, `component` and two annotated C
+files into design elements; `scripts/record-satisfaction.sh` records the links; and
+`scripts/build-trace-matrix.py` joins the three views into `docs/traceability.md`. The matrix
+shows, per area, each claim's design/code elements, tests and derived requirements, plus the
+coverage gaps.
+
+The one honest limit: **design ↔ design is not a req edge.** `ARCH_001 → SWARCH_001 → IMPL_LKA_*`
+is flattened — all three satisfy the same requirement — because a design-to-design relation
+would make architecture needs into claims, which they are not.
 
 ## Open: the variant requirements are the ones the importer skips
 
