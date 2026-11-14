@@ -89,6 +89,10 @@ files into design elements; `scripts/record-satisfaction.sh` records the links; 
 shows, per area, each claim's design/code elements, tests and derived requirements, plus the
 coverage gaps.
 
+The matrix is `docs/traceability.md`; the same shape as a rendered architecture graph is
+`docs/v-model.html`, built with archify from `docs/v-model.archify.json` (delivery and automated
+browser checks pass at 1440×900 and 2048×1320).
+
 The one honest limit: **design ↔ design is not a req edge.** `ARCH_001 → SWARCH_001 → IMPL_LKA_*`
 is flattened — all three satisfy the same requirement — because a design-to-design relation
 would make architecture needs into claims, which they are not.
