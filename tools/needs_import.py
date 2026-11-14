@@ -186,7 +186,8 @@ field is listed under "fields", so nothing is hidden; `relations` stays `[]` unl
              silently. The report also gains `links: <R> relation(s) on <D> of <N> drafted needs
              (<kind> <n>, …); <T> target(s) not carried (<reason> <n>, …)`.
 
---tests     opt-in: carry JUnit test cases as `tests:` links. Needs `--test-type` (the export's
+--tests     opt-in: carry JUnit test cases as `tests:` links. `<junit.xml>` is resolved against
+             the corpus root, like --from, and may be repeated. Needs `--test-type` (the export's
              test need type, repeatable) and `--test-link` (the field on a test need that names
              the requirements it proves, e.g. `specs`, repeatable). Each `<testcase>` is joined
              to a test need by its `name` — the convention Sphinx-Test-Reports writes — and to
@@ -234,9 +235,10 @@ dry run is the default; --write writes. The report ends with one line that adds 
 needs mapping that was read.
 
 exit: 0 drafted (dry run, or written) · 1 a definite problem, nothing written (nothing
-drafted, a --type the file does not have, a need already drafted from this origin, or with
---areas a docname part that leaves no key or two names that make one path) · 2 usage · 3 the
-export, the corpus, the subject registry, the area registry or `req` cannot be read.
+drafted, a --type/--test-type the file does not have, a --test-link no test need carries, a need
+already drafted from this origin, or with --areas a docname part that leaves no key or two names
+that make one path) · 2 usage · 3 the export, a JUnit report, the corpus, the subject registry,
+the area registry or `req` cannot be read.
 
 This script is a starting point to COPY and adjust for your project — it is not a req
 subcommand.
