@@ -46,6 +46,11 @@ claims: 135 (80 unstructured); pins: 3 on 1 claim(s), 0 flagged; lints on 20 cla
 80 of 135 statements have no modality req can hold. That is the corpus, not the tool: it is
 written as tasks and sentence clusters. The 20 lints are the first authoring work list.
 
+`req canon --by-area` (landing in [`req#89`](https://github.com/autox-my/req/pull/89)) puts that
+work in order: ADAS software requirements are **0 of 29** structured, ADAS SYS.2 **0 of 16**, the
+ISO FSRs **13 of 36**, while the coffee-machine requirements are 7 of 8. The authoring pass starts
+with the ADAS prose, and the output now says so.
+
 ## 3. The traceability matrix
 
 ```console
