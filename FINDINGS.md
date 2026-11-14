@@ -140,11 +140,12 @@ The two committed projections (`docs/spec.md`, `docs/trace.md`) load and verify 
 
 ## What I would change next, in order
 
-1. **`needs_import.py --test-links <junit.xml>`** — propose `tests:` links from test-need `specs`
-   plus the report's `classname::name`, counted and never guessed. It would turn the biggest open
-   number (131 unlinked) into a reviewed list.
-2. **A canon work list by area** — `req canon` already lints; a per-area summary would make the
-   80-claim authoring pass a plan instead of a scroll.
-3. **A documented variant-expansion recipe** — not a flag. The export has the resolved fields;
+1. **A canon work list by area** — `req canon` already lints; a per-area summary would make the
+   80-claim authoring pass a plan instead of a scroll. The ADAS example (7 of 53 structured) is
+   where it would pay.
+2. **A documented variant-expansion recipe** — not a flag. The export has the resolved fields;
    the missing piece is the project's convention, which belongs in a project-local script like
    `adopt.py`, not in req's core.
+3. **A test-report reader for other generators** — the `--tests` join assumes Sphinx-Test-Reports
+   (`name` = test need id). Another generator's report is deliberately counted, not converted;
+   a mapping flag would be the next step if an adopter needs it.
