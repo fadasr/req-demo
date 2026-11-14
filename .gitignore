@@ -5,3 +5,6 @@ upstream/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Archify visual-check evidence is generated per run.
+docs/*.visual-check.*

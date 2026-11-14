@@ -207,7 +207,9 @@ $ scripts/build-trace-matrix.py --out docs/traceability.md
 ```
 
 `docs/traceability.md` joins the three views: per area, each claim's design/code elements, its
-linked tests and its derived requirements, then the coverage gaps. It is generated, not a req
+linked tests and its derived requirements, then the coverage gaps. `docs/v-model.html` renders the
+same shape as an architecture graph (`archify` from `docs/v-model.archify.json`), for the reader
+who wants the picture rather than the table. It is generated, not a req
 projection, because req has no single command that merges external elements with claims.
 
 One limit is stated rather than hidden: **design ↔ design is not a req edge.** The upstream chain

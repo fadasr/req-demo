@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "req-demo \u2014 the V-model as req sees it",
+    "quality_profile": "showcase"
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 5,
+    "gapX": 40,
+    "gapY": 130,
+    "cellW": 200,
+    "cellH": 80
+  },
+  "components": [
+    {
+      "id": "needs",
+      "type": "external",
+      "label": "Stakeholder needs",
+      "sublabel": "8 ADAS needs",
+      "row": 0,
+      "col": 0,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "safety",
+      "type": "security",
+      "label": "ISO 26262 safety",
+      "sublabel": "20 goals \u00b7 36 FSRs",
+      "row": 1,
+      "col": 1,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "sysreq",
+      "type": "backend",
+      "label": "System requirements",
+      "sublabel": "16 ADAS \u00b7 18 ISO",
+      "row": 0,
+      "col": 1,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "swreq",
+      "type": "backend",
+      "label": "Software requirements",
+      "sublabel": "29 ADAS claims",
+      "row": 0,
+      "col": 2,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "coffee",
+      "type": "external",
+      "label": "Coffee machine",
+      "sublabel": "8 claims \u00b7 4 tested",
+      "row": 1,
+      "col": 3,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "arch",
+      "type": "backend",
+      "label": "Architecture & design",
+      "sublabel": "21 ARCH / SWARCH files",
+      "row": 0,
+      "col": 3,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "code",
+      "type": "backend",
+      "label": "Code",
+      "sublabel": "2 C files \u00b7 3 components",
+      "row": 0,
+      "col": 4,
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "tests",
+      "type": "database",
+      "label": "Test evidence",
+      "sublabel": "13 claims \u00b7 16 JUnit links",
+      "row": 1,
+      "col": 2,
+      "size": [
+        200,
+        72
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "ADAS V-model",
+      "wraps": [
+        "needs",
+        "sysreq",
+        "swreq",
+        "arch",
+        "code"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "ISO 26262",
+      "wraps": [
+        "safety"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "needs-sys",
+      "from": "needs",
+      "to": "sysreq",
+      "label": "links \u00b7 44",
+      "labelDy": -34
+    },
+    {
+      "id": "safety-sys",
+      "from": "safety",
+      "to": "sysreq",
+      "label": "derives \u00b7 171"
+    },
+    {
+      "id": "sys-sw",
+      "from": "sysreq",
+      "to": "swreq",
+      "label": "links \u00b7 44",
+      "labelDy": -34
+    },
+    {
+      "id": "sw-arch",
+      "from": "swreq",
+      "to": "arch",
+      "label": "req-satisfies \u00b7 56",
+      "labelDy": -34
+    },
+    {
+      "id": "arch-code",
+      "from": "arch",
+      "to": "code",
+      "label": "implements",
+      "labelDy": -34
+    },
+    {
+      "id": "sw-tests",
+      "from": "swreq",
+      "to": "tests",
+      "label": "tests \u00b7 16",
+      "variant": "dashed",
+      "labelDy": 35
+    },
+    {
+      "id": "coffee-sw",
+      "from": "coffee",
+      "to": "swreq",
+      "label": "reqs \u00b7 5"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Relations are claim-to-claim",
+      "items": [
+        "220 edges in req trace.",
+        "The matrix shows each claim's derived requirements."
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Design is a file, not a claim",
+      "items": [
+        "56 req-satisfies links join requirements to architecture, components and code.",
+        "All hold."
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Evidence is JUnit",
+      "items": [
+        "16 classname::name links on 13 claims.",
+        "4 pass; 9 fail on the ADAS SYS.5 report."
+      ]
+    }
+  ]
+}

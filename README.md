@@ -25,6 +25,7 @@ corpus had 220 trace edges, an empty traceability matrix, and no test evidence. 
 | `design/` | 26 architecture, component and code elements, each declaring what it satisfies |
 | `docs/spec.md`, `docs/trace.md` | generated projections; never edited by hand |
 | `docs/traceability.md` | the full V-model matrix: requirement ↔ design/code ↔ test |
+| `docs/v-model.html` | a rendered architecture graph of the same three views (`archify`) |
 | `docs/design.md` | how `design/` maps to `req satisfy`, and the token trap |
 | `tools/needs_import.py` | the importer from req, at the commit that added `--links` and `--tests` |
 | `data/` | the two upstream JUnit reports, committed so the test links are reproducible |
@@ -76,6 +77,9 @@ scripts/build-trace-matrix.py --out docs/traceability.md
 
 `docs/traceability.md` joins the three views into the matrix a reader expects: per area, each
 claim's design/code elements, linked tests and derived requirements, plus the coverage gaps.
+`docs/v-model.html` is the same shape as a rendered architecture graph, built with
+[`archify`](https://github.com/tt-a1i/archify) from `docs/v-model.archify.json`; it is a reader's
+view, not a req projection.
 
 There is one honest limit: **design ↔ design is not a req edge.** The upstream chain
 `ARCH_001 → SWARCH_001 → IMPL_LKA_*` is flattened — the arch file, the swarch file and the C file
