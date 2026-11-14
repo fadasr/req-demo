@@ -8,3 +8,6 @@ __pycache__/
 
 # Archify visual-check evidence is generated per run.
 docs/*.visual-check.*
+docs/*.browser-check.json
+docs/*.delivery.json
+docs/*.finalize*.json
