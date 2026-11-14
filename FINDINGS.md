@@ -88,7 +88,9 @@ none because the two variant claims are the only selectors.
 **Observation.** `req canon` reads 135 claims and finds **80 unstructured** — 59%. The upstream's
 requirements are written as tasks ("Develop a lane detection algorithm…", "Implement turn signal
 logic…") or as sentence clusters with two obligations. Only 55 have a modality and a parseable
-structure.
+structure, and the split is by example: ISO 26262 Safety is 41/74 structured, Coffee Machine 7/8,
+Automotive ADAS 7/53. The ADAS prose is the problem, and it is the example with the most
+requirements.
 
 **Consequence.** Drift-and-direction applies only where there is structure. The demo's drift case
 uses `REQ-0115`, one of the 55:

@@ -3,6 +3,12 @@
 This is a transcript of the demo, with the interpretation each output is meant to carry. The
 corpus is already built; `README.md` says how to rebuild it. Every command runs offline.
 
+The upstream is four examples, and they land very differently: ISO 26262 Safety supplies 74
+claims (41 structured, 171 edges), Automotive ADAS 53 (7 structured, 44 edges), Coffee Machine 8
+(7 structured, 5 edges), and the Basic Example none — its objects are feature demos, imported
+needs with no content, and external needs that an export does not contain. The Basic Example is
+still part of the demo: it is what "reject the draft" looks like.
+
 ## 1. What came in
 
 ```console

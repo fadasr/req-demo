@@ -1,10 +1,10 @@
 # req-demo: a real Sphinx-Needs corpus put through req
 
 This repository is a **demonstration corpus**, not a product: it takes the
-[`useblocks/sphinx-needs-demo`](https://github.com/useblocks/sphinx-needs-demo) documentation
-(automotive ADAS safety requirements, a coffee machine, stakeholder needs) and runs it through
-[`req`](https://github.com/autox-my/req) — import, canonicalization, traceability, variants, drift,
-gate, audit.
+[`useblocks/sphinx-needs-demo`](https://github.com/useblocks/sphinx-needs-demo) documentation —
+its four examples: Basic, Coffee Machine, Automotive ADAS, ISO 26262 Functional Safety — and runs
+it through [`req`](https://github.com/autox-my/req): import, canonicalization, traceability, variants,
+drift, gate, audit.
 
 The point is to **pressure-test req on other people's prose** and turn what hurts into small
 changes. The first such change is [PR #86](https://github.com/autox-my/req/pull/86): the importer
@@ -25,6 +25,25 @@ empty traceability matrix. See [`FINDINGS.md`](FINDINGS.md) for everything the d
 | `scripts/` | rebuild, import, and the drift walkthrough |
 | `upstream/` | the source checkout (ignored; pinned by `scripts/build-upstream.sh`) |
 | `build/` | generated reports (`needs.json`, command captures; ignored) |
+
+## The four upstream examples
+
+The upstream documentation is four examples, and they behave very differently under import. The
+counts below are this corpus; `structured` means `req canon` derived a modality (the rest are
+`UNSTRUCTURED` and can only be reported as `not-judged` by `req diff`).
+
+| upstream example | claims | structured | trace edges | notes |
+| --- | ---: | ---: | ---: | --- |
+| 🧰 Basic Example | 0 | — | — | feature showcase, not obligations: `EX_REQ_002` is "Some content"; `EX_REQ_001` contains images and bold markup and is skipped as `rst directive`; the imported needs have no content; external needs are not in a Sphinx-Needs export at all |
+| ☕️ Coffee Machine | 8 | 7 | 5 | system requirements + software requirements; `SWREQ_BREW_STRENGTH` is skipped (multi-paragraph); 5 JUnit test links |
+| 🚗 Automotive ADAS | 53 | 7 | 44 | stakeholder needs + SYS/SWE requirements + one authored right-hand-drive variant claim; the task-style prose ("Develop…", "Implement…") is mostly unstructured |
+| 🛡️ ISO 26262 Safety | 74 | 41 | 171 | HARA → safety goals → FSR → system-requirement chain; the best-structured example, and most of the corpus's edges |
+| **total** | **135** | **55** | **220** | |
+
+The Basic Example is deliberately zero claims. Its Sphinx-Needs objects demonstrate directives,
+filtering, imported needs and external needs; none of them is an obligation a person would
+ratify. The importer drafts `EX_REQ_002` and a human rejects it — that rejection is part of the
+demo, not a gap.
 
 ## The source, pinned
 
