@@ -61,15 +61,15 @@ A claim's design elements are the files under `design/` that declare `req-satisf
 
 | claim | requirement | design / code | tests | derives from |
 | --- | --- | --- | --- | --- |
-| REQ-0046 | Develop a lane detection algorithm to process camera input and accurately identify lane... | `design/architecture/ARCH_001.md` | `TEST_SYS_QUAL_001` | links → REQ-0038 |
-| REQ-0047 | Implement a control logic module to provide smooth and precise steering corrections bas... | `design/architecture/ARCH_001.md` | `TEST_SYS_QUAL_001` | links → REQ-0038 |
-| REQ-0048 | Design a system to measure the distance to the vehicle ahead using radar or LiDAR senso... | `design/architecture/ARCH_002.md` | `TEST_SYS_QUAL_002` | links → REQ-0039 |
-| REQ-0049 | Create an algorithm to adjust vehicle speed dynamically while maintaining a safe follow... | `design/architecture/ARCH_002.md` | `TEST_SYS_QUAL_002` | links → REQ-0039 |
-| REQ-0050 | Develop a module to identify potential collisions using sensor data and predict the tim... | `design/architecture/ARCH_003.md` | `TEST_SYS_QUAL_003` | links → REQ-0040 |
-| REQ-0051 | Implement logic to autonomously apply brakes when a collision is imminent based on pred... | `design/architecture/ARCH_003.md` | `TEST_SYS_QUAL_003` | links → REQ-0040 |
-| REQ-0052 | Create a system to detect pedestrians in the vehicle's path using machine learning and... | `design/architecture/ARCH_004.md` | `TEST_SYS_QUAL_004` | links → REQ-0041 |
-| REQ-0053 | Design a mechanism to issue audio or visual alerts when pedestrians are detected near t... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_005.md` | `TEST_SYS_QUAL_004` | links → REQ-0041 |
-| REQ-0054 | Develop functionality to initiate emergency braking when a pedestrian is in the collisi... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_006.md` | `TEST_SYS_QUAL_004` | links → REQ-0041 |
+| REQ-0046 | Develop a lane detection algorithm to process camera input and accurately identify lane... | `design/architecture/ARCH_001.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_001` | links → REQ-0038 |
+| REQ-0047 | Implement a control logic module to provide smooth and precise steering corrections bas... | `design/architecture/ARCH_001.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_001` | links → REQ-0038 |
+| REQ-0048 | Design a system to measure the distance to the vehicle ahead using radar or LiDAR senso... | `design/architecture/ARCH_002.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_002` | links → REQ-0039 |
+| REQ-0049 | Create an algorithm to adjust vehicle speed dynamically while maintaining a safe follow... | `design/architecture/ARCH_002.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_002` | links → REQ-0039 |
+| REQ-0050 | Develop a module to identify potential collisions using sensor data and predict the tim... | `design/architecture/ARCH_003.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_003` | links → REQ-0040 |
+| REQ-0051 | Implement logic to autonomously apply brakes when a collision is imminent based on pred... | `design/architecture/ARCH_003.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_003` | links → REQ-0040 |
+| REQ-0052 | Create a system to detect pedestrians in the vehicle's path using machine learning and... | `design/architecture/ARCH_004.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
+| REQ-0053 | Design a mechanism to issue audio or visual alerts when pedestrians are detected near t... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_005.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
+| REQ-0054 | Develop functionality to initiate emergency braking when a pedestrian is in the collisi... | `design/architecture/ARCH_004.md`<br>`design/architecture/ARCH_006.md` | `com.example.tests.ExampleTest::TEST_SYS_QUAL_004` | links → REQ-0041 |
 | REQ-0055 | Develop functionality to detect posted speed limit signs from camera input and provide... | `design/architecture/ARCH_007.md` | — | links → REQ-0042 |
 | REQ-0056 | Develop functionality to detect vehicles, motorcycles, and bicycles entering the blind... | `design/architecture/ARCH_008.md` | — | links → REQ-0043 |
 | REQ-0057 | Issue a driver warning when the turn signal is engaged toward a blind spot zone that is... | `design/architecture/ARCH_008.md` | — | links → REQ-0043 |
@@ -91,10 +91,10 @@ A claim's design elements are the files under `design/` that declare `req-satisf
 
 | claim | requirement | design / code | tests | derives from |
 | --- | --- | --- | --- | --- |
-| REQ-0114 | The software shall process button inputs with debouncing and trigger appropriate action... | `design/components/COMP_UI_MODULE.md` | `TEST_BUTTON_DEBOUNCE` | reqs → REQ-0065 |
-| REQ-0115 | The software shall continuously monitor water temperature and trigger an emergency shut... | `design/components/COMP_SAFETY_MON.md` | `TEST_SAFETY_SHUTDOWN`<br>`TEST_SAFETY_SHUTDOWN` | reqs → REQ-0063<br>reqs → REQ-0064 |
-| REQ-0116 | The temperature control software shall monitor the water temperature sensor and regulat... | `design/components/COMP_TEMP_CTRL.md` | `TEST_TEMP_CONTROL`<br>`TEST_TEMP_CONTROL` | reqs → REQ-0063 |
-| REQ-0117 | The software shall continuously monitor the water level sensor and prevent brewing oper... | `design/components/COMP_SAFETY_MON.md` | `TEST_SAFETY_SHUTDOWN`<br>`TEST_SAFETY_SHUTDOWN` | reqs → REQ-0064 |
+| REQ-0114 | The software shall process button inputs with debouncing and trigger appropriate action... | `design/components/COMP_UI_MODULE.md` | `test_user_command_variants::TEST_BUTTON_DEBOUNCE` | reqs → REQ-0065 |
+| REQ-0115 | The software shall continuously monitor water temperature and trigger an emergency shut... | `design/components/COMP_SAFETY_MON.md` | `test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN`<br>`test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN` | reqs → REQ-0063<br>reqs → REQ-0064 |
+| REQ-0116 | The temperature control software shall monitor the water temperature sensor and regulat... | `design/components/COMP_TEMP_CTRL.md` | `test_sensor_data_creation::TEST_TEMP_CONTROL`<br>`test_temperature_status_conversions::TEST_TEMP_CONTROL` | reqs → REQ-0063 |
+| REQ-0117 | The software shall continuously monitor the water level sensor and prevent brewing oper... | `design/components/COMP_SAFETY_MON.md` | `test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN`<br>`test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN` | reqs → REQ-0064 |
 
 ### safety-example/fsr
 

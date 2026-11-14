@@ -38,6 +38,11 @@ def short(text, limit=90):
     return text if len(text) <= limit else text[: limit - 3].rstrip() + "..."
 
 
+def short_test(test):
+    parts = test.split("::")
+    return f"{parts[-2]}::{parts[-1]}" if len(parts) >= 2 else test
+
+
 def built_from(text):
     match = re.search(r"^\s*built from\s+(\S+)", text, re.MULTILINE)
     return match.group(1) if match else "unknown"
@@ -91,7 +96,7 @@ def main():
             elements_cell = "<br>".join(
                 f"`{link['element']}`" for link in design.get(claim, [])
             ) or "—"
-            tests_cell = "<br>".join(f"`{test.split('::')[-1]}`" for test in node["tests"]) or "—"
+            tests_cell = "<br>".join(f"`{short_test(test)}`" for test in node["tests"]) or "—"
             outgoing = [
                 edge for edge in trace["edges"] if edge["from"] == claim
             ]

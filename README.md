@@ -154,7 +154,7 @@ not a bug: the skipped item is a decision for a person.
 
 ```bash
 req canon                                  # 135 claims, 80 unstructured, 20 with lints
-req canon --by-area                        # the work list: ADAS SW reqs 0/29 structured
+req canon --by-area                        # the work list (req#89): ADAS SW reqs 0/29 structured
 req trace | head -40                       # 220 stored edges, 66 targets receive one
 req impact REQ-0038                        # 7 dependents, nearest first
 req satisfy                                # 56 design/code links, all HOLD
