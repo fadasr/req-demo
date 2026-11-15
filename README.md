@@ -1,5 +1,7 @@
 # req-demo: a real Sphinx-Needs corpus put through req
 
+**Live demo:** https://fadasr.github.io/req-demo/
+
 This repository is a **demonstration corpus**, not a product: it takes the
 [`useblocks/sphinx-needs-demo`](https://github.com/useblocks/sphinx-needs-demo) documentation —
 its four examples: Basic, Coffee Machine, Automotive ADAS, ISO 26262 Functional Safety — and runs
