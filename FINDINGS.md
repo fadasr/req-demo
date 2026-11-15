@@ -188,17 +188,17 @@ The two committed projections (`docs/spec.md`, `docs/trace.md`) load and verify 
 
 ## What I would change next, in order
 
-1. **A design-element view** — `req satisfy` lists links, but design elements are not nodes in
-   `req trace`; the demo's matrix joins them outside req. If adopters need the upstream's
+1. **Finish the ISO authoring pass** — 23 of 36 FSRs and 10 of 18 system requirements are still
+   unstructured. This is corpus work, not a req feature; `req canon --by-area` names the order.
+2. **A design-element view in req** — `req satisfy` lists links and the demo's matrix joins them,
+   but design elements are not nodes in `req trace`. If adopters need the upstream's
    design ↔ design graph, that is a new view and an ADR, not a patch.
-2. **A documented variant-expansion recipe** — not a flag. The export has the resolved fields;
-   the missing piece is the project's convention, which belongs in a project-local script like
-   `adopt.py`, not in req's core.
-3. **A test-report reader for other generators** — the `--tests` join assumes Sphinx-Test-Reports
-   (`name` = test need id). Another generator's report is deliberately counted, not converted;
-   a mapping flag would be the next step if an adopter needs it.
+3. **A test-report mapping for other generators** — the `--tests` join assumes
+   Sphinx-Test-Reports (`name` = test need id). Another generator's report is deliberately
+   counted, not converted; a mapping flag would be the next step if an adopter needs it.
 
-The canon work list suggested here is now [`req#89`](https://github.com/autox-my/req/pull/89):
-`req canon --by-area` put the authoring pass in order (ADAS software requirements 0/29 structured,
-ADAS SYS.2 0/16, ISO FSR 13/36) and now shows the result: ADAS software requirements 27/29, ADAS
-SYS.2 14/16, ISO FSR 13/36 — the remaining work is the ISO examples.
+**Done since the list was written:** the canon work list is [`req#89`](https://github.com/autox-my/req/pull/89)
+(`req canon --by-area`), typed links and JUnit evidence are [`req#86`](https://github.com/autox-my/req/pull/86),
+the subject registry is curated, and the ADAS authoring pass is complete. The Sphinx-Needs
+variant-expansion recipe is documented in [`docs/variants.html`](docs/variants.html) as a
+project-level mapping, not a req flag.

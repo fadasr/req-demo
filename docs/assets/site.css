@@ -164,3 +164,15 @@ footer p { margin: 0; color: var(--ink-3); font-size: .82rem; max-width: 900px; 
   .top nav { font-size: .82rem; }
   main { padding-top: 1.6rem; }
 }
+
+pre {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .85rem 1rem;
+  overflow-x: auto;
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+pre code { background: none; border: 0; padding: 0; white-space: pre; }

@@ -30,6 +30,8 @@ corpus had 220 trace edges, an empty traceability matrix, and no test evidence. 
 | `docs/v-model.html` | a rendered architecture graph of the same three views (`archify`) |
 | `docs/components.html` | the req-native component overlay: `arch_overlay.py` colors each software component by its satisfaction outcome |
 | `docs/index.html`, `docs/matrix.html` | the GitHub Pages landing page and global matrix |
+| `docs/variants.html` | req selectors vs Sphinx-Needs variant builds, including architecture/design/code |
+| `docs/comparison.html` | the bounded req vs Sphinx-Needs evaluation |
 | `docs/<project>/` | one page, requirement graph and (where it exists) component overlay per upstream example |
 | `component-coverage.md` | the overlay's coverage matrix, one row per claim |
 | `docs/components.archify.json` | the component diagram the overlay is built from |
@@ -220,21 +222,28 @@ weakens the 100 ms over-temperature shutdown to 500 ms, and asks req what moved:
 scripts/demo-drift.sh
 ```
 
-## The authoring pass this demo argues for
+## The authoring pass: what is done, what remains
 
-The import is a draft, never a ratification (ADR 0004). In this corpus the useful next edits are:
+The import is a draft, never a ratification (ADR 0004).
 
-1. **Re-word the remaining 39 unstructured claims** so they carry a modality and a bound. The ADAS
-   pass is done (48/53); ISO FSR 23/36 and ISO system requirements 10/18 are now the work list.
-   "Develop functionality to…" is a task, not an obligation; `req canon` lints it but never
-   invents a `shall`. The 22 lint findings are the first edits (`untestable_qualifier`,
-   `multiple_obligations`, `uncovered_content`, …).
-2. **Pin the load-bearing bounds** (the demo pins REQ-0115 at `LE 0.1 s`).
-3. **Link the remaining tests.** The importer now drafts the JUnit links it can prove
-   (`--tests`); 121 claims still have no test, and not every upstream test need has a report.
-4. **Curate the subject registry.** Done: 30 subjects, `version: 2`, with the abbreviated and
-   spelled-out controller names as one subject. It moved addresses (no Baseline here), which is
-   the documented cost of a registry bump.
+**Done**
+- **The ADAS prose** was re-worded into obligations: 48 of 53 structured, up from 7.
+- **The subject registry** is curated: 30 subjects, `version: 2`; abbreviations and spelled-out
+  controller names resolve to one subject.
+- **The bounded pin** is demonstrated on `REQ-0115` (`LE 0.1 s`), and `req gate` holds it.
+- **The test evidence** is carried by `--tests`; 13 claims are linked (4 Coffee pass, 9 ADAS fail
+  on the real SYS.5 report).
+
+**Remaining**
+1. **Re-word the 39 unstructured claims** — ISO FSR 23/36 and ISO system requirements 10/18 are
+   the work list, plus five ADAS qualifiers (`smooth`, `robust`, `multiple_obligations`). The 22
+   lint findings are the first edits; `req canon --by-area` is the plan.
+2. **Pin more load-bearing bounds** — one pin is a demonstration, not a ratified set.
+3. **Link the 121 claims with no test** — not every upstream test need has a JUnit report, so some
+   of this is a test-authoring task, not a link task.
+
+The variant comparison is written up in [`docs/variants.html`](docs/variants.html); the tool-level
+list is [`FINDINGS.md`](FINDINGS.md#what-i-would-change-next-in-order).
 
 ## Licence and provenance
 

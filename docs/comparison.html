@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>req vs Sphinx-Needs · req-demo</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="page-compare">
+<header class="top">
+  <a class="brand" href="index.html"><span class="mark">req</span><span>demo</span></a>
+  <nav>
+    <a href="index.html#projects">Projects</a>
+    <a href="matrix.html">Matrix</a>
+    <a href="variants.html">Variants</a>
+    <a href="comparison.html">Compare</a>
+    <a href="v-model.html">V-model</a>
+    <a href="components.html">Components</a>
+    <a href="https://github.com/fadasr/req-demo/blob/main/FINDINGS.md">Findings</a>
+  </nav>
+</header>
+<main>
+<section class="project-hero">
+  <p class="eyebrow">evaluation</p>
+  <h1>req vs Sphinx-Needs</h1>
+  <p class="lede">They are not the same kind of tool. Sphinx-Needs is an authoring and publishing
+  suite for needs in Sphinx; req is a claim model that asks what a requirement <em>means</em>, what
+  changed, and in which direction. The demo uses Sphinx-Needs as the source and req as the
+  analysis layer. This comparison is bounded to one real corpus, not a benchmark.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>At a glance</h2><p>req <code>0.1.0</code>, rules_v 9; Sphinx-Needs 8.3; the demo export at <code>3c602bf</code>.</p></div>
+  <div class="table-wrap"><table class="coverage">
+    <thead><tr><th>Dimension</th><th>Sphinx-Needs</th><th>req</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Unit</strong></td><td>A <em>need</em>: a typed object in a Sphinx document, with fields, content and typed links.</td><td>A <em>claim</em>: one obligation per file, stable <code>claim_id</code>, content-addressed meaning fingerprint.</td></tr>
+      <tr><td><strong>Source of truth</strong></td><td>The RST/Markdown documents plus configuration. The HTML and <code>needs.json</code> are builds.</td><td>The claims. Spec, matrix, audit packet and views are compiled projections over a signed Baseline.</td></tr>
+      <tr><td><strong>Variants</strong></td><td>Build-time data file, templated fields, <code>:variant:</code> roles, <code>.. if::</code> blocks: one document per variant.</td><td>Query-time <code>applicability</code> predicates: one model, tri-state selection, no fork.</td></tr>
+      <tr><td><strong>Traceability</strong></td><td>Typed links, backlinks, needflow/needtable/needlist, filters, services.</td><td>Claim relations (<code>trace</code>, <code>impact</code>) plus design elements (<code>req-satisfies</code>) and JUnit evidence.</td></tr>
+      <tr><td><strong>Architecture / design / code</strong></td><td>Need types, codelinks, one-line needs in source, components/interfaces, PlantUML.</td><td>Design elements are files that declare <code>req-satisfies</code>; code is a design element; relations stay claim-to-claim.</td></tr>
+      <tr><td><strong>Change</strong></td><td>Document diff, versioned builds; no meaning fingerprint and no direction of a requirement change.</td><td><code>req diff</code>/<code>req compare</code>: tightened, weakened, reshaped, not-judged; pins and Baseline drift.</td></tr>
+      <tr><td><strong>Evidence</strong></td><td>Schema validation, constraints, test-reports integration, warnings.</td><td>Tri-state gate policies over claims, links, design satisfaction and JUnit; UNVERIFIABLE blocks.</td></tr>
+      <tr><td><strong>Output</strong></td><td>Rich HTML documentation, diagrams, dashboards, PDF, ecosystem.</td><td>Markdown/JSON views and a CLI; no document renderer by design.</td></tr>
+      <tr><td><strong>Maturity</strong></td><td>Mature 8.x, broad extension ecosystem, used in industry.</td><td>Early <code>0.1.0</code>, one maintainer, bounded claims; Tier-2 is research.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>What this corpus measured</h2>
+    <p>The same export through both: Sphinx-Needs built the documents; req imported the result.</p>
+    <pre><code>needs 362 = drafted 135 + skipped 8 + not selected 219
+links 220 relations · 58 design/code links · 16 test links
+canon 135 claims · 96 structured · 39 unstructured
+gate  UNVERIFIABLE (no Baseline, 121 unlinked)
+      FAIL with both JUnit reports (4 passed, 9 failed)</code></pre>
+    <p>The importer refused to guess eight needs: three reStructuredText directives, two
+    variant-templated requirements with <code>:variant:</code> roles, two empty imported needs and
+    one multi-paragraph software requirement. That is a limit of “one plain paragraph”, not a
+    claim that the prose is wrong.</p>
+    <p>The two variant requirements are the clearest model difference: in Sphinx-Needs each is a
+    separate build; in req they are two claims selected by <code>steering_side</code>.</p>
+  </div>
+  <aside class="panel">
+    <h3>What req does not do</h3>
+    <p>It does not render a manual, draw a needflow, resolve variant templates, validate a JSON
+    schema, or offer a plugin ecosystem. It reads a corpus and answers meaning, direction and
+    evidence questions. For a documentation site, Sphinx-Needs is the authoring tool.</p>
+  </aside>
+</section>
+
+<section class="section">
+  <h2>Where each fits</h2>
+  <div class="grid">
+    <article class="project-card accent-blue"><div class="card-head"><h3>Use Sphinx-Needs</h3></div>
+      <p>You need rich requirements documents, diagrams, dashboards, variant builds and a mature
+      extension ecosystem. The need graph is the product.</p></article>
+    <article class="project-card accent-green"><div class="card-head"><h3>Use req</h3></div>
+      <p>You need to know whether a requirement's meaning moved, in which direction, whether the
+      evidence still holds, and which variant a claim applies to — across a signed Baseline.</p></article>
+    <article class="project-card accent-amber"><div class="card-head"><h3>Use both</h3></div>
+      <p>Author and publish with Sphinx-Needs; export its <code>needs.json</code> and let req draft
+      claims, carry the typed links and test evidence, and gate the release. That is this demo.</p></article>
+  </div>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>The honest limits on both sides</h2>
+    <ul class="shows">
+      <li><strong>req is early.</strong> One maintainer, <code>0.1.0</code>, no rendering, and the
+      false-merge bet is measured only on bounded corpora. It is not a Sphinx-Needs replacement.</li>
+      <li><strong>Import is lossy by design.</strong> One plain paragraph per claim; statuses, tags,
+      ASIL and typed links not selected are not carried. The report names every skip.</li>
+      <li><strong>Variants do not template prose.</strong> Two meanings are two claims; a context
+      key the predicate does not mention is UNKNOWN, not a default. That is deliberate.</li>
+      <li><strong>Sphinx-Needs does not give you direction.</strong> It can tell you a document
+      changed; it does not tell you a requirement was weakened by a larger bound, and it has no
+      signed meaning fingerprint to compare against.</li>
+      <li><strong>Different questions.</strong> “What does the document say?” versus “did this
+      obligation change, and can we still prove it?” A project can need both answers.</li>
+    </ul>
+  </div>
+  <aside class="panel">
+    <h3>If you are choosing today</h3>
+    <p>Choose Sphinx-Needs for the authoring and publishing layer. Add req only if the questions
+    “what changed in meaning, in which direction, and is it still evidenced?” are the ones you
+    cannot answer. The demo shows the composition, not a migration.</p>
+  </aside>
+</section>
+</main>
+<footer>
+  <p>Source: <a href="https://github.com/fadasr/req-demo">fadasr/req-demo</a>.
+  Requirements prose from <a href="https://github.com/useblocks/sphinx-needs-demo">useblocks/sphinx-needs-demo</a>
+  at <code>3c602bf</code> (MIT); claims, views and pages generated with <a href="https://github.com/autox-my/req">req</a>.
+  No signed Baseline: everything here is a draft for a human to ratify.</p>
+</footer>
+</body>
+</html>

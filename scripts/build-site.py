@@ -170,6 +170,8 @@ def page(title, body, active, depth=0):
   <nav>
     <a href="{prefix}index.html#projects">Projects</a>
     <a href="{prefix}matrix.html">Matrix</a>
+    <a href="{prefix}variants.html">Variants</a>
+    <a href="{prefix}comparison.html">Compare</a>
     <a href="{prefix}v-model.html">V-model</a>
     <a href="{prefix}components.html">Components</a>
     <a href="https://github.com/fadasr/req-demo/blob/main/FINDINGS.md">Findings</a>

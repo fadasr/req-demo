@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variants are selectors · req-demo</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="page-variants">
+<header class="top">
+  <a class="brand" href="index.html"><span class="mark">req</span><span>demo</span></a>
+  <nav>
+    <a href="index.html#projects">Projects</a>
+    <a href="matrix.html">Matrix</a>
+    <a href="variants.html">Variants</a>
+    <a href="comparison.html">Compare</a>
+    <a href="v-model.html">V-model</a>
+    <a href="components.html">Components</a>
+    <a href="https://github.com/fadasr/req-demo/blob/main/FINDINGS.md">Findings</a>
+  </nav>
+</header>
+<main>
+<section class="project-hero">
+  <p class="eyebrow">variants</p>
+  <h1>Selectors, not builds</h1>
+  <p class="lede">Sphinx-Needs resolves a variant at build time: a data file, templated fields,
+  <code>:variant:</code> roles and <code>.. if::</code> blocks produce a separate document per
+  variant. req keeps one model and queries it: a claim's <code>applicability</code> is a predicate,
+  and a context decides which claims apply. The difference is not cosmetic; it changes what
+  “unknown” means, and what happens to architecture, design, code and tests.</p>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>Sphinx-Needs: one build per variant</h2>
+    <p>The upstream ships three JSON files (<code>eu_left</code>, <code>eu_right</code>,
+    <code>america</code>) and builds with one at a time:</p>
+    <pre><code>sphinx-build -b html -D needs_variant_data_file=variants/eu_right.json docs _build/eu_right</code></pre>
+    <p>Inside the document, a variant can change a field value, expand prose, or include a block:</p>
+    <pre><code>:max_speed: &lt;{ var.region.speed_limit_highway }&gt;
+
+.. if:: var.vehicle.steering_side == "left"
+   .. swreq:: Left-hand drive turn signal priority
+      :id: SWREQ_028
+
+.. if:: var.vehicle.steering_side == "right"
+   .. swreq:: Right-hand drive turn signal priority
+      :id: SWREQ_029</code></pre>
+    <p>The two builds are two documents. <code>SWREQ_028</code> exists in the left build and
+    <code>SWREQ_029</code> exists in the right one; neither export holds both. The traceability
+    table, the needflow, the fields and the conditional prose are all resolved for that build.
+    Comparing variants means building twice and comparing two outputs.</p>
+  </div>
+  <aside class="panel">
+    <h3>What that gives you</h3>
+    <p>A finished document per variant, with variant-specific prose in place. The author writes
+    the template once and the build produces the artifact.</p>
+    <h3>What it costs</h3>
+    <p>There is no single model to query: a need is present or absent depending on the build.
+    A requirement that is wrong for a variant cannot be “undecided”; it is either emitted or not.
+    The matrix is per build.</p>
+  </aside>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>req: one corpus, a context</h2>
+    <p>The two turn-signal requirements are two claims in the same corpus:</p>
+    <pre><code>claim_id: REQ-0113
+applicability:
+  - steering_side == left
+
+claim_id: REQ-0136
+applicability:
+  - steering_side == right</code></pre>
+    <p><code>.req/variants</code> declares the contexts the release gate must decide:</p>
+    <pre><code>steering_side=left
+steering_side=right</code></pre>
+    <p>Selection is a query, not a build:</p>
+    <pre><code>$ req select steering_side=right
+REQ-0136  applies
+REQ-0113  does not apply
+applies 135, does not apply 1, unknown 0</code></pre>
+    <p>Nothing is copied, forked or regenerated. The same 135 claims, the same design files and the
+    same JUnit links are present in both contexts.</p>
+  </div>
+  <aside class="panel">
+    <h3>Tri-state, not two states</h3>
+    <p>“Does not apply” and “cannot tell” are different answers. A context that omits
+    <code>steering_side</code> leaves both claims <strong>unknown</strong>, and a gate that leaves a
+    claim undecided exits 3 — it never treats the claim as absent.</p>
+    <p class="small">This is the discipline the demo’s <code>UNVERIFIABLE</code> answers come from:
+    the tool reports what it could not decide.</p>
+  </aside>
+</section>
+
+<section class="section">
+  <h2>Architecture, design and code</h2>
+  <p>This is where the two models differ most. req does not put a selector on a file. A design
+  element — an architecture document, a component or a C file — declares <code>req-satisfies:</code>
+  links to claims; the <em>claim</em> carries the applicability. The variant pair has one element
+  per side:</p>
+  <ul class="shows">
+    <li><code>design/components/TURN_SIGNAL_LEFT.md</code> → <code>REQ-0113</code></li>
+    <li><code>design/components/TURN_SIGNAL_RIGHT.md</code> → <code>REQ-0136</code></li>
+  </ul>
+  <p><code>req satisfy</code> has no context and lists all 58 declared links. A gate is a context, and
+  judges only the links of claims that apply there:</p>
+  <div class="table-wrap"><table class="coverage">
+    <thead><tr><th>Invocation</th><th>design links judged</th><th>why</th></tr></thead>
+    <tbody>
+      <tr><td><code>req gate steering_side=left</code></td><td><strong>57</strong> of 58</td><td>the right element’s claim does not apply</td></tr>
+      <tr><td><code>req gate steering_side=right</code></td><td><strong>57</strong> of 58</td><td>the left element’s claim does not apply</td></tr>
+      <tr><td><code>req gate</code> (no context)</td><td><strong>56</strong> of 58</td><td>both variant claims are undecided; 2 undecided in total</td></tr>
+      <tr><td><code>req satisfy</code></td><td><strong>58</strong> declared</td><td>diagnostic over every declaration, no context</td></tr>
+    </tbody>
+  </table></div>
+  <p>The architecture/component/code element itself is not “variant A” or “variant B”; it is a
+  design element with a link to a variant-scoped claim. If one design is genuinely shared, one
+  element links to both claims. If the design is physically different, it is two elements. That is
+  the whole rule, and it is why the same component overlay can show both elements HOLD while a
+  gate under <code>left</code> judges only one of them.</p>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>Tests</h2>
+    <p>A test link lives on the claim (<code>tests: classname::name</code>), so it inherits the
+    claim’s applicability. A gate for <code>steering_side=left</code> only requires evidence for
+    the left claim; the right test can be present in the same report without being counted in that
+    release. Nothing is deleted from the corpus; the context decides what the gate examines.</p>
+    <p>The Coffee Machine example uses the same rule with no selector: all 8 claims apply in every
+    context, and the 4 linked claims are judged in both.</p>
+  </div>
+  <aside class="panel">
+    <h3>What does not transfer from Sphinx-Needs</h3>
+    <p>Templated prose per variant does not: two meanings are two claims. Variant fields are not
+    rewritten into the statement; the claim states the obligation, and the selector states where it
+    applies. A selector the context does not mention is <strong>UNKNOWN</strong>, never a default.</p>
+  </aside>
+</section>
+</main>
+<footer>
+  <p>Source: <a href="https://github.com/fadasr/req-demo">fadasr/req-demo</a>.
+  Requirements prose from <a href="https://github.com/useblocks/sphinx-needs-demo">useblocks/sphinx-needs-demo</a>
+  at <code>3c602bf</code> (MIT); claims, views and pages generated with <a href="https://github.com/autox-my/req">req</a>.
+  No signed Baseline: everything here is a draft for a human to ratify.</p>
+</footer>
+</body>
+</html>
