@@ -27,12 +27,30 @@ corpus had 220 trace edges, an empty traceability matrix, and no test evidence. 
 | `docs/traceability.md` | the full V-model matrix: requirement ↔ design/code ↔ test |
 | `docs/v-model.html` | a rendered architecture graph of the same three views (`archify`) |
 | `docs/components.html` | the req-native component overlay: `arch_overlay.py` colors each software component by its satisfaction outcome |
+| `docs/index.html`, `docs/matrix.html` | the GitHub Pages landing page and global matrix |
+| `docs/<project>/` | one page, requirement graph and (where it exists) component overlay per upstream example |
 | `component-coverage.md` | the overlay's coverage matrix, one row per claim |
 | `docs/components.archify.json` | the component diagram the overlay is built from |
 | `docs/design.md` | how `design/` maps to `req satisfy`, and the token trap |
 | `tools/needs_import.py` | the importer from req, at the commit that added `--links` and `--tests` |
+| `tools/req-graph/` | req's graph converters, copied at the same commit |
 | `data/` | the two upstream JUnit reports, committed so the test links are reproducible |
-| `scripts/` | rebuild, import, design build, satisfaction record, trace matrix, drift |
+| `scripts/` | rebuild, import, design build, satisfaction record, trace matrix, project graphs, site, drift |
+
+## The site
+
+The demonstration is a static GitHub Pages site: **https://fadasr.github.io/req-demo/**. It is
+built from the checked JSON views, not from prose:
+
+```bash
+req trace --format json > build/trace.json
+req satisfy --format json > build/satisfy.json
+scripts/fetch-archify.sh                  # archify 7e45f36, the pin req's graph tools name
+python3 scripts/build-project-graphs.py   # docs/<project>/graph.html + components.html
+python3 scripts/build-site.py             # docs/index.html, docs/matrix.html, project pages
+```
+
+`.github/workflows/pages.yml` deploys `docs/` on every push to `main`.
 | `upstream/` | the source checkout (ignored; pinned by `scripts/build-upstream.sh`) |
 | `build/` | generated reports (`needs.json`, command captures; ignored) |
 
@@ -142,6 +160,11 @@ req canon                                 # the parse each claim derives
 scripts/build-design.py --write           # design/ from the arch/swarch/component/impl needs
 scripts/record-satisfaction.sh            # record the req-satisfies: links
 scripts/build-trace-matrix.py --out docs/traceability.md
+req trace --format json > build/trace.json
+req satisfy --format json > build/satisfy.json
+scripts/fetch-archify.sh                  # only to regenerate the graph pages
+python3 scripts/build-project-graphs.py
+python3 scripts/build-site.py
 ```
 
 The import report on this export:

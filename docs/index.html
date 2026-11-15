@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Requirements that keep their meaning · req-demo</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="page-home">
+<header class="top">
+  <a class="brand" href="index.html"><span class="mark">req</span><span>demo</span></a>
+  <nav>
+    <a href="index.html#projects">Projects</a>
+    <a href="matrix.html">Matrix</a>
+    <a href="v-model.html">V-model</a>
+    <a href="components.html">Components</a>
+    <a href="https://github.com/fadasr/req-demo/blob/main/FINDINGS.md">Findings</a>
+  </nav>
+</header>
+<main>
+
+<section class="hero">
+  <p class="eyebrow">a real corpus, four projects, one claim model</p>
+  <h1>Requirements that keep their meaning<br><span>and their links.</span></h1>
+  <p class="lede">The four examples of <a href="https://sphinx-needs-demo.readthedocs.io/en/latest/">sphinx-needs-demo</a>
+  put through <a href="https://github.com/autox-my/req">req</a>: imported, canonicalized, linked to
+  architecture, code and tests, and gated. The spec, the matrix and this site are compiled views; the
+  obligations are the source.</p>
+  <div class="stats">
+    <div class="stat "><strong>135</strong><span>claims</span></div>
+    <div class="stat "><strong>220</strong><span>requirement relations</span></div>
+    <div class="stat "><strong>56</strong><span>design / code links</span></div>
+    <div class="stat "><strong>16</strong><span>test links</span></div>
+    <div class="stat good"><strong>96</strong><span>structured</span></div>
+  </div>
+</section>
+
+<section id="projects" class="section">
+  <div class="section-head"><h2>The four projects</h2><p>Each page has its own graph and coverage; the counts are this corpus.</p></div>
+  <div class="grid">
+<article class="project-card accent-slate">
+  <div class="card-head"><span class="icon">🧰</span><h3>Basic Example</h3></div>
+  <p>The feature showcase: directives, filtering, imported needs and external needs. None of it is an obligation, so this project deliberately contributes zero claims.</p>
+  <div class="mini-stats">
+    <span><strong>0</strong> claims</span>
+    <span><strong>0</strong> structured</span>
+    <span><strong>0</strong> relations</span>
+    <span><strong>0</strong> test links</span>
+  </div>
+  <div class="card-links"><a class="button ghost" href="basic/index.html">Coverage</a></div>
+</article>
+<article class="project-card accent-amber">
+  <div class="card-head"><span class="icon">☕️</span><h3>Coffee Machine</h3></div>
+  <p>A small end-to-end chain: system requirements → software requirements → components → passing JUnit tests. The clearest example of the full V-model.</p>
+  <div class="mini-stats">
+    <span><strong>8</strong> claims</span>
+    <span><strong>7</strong> structured</span>
+    <span><strong>5</strong> relations</span>
+    <span><strong>7</strong> test links</span>
+  </div>
+  <div class="card-links"><a class="button" href="coffee-machine/graph.html">Graph</a><a class="button" href="coffee-machine/components.html">Components</a><a class="button ghost" href="coffee-machine/index.html">Coverage</a></div>
+</article>
+<article class="project-card accent-blue">
+  <div class="card-head"><span class="icon">🚗</span><h3>Automotive ADAS</h3></div>
+  <p>The V-model at scale: stakeholder needs → SYS.2 → SWE.1 → architecture and code, with the upstream&#x27;s SYS.5 qualification evidence. The prose was re-worded into obligations.</p>
+  <div class="mini-stats">
+    <span><strong>53</strong> claims</span>
+    <span><strong>48</strong> structured</span>
+    <span><strong>44</strong> relations</span>
+    <span><strong>9</strong> test links</span>
+  </div>
+  <div class="card-links"><a class="button" href="automotive-adas/graph.html">Graph</a><a class="button" href="automotive-adas/components.html">Components</a><a class="button ghost" href="automotive-adas/index.html">Coverage</a></div>
+</article>
+<article class="project-card accent-green">
+  <div class="card-head"><span class="icon">🛡️</span><h3>ISO 26262 Functional Safety</h3></div>
+  <p>HARA → safety goals → functional safety requirements → system requirements. The best-structured example and most of the corpus&#x27;s relation edges.</p>
+  <div class="mini-stats">
+    <span><strong>74</strong> claims</span>
+    <span><strong>41</strong> structured</span>
+    <span><strong>171</strong> relations</span>
+    <span><strong>0</strong> test links</span>
+  </div>
+  <div class="card-links"><a class="button" href="iso-26262/graph.html">Graph</a><a class="button ghost" href="iso-26262/index.html">Coverage</a></div>
+</article></div>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>The three views</h2>
+    <p>A claim is an obligation with a stable id and a content-addressed meaning. Everything else is a view over it.</p>
+    <ul class="links">
+      <li><a href="v-model.html">The V-model</a><span>The layer map: needs → system → software → architecture → code, with tests and ISO safety.</span></li>
+      <li><a href="components.html">Component overlay</a><span>req's own <code>arch_overlay.py</code>: each component colored by the worst satisfaction outcome.</span></li>
+      <li><a href="matrix.html">Coverage matrix</a><span>Every claim, its design/code elements, its linked tests and its derived requirements.</span></li>
+      <li><a href="https://github.com/fadasr/req-demo/blob/main/docs/spec.md">Spec projection</a><span><code>req render</code>: the human-readable selection, regenerated, never hand-edited.</span></li>
+    </ul>
+  </div>
+  <div class="panel">
+    <h3>What the gate says</h3>
+    <p><span class="badge warn">UNVERIFIABLE</span> no signed Baseline, and 121 claims have no linked test. The projections are current.</p>
+    <p><span class="badge bad">FAIL</span> with both JUnit reports, nine ADAS claims are linked to three failing SYS.5 cases.</p>
+    <p class="small">The policy is not “green at any cost”: “we could not tell” and “a test failed” are different answers.</p>
+  </div>
+</section>
+
+<section class="section method">
+  <h2>How it is made</h2>
+  <ol>
+    <li><strong>Import</strong> the pinned export with <code>--links --tests --areas</code>: 362 needs in, 135 claims out, 8 named skips, 219 not selected by type.</li>
+    <li><strong>Author</strong>: 39 claims remain unstructured; the ADAS pass is done. Pins hold where a bound is load-bearing.</li>
+    <li><strong>Link</strong>: 220 claim relations, 56 <code>req-satisfies</code> links to architecture/components/code, 16 JUnit links.</li>
+    <li><strong>Gate</strong>: <code>req check</code> runs both variants, both projections and completeness; <code>req gate --test-report</code> judges the evidence.</li>
+    <li><strong>Render</strong>: the graph and this site are regenerated from the JSON views, never edited by hand.</li>
+  </ol>
+</section>
+
+</main>
+<footer>
+  <p>Requirements prose from <a href="https://github.com/useblocks/sphinx-needs-demo">useblocks/sphinx-needs-demo</a>
+  at <code>3c602bf</code> (MIT); claims, views and pages generated with <a href="https://github.com/autox-my/req">req</a>.
+  No signed Baseline: everything here is a draft for a human to ratify.</p>
+</footer>
+</body>
+</html>

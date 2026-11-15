@@ -11,3 +11,8 @@ docs/*.visual-check.*
 docs/*.browser-check.json
 docs/*.delivery.json
 docs/*.finalize*.json
+
+docs/**/*.browser-check.json
+docs/**/*.delivery.json
+docs/**/*.finalize*.json
+docs/**/*.visual-check.*

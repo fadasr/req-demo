@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coffee Machine · req-demo</title>
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="page-coffee-machine">
+<header class="top">
+  <a class="brand" href="../index.html"><span class="mark">req</span><span>demo</span></a>
+  <nav>
+    <a href="../index.html#projects">Projects</a>
+    <a href="../matrix.html">Matrix</a>
+    <a href="../v-model.html">V-model</a>
+    <a href="../components.html">Components</a>
+    <a href="https://github.com/fadasr/req-demo/blob/main/FINDINGS.md">Findings</a>
+  </nav>
+</header>
+<main>
+
+<section class="project-hero accent-amber">
+  <p class="eyebrow"><a href="../index.html">req-demo</a> / Coffee Machine</p>
+  <h1><span class="icon">☕️</span> Coffee Machine</h1>
+  <p class="lede">A small end-to-end chain: system requirements → software requirements → components → passing JUnit tests. The clearest example of the full V-model.</p>
+  <div class="stats">
+    <div class="stat "><strong>8</strong><span>claims</span></div>
+    <div class="stat good"><strong>7</strong><span>structured</span></div>
+    <div class="stat "><strong>5</strong><span>relations</span></div>
+    <div class="stat "><strong>4</strong><span>design / code links</span></div>
+    <div class="stat "><strong>7</strong><span>test links</span></div>
+  </div>
+  <div class="actions"><a class="button" href="graph.html">Requirement graph</a><a class="button" href="components.html">Component overlay</a><a class="button ghost" href="../matrix.html">Full matrix</a></div>
+</section>
+
+<section class="section">
+  <h2>What this project shows</h2>
+  <ul class="shows"><li>8 claims: 4 system requirements and 4 software requirements.</li><li>5 requirement relations and 4 design/code links; the coffee component satisfies 4 claims.</li><li>7 JUnit links on 4 claims, all passing; the safety and temperature tests both prove the shutdown claim.</li></ul>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>Coverage</h2><p>8 claims · 2 area(s). Design cells are the files that declare <code>req-satisfies</code>; test cells are JUnit <code>classname::name</code>.</p></div>
+  <div class="table-wrap"><table class="coverage">
+<thead><tr><th>Claim</th><th>Requirement</th><th>Design / code</th><th>Tests</th><th>Derives from</th></tr></thead>
+<tbody><tr id="REQ-0062"><td><code>REQ-0062</code></td><td>The coffee machine shall be able to brew coffee with user-selected strength (weak, medium, strong).</td><td>—</td><td>—</td><td class="rel">—</td></tr><tr id="REQ-0063"><td><code>REQ-0063</code></td><td>The coffee machine shall heat water to the appropriate temperature (85-95°C) for brewing coffee.</td><td>—</td><td>—</td><td class="rel">—</td></tr><tr id="REQ-0064"><td><code>REQ-0064</code></td><td>The coffee machine shall automatically shut down if the water temperature exceeds 100°C or if no water is detected.</td><td>—</td><td>—</td><td class="rel">—</td></tr><tr id="REQ-0065"><td><code>REQ-0065</code></td><td>The coffee machine shall provide a user interface with buttons for selecting coffee strength and starting the brewing p…</td><td>—</td><td>—</td><td class="rel">—</td></tr><tr id="REQ-0114"><td><code>REQ-0114</code></td><td>The software shall process button inputs with debouncing and trigger appropriate actions (strength selection, start bre…</td><td><code title="holds">COMP_UI_MODULE.md</code></td><td><code>test_user_command_variants::TEST_BUTTON_DEBOUNCE</code></td><td class="rel">reqs → <a href="#REQ-0065">REQ-0065</a></td></tr><tr id="REQ-0115"><td><code>REQ-0115</code></td><td>The software shall continuously monitor water temperature and trigger an emergency shutdown within 100ms if temperature…</td><td><code title="holds">COMP_SAFETY_MON.md</code></td><td><code>test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN</code><br><code>test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN</code></td><td class="rel">reqs → <a href="#REQ-0063">REQ-0063</a><br>reqs → <a href="#REQ-0064">REQ-0064</a></td></tr><tr id="REQ-0116"><td><code>REQ-0116</code></td><td>The temperature control software shall monitor the water temperature sensor and regulate the heating element to maintai…</td><td><code title="holds">COMP_TEMP_CTRL.md</code></td><td><code>test_sensor_data_creation::TEST_TEMP_CONTROL</code><br><code>test_temperature_status_conversions::TEST_TEMP_CONTROL</code></td><td class="rel">reqs → <a href="#REQ-0063">REQ-0063</a></td></tr><tr id="REQ-0117"><td><code>REQ-0117</code></td><td>The software shall continuously monitor the water level sensor and prevent brewing operations when water level is below…</td><td><code title="holds">COMP_SAFETY_MON.md</code></td><td><code>test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN</code><br><code>test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN</code></td><td class="rel">reqs → <a href="#REQ-0064">REQ-0064</a></td></tr></tbody></table></div>
+</section>
+
+</main>
+<footer>
+  <p>Requirements prose from <a href="https://github.com/useblocks/sphinx-needs-demo">useblocks/sphinx-needs-demo</a>
+  at <code>3c602bf</code> (MIT); claims, views and pages generated with <a href="https://github.com/autox-my/req">req</a>.
+  No signed Baseline: everything here is a draft for a human to ratify.</p>
+</footer>
+</body>
+</html>
