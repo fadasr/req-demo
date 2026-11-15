@@ -236,8 +236,8 @@ The import is a draft, never a ratification (ADR 0004).
 
 **Remaining**
 1. **Re-word the 39 unstructured claims** — ISO FSR 23/36 and ISO system requirements 10/18 are
-   the work list, plus five ADAS qualifiers (`smooth`, `robust`, `multiple_obligations`). The 22
-   lint findings are the first edits; `req canon --by-area` is the plan.
+   the work list, plus five ADAS qualifiers (`smooth`, `robust`, `multiple_obligations`). Lints on
+   22 claims are the first edits; `req canon --by-area` is the plan.
 2. **Pin more load-bearing bounds** — one pin is a demonstration, not a ratified set.
 3. **Link the 121 claims with no test** — not every upstream test need has a JUnit report, so some
    of this is a test-authoring task, not a link task.
