@@ -83,18 +83,18 @@ req keeps those as three separate, checkable views rather than one graph:
 | edge | req mechanism | this corpus |
 | --- | --- | --- |
 | requirement ↔ requirement | claim `relations` | 220 edges (`req trace`) |
-| requirement ↔ architecture / design / code | `req-satisfies:` in a design file | 26 elements, 56 links (`req satisfy`) |
+| requirement ↔ architecture / design / code | `req-satisfies:` in a design file | 28 elements, 58 links (`req satisfy`) |
 | requirement ↔ test | claim `tests:`, a JUnit `classname::name` | 16 links on 13 claims |
 
 `design/` holds the translation: one file per upstream `arch`, `swarch` and `component` need, plus
 the two annotated C files, each declaring the claims it satisfies ([details](docs/design.md)).
 `scripts/record-satisfaction.sh` is the human act (`req satisfy --record`) that writes
-`.req/satisfied`; all 56 links **HOLD**.
+`.req/satisfied`; all 58 links **HOLD**.
 
 ```bash
 scripts/build-design.py --write           # (re)write design/ from the export
 scripts/record-satisfaction.sh            # record every req-satisfies: link
-req satisfy                               # 56 links declared, verdict PASS
+req satisfy                               # 58 links declared, verdict PASS
 scripts/build-trace-matrix.py --out docs/traceability.md
 ```
 
@@ -197,7 +197,7 @@ req canon                                  # 135 claims, 39 unstructured, 22 wit
 req canon --by-area                        # the work list (req#89): ISO FSR 13/36 structured
 req trace | head -40                       # 220 stored edges, 66 targets receive one
 req impact REQ-0038                        # 7 dependents, nearest first
-req satisfy                                # 56 design/code links, all HOLD
+req satisfy                                # 58 design/code links, all HOLD
 req select steering_side=right             # REQ-0136 applies, REQ-0113 does not
 req gate steering_side=left --test-report data/coffee_machine_junit.xml \
     --test-report data/adas_junit.xml      # FAIL: 4 passed, 9 failed
@@ -207,7 +207,7 @@ req audit                                  # coverage and provenance, unratified
 
 Without a test report the gate's flagship answer is **UNVERIFIABLE**, and that is correct: 121
 of 134 applying claims have no linked test, so `tests_linked` cannot be confirmed even though
-every structural policy passes and all 56 design/code links HOLD. With the two real reports the
+every structural policy passes and all 58 design/code links HOLD. With the two real reports the
 answer becomes **FAIL** — nine ADAS claims are linked to three failing qualification cases — which
 is the policy doing its job, not a demo defect. The links can be drafted automatically:
 `needs_import.py --tests <junit.xml> --test-type test --test-link specs` proposes them from the

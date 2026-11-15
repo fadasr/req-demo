@@ -300,7 +300,7 @@ def index_page(trace, satisfy):
   <ol>
     <li><strong>Import</strong> the pinned export with <code>--links --tests --areas</code>: 362 needs in, 135 claims out, 8 named skips, 219 not selected by type.</li>
     <li><strong>Author</strong>: 39 claims remain unstructured; the ADAS pass is done. Pins hold where a bound is load-bearing.</li>
-    <li><strong>Link</strong>: 220 claim relations, 56 <code>req-satisfies</code> links to architecture/components/code, 16 JUnit links.</li>
+    <li><strong>Link</strong>: 220 claim relations, 58 <code>req-satisfies</code> links to architecture/components/code, 16 JUnit links.</li>
     <li><strong>Gate</strong>: <code>req check</code> runs both variants, both projections and completeness; <code>req gate --test-report</code> judges the evidence.</li>
     <li><strong>Render</strong>: the graph and this site are regenerated from the JSON views, never edited by hand.</li>
   </ol>

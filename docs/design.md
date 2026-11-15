@@ -20,7 +20,7 @@ committed record.
 ## What this shows, and what it does not
 
 - **Requirement ↔ design/code** is a `req-satisfies:` link: `req satisfy` judges it by the
-  direction of the claim's change since it was recorded. All 56 links HOLD here.
+  direction of the claim's change since it was recorded. All 58 links HOLD here.
 - **Requirement ↔ test** is the claim's `tests:`, a JUnit `classname::name`; 13 claims are
   linked (4 Coffee Machine passing, 9 ADAS qualification with three failures).
 - **Design ↔ design** is **not** a req edge. The upstream's `ARCH_001 -> SWARCH_001 -> IMPL_LKA_*`

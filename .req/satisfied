@@ -168,3 +168,9 @@ links:
 - element: design/components/COMP_UI_MODULE.md
   claim_id: REQ-0114
   statement: The software shall process button inputs with debouncing and trigger appropriate actions (strength selection, start brewing, stop/cancel).
+- element: design/components/TURN_SIGNAL_LEFT.md
+  claim_id: REQ-0113
+  statement: The turn signal logic for left-hand drive vehicles shall prioritize right-side mirror checks for overtaking maneuvers.
+- element: design/components/TURN_SIGNAL_RIGHT.md
+  claim_id: REQ-0136
+  statement: The turn signal logic for right-hand drive vehicles shall prioritize left-side mirror checks for overtaking maneuvers.

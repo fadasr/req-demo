@@ -80,7 +80,7 @@ req keeps three checkable views, and the demo now populates all three:
 | edge | req mechanism | this corpus |
 | --- | --- | --- |
 | requirement ↔ requirement | claim `relations` | 220 edges |
-| requirement ↔ architecture/design/code | `req-satisfies:` + `req satisfy` | 26 elements, 56 links, all HOLD |
+| requirement ↔ architecture/design/code | `req-satisfies:` + `req satisfy` | 28 elements, 58 links, all HOLD |
 | requirement ↔ test | claim `tests:` | 16 links on 13 claims |
 
 `scripts/build-design.py` turns the upstream `arch`, `swarch`, `component` and two annotated C

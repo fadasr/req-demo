@@ -102,7 +102,7 @@ it would be `UNKNOWN`, not excluded.
 $ req gate steering_side=left --test-report data/coffee_machine_junit.xml
 ...
 [PASS] design_satisfied
-  ... (counts: 56 link(s) judged · 56 holding · 0 weakened)
+  ... (counts: 57 link(s) judged · 57 holding · 0 weakened)
 [UNVERIFIABLE] tests_linked
   counts: 134 applying · 13 linked · 121 unlinked · 4 passed · 0 failed · 9 not in the report
 verdict: UNVERIFIABLE — nothing is wrong, but something cannot be confirmed
@@ -185,7 +185,7 @@ file, read by `req satisfy` (ADR 0040):
 
 ```console
 $ req satisfy
-# req satisfy: 56 link(s) declared
+# req satisfy: 58 link(s) declared
 [HOLDS] design/architecture/ARCH_001.md -> REQ-0046
 [HOLDS] design/architecture/ARCH_001.md -> REQ-0047
 ...
@@ -203,7 +203,7 @@ class is `HOLDS (weakened)`, anything else is `SUSPECT`.
 ```console
 $ scripts/build-trace-matrix.py --out docs/traceability.md
 135 claims · 45 with a design/code element · 13 with a linked test (16 test link(s)) ·
-26 design element(s) · 220 requirement relation(s).
+28 design element(s) · 220 requirement relation(s).
 ```
 
 `docs/traceability.md` joins the three views: per area, each claim's design/code elements, its

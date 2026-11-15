@@ -156,7 +156,7 @@
       "id": "sw-arch",
       "from": "swreq",
       "to": "arch",
-      "label": "req-satisfies \u00b7 56",
+      "label": "req-satisfies \u00b7 58",
       "labelDy": -34
     },
     {
@@ -194,7 +194,7 @@
       "dot": "emerald",
       "title": "Design is a file, not a claim",
       "items": [
-        "56 req-satisfies links join requirements to architecture, components and code.",
+        "58 req-satisfies links join requirements to architecture, components and code.",
         "All hold."
       ]
     },
