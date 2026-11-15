@@ -4,7 +4,7 @@
 
 # Traceability
 
-135 claims · 45 with a design/code element · 13 with a linked test (16 test link(s)) · 26 design element(s) · 220 requirement relation(s).
+135 claims · 47 with a design/code element · 13 with a linked test (16 test link(s)) · 28 design element(s) · 220 requirement relation(s).
 
 A claim's design elements are the files under `design/` that declare `req-satisfies: <claim-id>`; a test is a JUnit `classname::name` in the claim's `tests:`.
 
@@ -41,8 +41,8 @@ A claim's design elements are the files under `design/` that declare `req-satisf
 | REQ-0110 | The drowsiness monitoring software shall aggregate per-frame eye-state observations int... | `design/architecture/SWARCH_009.md` | — | links → REQ-0059 |
 | REQ-0111 | The parking slot detection software shall recognize parallel and perpendicular parking... | `design/architecture/SWARCH_010.md` | — | links → REQ-0060 |
 | REQ-0112 | The parking control software shall plan and follow a smooth park trajectory into the se... | `design/architecture/SWARCH_010.md` | — | links → REQ-0061 |
-| REQ-0113 | The turn signal logic for left-hand drive vehicles shall prioritize right-side mirror c... | — | — | — |
-| REQ-0136 | The turn signal logic for right-hand drive vehicles shall prioritize left-side mirror c... | — | — | — |
+| REQ-0113 | The turn signal logic for left-hand drive vehicles shall prioritize right-side mirror c... | `design/components/TURN_SIGNAL_LEFT.md` | — | — |
+| REQ-0136 | The turn signal logic for right-hand drive vehicles shall prioritize left-side mirror c... | `design/components/TURN_SIGNAL_RIGHT.md` | — | — |
 
 ### automotive-adas/sys-1-req-elicitation
 
@@ -215,9 +215,11 @@ A claim's design elements are the files under `design/` that declare `req-satisf
 | `design/components/COMP_SAFETY_MON.md` | REQ-0115 (holds)<br>REQ-0117 (holds) | holds |
 | `design/components/COMP_TEMP_CTRL.md` | REQ-0116 (holds) | holds |
 | `design/components/COMP_UI_MODULE.md` | REQ-0114 (holds) | holds |
+| `design/components/TURN_SIGNAL_LEFT.md` | REQ-0113 (holds) | holds |
+| `design/components/TURN_SIGNAL_RIGHT.md` | REQ-0136 (holds) | holds |
 
 ## Coverage
 
-- claims with no design/code element: **90** (REQ-0096, REQ-0097, REQ-0113, REQ-0136, REQ-0038, REQ-0039, REQ-0040, REQ-0041, REQ-0042, REQ-0043, REQ-0044, REQ-0045, REQ-0062, REQ-0063, REQ-0064, REQ-0065, REQ-0002, REQ-0003, REQ-0004, REQ-0005, REQ-0006, REQ-0007, REQ-0008, REQ-0009, REQ-0010, REQ-0011, REQ-0012, REQ-0013, REQ-0014, REQ-0015, REQ-0016, REQ-0017, REQ-0018, REQ-0019, REQ-0020, REQ-0021, REQ-0022, REQ-0023, REQ-0024, REQ-0025, REQ-0026, REQ-0027, REQ-0028, REQ-0029, REQ-0030, REQ-0031, REQ-0032, REQ-0033, REQ-0034, REQ-0035, REQ-0036, REQ-0037, REQ-0066, REQ-0067, REQ-0068, REQ-0069, REQ-0070, REQ-0071, REQ-0072, REQ-0073, REQ-0074, REQ-0075, REQ-0076, REQ-0077, REQ-0078, REQ-0079, REQ-0080, REQ-0081, REQ-0082, REQ-0083, REQ-0084, REQ-0085, REQ-0118, REQ-0119, REQ-0120, REQ-0121, REQ-0122, REQ-0123, REQ-0124, REQ-0125, REQ-0126, REQ-0127, REQ-0128, REQ-0129, REQ-0130, REQ-0131, REQ-0132, REQ-0133, REQ-0134, REQ-0135)
+- claims with no design/code element: **88** (REQ-0096, REQ-0097, REQ-0038, REQ-0039, REQ-0040, REQ-0041, REQ-0042, REQ-0043, REQ-0044, REQ-0045, REQ-0062, REQ-0063, REQ-0064, REQ-0065, REQ-0002, REQ-0003, REQ-0004, REQ-0005, REQ-0006, REQ-0007, REQ-0008, REQ-0009, REQ-0010, REQ-0011, REQ-0012, REQ-0013, REQ-0014, REQ-0015, REQ-0016, REQ-0017, REQ-0018, REQ-0019, REQ-0020, REQ-0021, REQ-0022, REQ-0023, REQ-0024, REQ-0025, REQ-0026, REQ-0027, REQ-0028, REQ-0029, REQ-0030, REQ-0031, REQ-0032, REQ-0033, REQ-0034, REQ-0035, REQ-0036, REQ-0037, REQ-0066, REQ-0067, REQ-0068, REQ-0069, REQ-0070, REQ-0071, REQ-0072, REQ-0073, REQ-0074, REQ-0075, REQ-0076, REQ-0077, REQ-0078, REQ-0079, REQ-0080, REQ-0081, REQ-0082, REQ-0083, REQ-0084, REQ-0085, REQ-0118, REQ-0119, REQ-0120, REQ-0121, REQ-0122, REQ-0123, REQ-0124, REQ-0125, REQ-0126, REQ-0127, REQ-0128, REQ-0129, REQ-0130, REQ-0131, REQ-0132, REQ-0133, REQ-0134, REQ-0135)
 - claims with no linked test: **122** (REQ-0086, REQ-0087, REQ-0088, REQ-0089, REQ-0090, REQ-0091, REQ-0092, REQ-0093, REQ-0094, REQ-0095, REQ-0096, REQ-0097, REQ-0098, REQ-0099, REQ-0100, REQ-0101, REQ-0102, REQ-0103, REQ-0104, REQ-0105, …)
 

@@ -45,7 +45,7 @@ PROJECTS = [
         "title": "Automotive ADAS",
         "prefixes": ("automotive-adas",),
         "components": ["lane", "acc", "collision", "pedestrian", "alerting",
-                       "traffic", "blind", "drowsy", "parking"],
+                       "traffic", "blind", "drowsy", "parking", "turn"],
     },
     {
         "slug": "iso-26262",

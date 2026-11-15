@@ -8,7 +8,7 @@
       "url": "https://github.com/fadasr/req-demo",
       "provider": "github",
       "link_mode": "local-only",
-      "revision": "e97ea3df41bac5761028c1f104c19e68b0be665f"
+      "revision": "a8d5c212dca84c7ba1e086773f6d6e92d5e7c047"
     },
     "output": "components.html"
   },
@@ -200,6 +200,26 @@
         },
         {
           "path": "design/components/COMP_UI_MODULE.md"
+        }
+      ]
+    },
+    {
+      "id": "turn",
+      "type": "backend",
+      "label": "Turn signal logic",
+      "sublabel": "SWREQ_028 / SWREQ_029",
+      "row": 2,
+      "col": 0,
+      "size": [
+        220,
+        72
+      ],
+      "sources": [
+        {
+          "path": "design/components/TURN_SIGNAL_LEFT.md"
+        },
+        {
+          "path": "design/components/TURN_SIGNAL_RIGHT.md"
         }
       ]
     }

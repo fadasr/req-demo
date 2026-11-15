@@ -62,7 +62,7 @@ PROJECTS = [
         ),
         "shows": [
             "53 claims, 48 of them structured after the authoring pass; 44 requirement relations.",
-            "9 software components satisfy the claims; the overlay shows all of them HOLD.",
+            "10 software components satisfy the claims; the overlay shows all of them HOLD.",
             "9 claims are linked to the SYS.5 qualification report — three cases fail — so the gate says FAIL, not UNVERIFIABLE.",
             "The two turn-signal claims are the variant pair: <code>steering_side=left/right</code>.",
         ],

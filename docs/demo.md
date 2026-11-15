@@ -202,7 +202,7 @@ class is `HOLDS (weakened)`, anything else is `SUSPECT`.
 
 ```console
 $ scripts/build-trace-matrix.py --out docs/traceability.md
-135 claims · 45 with a design/code element · 13 with a linked test (16 test link(s)) ·
+135 claims · 47 with a design/code element · 13 with a linked test (16 test link(s)) ·
 28 design element(s) · 220 requirement relation(s).
 ```
 
@@ -210,7 +210,7 @@ $ scripts/build-trace-matrix.py --out docs/traceability.md
 linked tests and its derived requirements, then the coverage gaps. `docs/v-model.html` renders the
 same shape as an architecture graph (`archify` from `docs/v-model.archify.json`), for the reader
 who wants the picture rather than the table. `docs/components.html` is req's own
-`arch_overlay.py` over a 10-component software map: every component is **HOLDS**, and
+`arch_overlay.py` over an 11-component software map: every component is **HOLDS**, and
 `component-coverage.md` is its claim-by-claim matrix. It is generated, not a req
 projection, because req has no single command that merges external elements with claims.
 

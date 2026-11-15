@@ -107,7 +107,7 @@ view, not a req projection.
 The req-native version is `docs/components.html`, produced by req's own
 [`tools/graph/arch_overlay.py`](https://github.com/autox-my/req/blob/main/tools/graph/arch_overlay.py)
 from `docs/components.archify.json`, `req satisfy --format json` and `req trace --format json`.
-Each of the 10 software components cites the design files it is built from; the overlay sets its
+Each of the 11 software components cites the design files it is built from; the overlay sets its
 status to the worst satisfaction outcome and lists the claims. All 10 are **HOLDS**, with 1–5
 claims each; `component-coverage.md` is the tool's claim-by-claim matrix. It was validated,
 delivered and browser-checked by archify **7e45f36** (the version req pins).
