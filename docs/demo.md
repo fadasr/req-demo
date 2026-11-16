@@ -209,7 +209,8 @@ $ scripts/build-trace-matrix.py --out docs/traceability.md
 `docs/traceability.md` joins the three views: per area, each claim's design/code elements, its
 linked tests and its derived requirements, then the coverage gaps. `docs/v-model.html` renders the
 same shape as an architecture graph (`archify` from `docs/v-model.archify.json`), for the reader
-who wants the picture rather than the table. `docs/components.html` is req's own
+who wants the picture rather than the table. `docs/explorer.html` is the coverage explorer from
+`rev-3294a46`: one claim across source, design and tests, filters and gaps. `docs/components.html` is req's own
 `arch_overlay.py` over an 11-component software map: every component is **HOLDS**, and
 `component-coverage.md` is its claim-by-claim matrix. It is generated, not a req
 projection, because req has no single command that merges external elements with claims.

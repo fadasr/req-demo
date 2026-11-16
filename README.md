@@ -106,6 +106,8 @@ scripts/build-trace-matrix.py --out docs/traceability.md
 
 `docs/traceability.md` joins the three views into the matrix a reader expects: per area, each
 claim's design/code elements, linked tests and derived requirements, plus the coverage gaps.
+`docs/explorer.html` is req's coverage explorer: one claim across source, design and tests, with
+area/outcome filters, search and the gaps named (ADR 0054).
 `docs/v-model.html` is the same shape as a rendered architecture graph, built with
 [`archify`](https://github.com/tt-a1i/archify) from `docs/v-model.archify.json`; it is a reader's
 view, not a req projection.
