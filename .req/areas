@@ -1,8 +1,9 @@
-safety-example/fsr safety_example/fsr
-automotive-adas/sys-1-req-elicitation automotive-adas/sys_1_req_elicitation
-automotive-adas/sys-2-req-analysis automotive-adas/sys_2_req_analysis
-coffee-machine/requirements coffee-machine/requirements
-safety-example/safety-goals safety_example/safety_goals
-automotive-adas/swe-1-sw-req-analysis automotive-adas/swe_1_sw_req_analysis
-coffee-machine/sw-requirements coffee-machine/sw_requirements
-safety-example/system-requirements safety_example/system_requirements
+# The reading order is the line order. The path is stable; the label is what a reader sees.
+coffee-machine/requirements Coffee Machine / System Requirements
+coffee-machine/sw-requirements Coffee Machine / Software Requirements
+automotive-adas/sys-1-req-elicitation ADAS / SYS.1 Stakeholder Needs
+automotive-adas/sys-2-req-analysis ADAS / SYS.2 System Requirements
+automotive-adas/swe-1-sw-req-analysis ADAS / SWE.1 Software Requirements
+safety-example/safety-goals ISO 26262 / Safety Goals
+safety-example/fsr ISO 26262 / Functional Safety Requirements
+safety-example/system-requirements ISO 26262 / System Requirements

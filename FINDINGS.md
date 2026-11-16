@@ -1,8 +1,8 @@
 # What this demo found
 
-One corpus, measured on 2026-11-14 with `req 0.1.0` (rules_v 9, built from `dd78c81`), then
-re-verified on 2026-11-15 with `cc35d81` (latest `main` plus PR #86), same rules_v 9 and no
-address moved, and the Sphinx-Needs demo at `3c602bf`. These are observations from **one** real
+One corpus, measured on 2026-11-14 with `req 0.1.0` (rules_v 9), then re-verified on 2026-11-16
+with the `rev-3294a46` release: same rules_v 9, no address moved, and the Sphinx-Needs demo at
+`3c602bf`. These are observations from **one** real
 project, not a benchmark; where a number is a count, the command that produced it is named.
 
 ## Fixed: typed links were dropped, so traceability was empty
@@ -20,7 +20,7 @@ wrote `relations: []` for every one. `req trace` on the imported corpus said:
 The `not carried` report line named the link fields (`derives_from`, `implements`, `links`,
 `reqs`, …) and counted the needs, but an adopter had to rebuild 220 edges by hand.
 
-**Change.** [`req#86`](https://github.com/autox-my/req/pull/86) adds `--links`: an edge whose
+**Change.** `rev-3294a46` (PR [`#86`](https://github.com/autox-my/req/pull/86)) adds `--links`: an edge whose
 target is also drafted in the same run becomes a `relations:` entry (`type` = source link field,
 `to` = the target's claim id). Backlinks are not duplicated (req stores an edge once), link
 filters (`<id>[version==1]`) are stripped, and every target that cannot be carried is counted by
@@ -197,8 +197,9 @@ The two committed projections (`docs/spec.md`, `docs/trace.md`) load and verify 
    Sphinx-Test-Reports (`name` = test need id). Another generator's report is deliberately
    counted, not converted; a mapping flag would be the next step if an adopter needs it.
 
-**Done since the list was written:** the canon work list is [`req#89`](https://github.com/autox-my/req/pull/89)
-(`req canon --by-area`), typed links and JUnit evidence are [`req#86`](https://github.com/autox-my/req/pull/86),
+**Done since the list was written:** the canon work list is `req canon --by-area` (`rev-3294a46`, PR
+[#89](https://github.com/autox-my/req/pull/89)), typed links and JUnit evidence are PR
+[#86](https://github.com/autox-my/req/pull/86),
 the subject registry is curated, and the ADAS authoring pass is complete. The Sphinx-Needs
 variant-expansion recipe is documented in [`docs/variants.html`](docs/variants.html) as a
 project-level mapping, not a req flag.

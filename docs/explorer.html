@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>req coverage explorer</title>
+<style>
+:root {
+  --bg: #fafaf8; --fg: #1d1f21; --muted: #565b63; --panel: #ffffff; --line: #c4c8ce; --focus: #1b55c4;
+  --src-bg: #f3ecfa; --src-bd: #7a49b8; --claim-bg: #e8f0fe; --claim-bd: #2f67d0; --area-bg: #dfe6f3;
+  --des-bg: #e5f4ea; --des-bd: #217a4a; --tst-bg: #fdf1dc; --tst-bd: #a9680f;
+  --gap-bg: #fdeae7; --gap-bd: #b3261e; --ask-bg: #eef0f2; --ask-bd: #6b7078;
+  --ok: #1a7a3a; --weak: #8a6a00; --bad: #b3261e; --idle: #6b7078; --dim: 0.2;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171b; --fg: #e6e8eb; --muted: #a2a8b0; --panel: #1d2026; --line: #3b4048; --focus: #7aa7ff;
+    --src-bg: #2a2236; --src-bd: #a98ae0; --claim-bg: #1f2b44; --claim-bd: #7aa7ff; --area-bg: #28324a;
+    --des-bg: #1c2f26; --des-bd: #5fcb8b; --tst-bg: #35291a; --tst-bd: #e0a85a;
+    --gap-bg: #3a2020; --gap-bd: #ff8a80; --ask-bg: #272b31; --ask-bd: #9aa1ab;
+    --ok: #5fcb8b; --weak: #e2c25a; --bad: #ff8a80; --idle: #9aa1ab; --dim: 0.28;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: var(--focus); }
+header, main, footer { max-width: 1760px; margin: 0 auto; padding: 0 16px; }
+header { max-width: 1760px; }
+h1 { font-size: 1.5rem; margin: 20px 0 4px; }
+.lede { margin: 4px 0; color: var(--muted); max-width: 70ch; }
+.meta { margin: 6px 0 0; font-size: 0.9rem; color: var(--muted); }
+code { font: 0.9em ui-monospace, SFMono-Regular, Menlo, monospace; }
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px 16px; align-items: end;
+  margin: 14px 0 8px; padding: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.controls label, .controls legend { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 2px; padding: 0; }
+.controls input[type=search], .controls select { width: 100%; min-height: 36px; font: inherit; color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.checks { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.checks label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem; color: var(--fg); margin: 0; min-height: 32px; }
+button { font: inherit; min-height: 36px; padding: 4px 12px; color: var(--fg); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 6px; cursor: pointer; }
+button:hover { border-color: var(--focus); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.status { margin: 6px 0; min-height: 1.5em; font-size: 0.95rem; }
+.status.limit { padding: 8px 12px; border: 1px solid var(--weak); border-radius: 6px; background: var(--panel); }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-bottom: 24px; }
+@media (min-width: 1100px) { .layout { grid-template-columns: minmax(0, 1fr) 320px; align-items: start; } }
+.stage { overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; max-height: 78vh; }
+svg { display: block; }
+.colhead { font: 600 12px system-ui, sans-serif; fill: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.n { cursor: pointer; }
+.n rect { stroke-width: 1.5; }
+.n .t1 { font: 600 12px system-ui, -apple-system, sans-serif; fill: var(--fg); }
+.n .t2 { font: 10.5px system-ui, -apple-system, sans-serif; fill: var(--muted); }
+.n-source rect { fill: var(--src-bg); stroke: var(--src-bd); }
+.n-claim rect { fill: var(--claim-bg); stroke: var(--claim-bd); }
+.n-area rect { fill: var(--area-bg); stroke: var(--claim-bd); }
+.n-design rect { fill: var(--des-bg); stroke: var(--des-bd); }
+.n-tests rect { fill: var(--tst-bg); stroke: var(--tst-bd); }
+.n-gap rect { fill: var(--gap-bg); stroke: var(--gap-bd); stroke-dasharray: 5 3; }
+.n-gap .t1 { fill: var(--gap-bd); }
+.n-ask rect { fill: var(--ask-bg); stroke: var(--ask-bd); stroke-dasharray: 2 3; }
+.n-na rect { stroke-dasharray: 2 3; }
+.n:focus-visible rect, .n.focus rect { stroke: var(--focus); stroke-width: 3; }
+.n:focus-visible { outline: none; }
+.ext { font: 600 13px system-ui, sans-serif; fill: var(--focus); text-decoration: none; }
+.e { fill: none; stroke-width: 1.4; }
+.e-source { stroke: var(--src-bd); }
+.e-ver { stroke: var(--tst-bd); stroke-width: 1.2; }
+.e-sat { stroke: var(--idle); stroke-width: 1.8; }
+.o-holds { stroke: var(--ok); }
+.o-holds_weakened { stroke: var(--weak); stroke-dasharray: 7 3; }
+.o-suspect { stroke: var(--bad); stroke-dasharray: 3 3; }
+.o-unratified, .o-orphaned { stroke: var(--idle); stroke-dasharray: 2 4; }
+.o-unknown_claim { stroke: var(--bad); stroke-dasharray: 8 2 2 2; }
+.o-other { stroke: var(--idle); stroke-dasharray: 1 3; }
+.elabel { font: 600 10.5px system-ui, sans-serif; fill: var(--fg); paint-order: stroke; stroke: var(--panel); stroke-width: 3.5px; stroke-linejoin: round; }
+.has-focus .n, .has-focus .e, .has-focus .elabel { opacity: var(--dim); }
+.has-focus .hot { opacity: 1; }
+.has-focus .e.hot { stroke-width: 2.6; }
+aside { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: 0.92rem; overflow-wrap: anywhere; }
+aside h2 { font-size: 1rem; margin: 0 0 6px; }
+aside h3 { font-size: 0.82rem; margin: 12px 0 4px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+aside ul { margin: 0; padding-left: 1.1rem; }
+aside li { margin: 2px 0; }
+aside li button { min-height: 0; padding: 0 4px; border: 0; background: none; color: var(--focus); text-decoration: underline; text-align: left; }
+.scroll { max-height: 220px; overflow: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.85rem; color: var(--muted); }
+.legend li { display: inline-flex; align-items: center; gap: 6px; }
+.legend svg { width: 34px; height: 8px; }
+.tag { display: inline-block; padding: 0 6px; border: 1px solid var(--line); border-radius: 4px; font-size: 0.8rem; }
+footer { padding-bottom: 28px; color: var(--muted); font-size: 0.88rem; }
+@media (max-width: 1099px) {
+  aside { max-height: 42vh; overflow: auto; }
+  .layout.has-focus aside { order: -1; }   /* below the graph a focused chain would be off screen */
+}
+@media (max-width: 640px) {
+  body { font-size: 14px; }
+  h1 { font-size: 1.25rem; }
+  .controls { grid-template-columns: 1fr 1fr; padding: 10px; }
+  .controls .wide { grid-column: 1 / -1; }
+  .stage { max-height: 70vh; }
+}
+@media (prefers-reduced-motion: no-preference) { .n rect { transition: opacity 0.12s; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>req coverage explorer</h1>
+  <p class="lede">One claim, followed across the four layers: where it came from (<em>Source</em>), what it says (<em>Claim</em>), the design that
+  satisfies it (<em>Design</em>) and the tests that verify it (<em>Tests</em>). Read-only; recording a link stays a human act in a
+  terminal (<code>req satisfy --record</code>). <a href="index.html">Back to the overview</a>.</p>
+  <p class="meta" id="selection"></p>
+  <p class="meta" id="counts"></p>
+  <noscript><p class="status limit">This page draws its graph with a script it carries inside itself; it loads nothing from the network. Turn scripts on to read it.</p></noscript>
+</header>
+<main>
+  <form class="controls" id="controls" role="search" aria-label="Filters" onsubmit="return false">
+    <div class="wide">
+      <label for="q">Search by claim id, file path or test id</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="REQ-0028, src/gate.rs, suite::case">
+    </div>
+    <fieldset>
+      <legend>Layers drawn (claims always)</legend>
+      <div class="checks">
+        <label><input type="checkbox" id="l-source" checked> Source</label>
+        <label><input type="checkbox" id="l-design" checked> Design</label>
+        <label><input type="checkbox" id="l-tests" checked> Tests</label>
+      </div>
+    </fieldset>
+    <div>
+      <label for="outcome">Design link outcome</label>
+      <select id="outcome"><option value="">any</option></select>
+    </div>
+    <div>
+      <label for="area">Area</label>
+      <select id="area"><option value="">all areas</option></select>
+    </div>
+    <div class="checks">
+      <label><input type="checkbox" id="gaps"> Gaps only</label>
+    </div>
+    <div>
+      <button type="button" id="reset">Reset the view</button>
+    </div>
+  </form>
+  <div class="status" id="status" role="status" aria-live="polite"></div>
+  <ul class="legend" aria-label="Legend" id="legend"></ul>
+  <div class="layout" id="layout">
+    <div class="stage" id="stage" tabindex="-1">
+      <svg id="graph" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Coverage graph: source, claim, design, tests"></svg>
+    </div>
+    <aside id="detail" aria-live="polite"></aside>
+  </div>
+</main>
+<footer>
+  <p>Generated by <code>tools/explorer/build.py</code> from <code>req trace</code>, <code>req satisfy</code> and the architecture overlays; every node and
+  edge here is one of theirs. Test outcomes are not on this page: they depend on a run, not on the repository.</p>
+</footer>
+<script type="application/json" id="req-explorer-data">{"areas":[{"label":"Coffee Machine / System Requirements","path":"coffee-machine/requirements"},{"label":"Coffee Machine / Software Requirements","path":"coffee-machine/sw-requirements"},{"label":"ADAS / SYS.1 Stakeholder Needs","path":"automotive-adas/sys-1-req-elicitation"},{"label":"ADAS / SYS.2 System Requirements","path":"automotive-adas/sys-2-req-analysis"},{"label":"ADAS / SWE.1 Software Requirements","path":"automotive-adas/swe-1-sw-req-analysis"},{"label":"ISO 26262 / Safety Goals","path":"safety-example/safety-goals"},{"label":"ISO 26262 / Functional Safety Requirements","path":"safety-example/fsr"},{"label":"ISO 26262 / System Requirements","path":"safety-example/system-requirements"}],"claims":[{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0002","modality":"UNSTRUCTURED","statement":"Control algorithm robust against uncertainties of the brake dynamics model and disturbances. Performance maintained under friction coefficient variations (µ=0.2 to µ=1.0)."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0003","modality":"UNSTRUCTURED","statement":"Fail-operational design of brake controller. Independent brake circuits with separate power supplies. Each circuit capable of achieving minimum 0.3g deceleration."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0004","modality":"UNSTRUCTURED","statement":"Monitoring of operational state of brake controller and process and report to superordinate controller. Status reported every 10ms with fault detection <100ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0005","modality":"SHALL","statement":"Brake controller must recognize brakes operating beyond design limits and react appropriately. Maximum pressure, temperature, duty cycle monitoring with protective actions."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0006","modality":"UNSTRUCTURED","statement":"Monitoring of electrical and mechanical brake components with reporting to VDC. Pad wear, fluid level, actuator health, sensor status monitored continuously."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0007","modality":"UNSTRUCTURED","statement":"Control algorithm robust against uncertainties of the drive dynamics model and disturbances. Torque control accuracy ±5% under all conditions."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0008","modality":"SHALL","statement":"Sufficiently precise and validated drive dynamics model. Process variables must comply with the physical process state. Model verified across full speed and torque range."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0009","modality":"UNSTRUCTURED","statement":"Fail-operational design of drive controller. Graceful degradation to limp-home mode with minimum 20% torque capability maintained."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0010","modality":"UNSTRUCTURED","statement":"Monitoring of electrical/mechanical drive components and report to WRDC. Motor temperature, inverter status, gear health monitored at 50Hz."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0011","modality":"SHALL","statement":"Drive controller must recognize drive operating beyond design limits and react appropriately. Overspeed, overcurrent, overtemperature protection active."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0012","modality":"UNSTRUCTURED","statement":"Continuous and sufficient power supply for all safety-critical actuators. Redundant power sources with automatic failover. Minimum hold-up time: 500ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0013","modality":"UNSTRUCTURED","statement":"Continuous and sufficient power supply for VDC and WRDC. Independent power domains with galvanic isolation. Voltage monitoring and brown-out protection."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0014","modality":"SHALL","statement":"Control actions of the vehicle dynamics controller must target the same vehicle motion. Coordination logic prevents conflicting brake/drive commands. Maximum conflict resolution time: 10ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0015","modality":"UNSTRUCTURED","statement":"Exclusion of drive and brake actuation with conflicting targets. Hardware interlocks prevent simultaneous brake and drive application >10% torque."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0016","modality":"UNSTRUCTURED","statement":"Control algorithm must be robust against uncertainties of the steering dynamics model and disturbances. Algorithm shall maintain stability and performance under model parameter variations of ±20%."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0017","modality":"SHALL","statement":"Sufficiently precise and validated steering dynamics model. Model accuracy shall be verified through physical testing with maximum error <5% across the operational envelope."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0018","modality":"SHALL-NOT","statement":"Fail-operational design of steering controller. Single-point failures shall not cause loss of steering control. Redundant execution paths required."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0019","modality":"SHALL","statement":"Operation must be provided in required cycle time and jitter. Control loop execution time: 10ms ± 1ms. Maximum jitter: 500µs."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0020","modality":"UNSTRUCTURED","statement":"Electrical and mechanical design according to state of the art. Components shall meet automotive standards (ISO 26262, ISO 16750)."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0021","modality":"UNSTRUCTURED","statement":"Monitoring of electrical and mechanical components and report to superordinate controller. Motor current, temperature, position sensor health monitored at 100Hz."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0022","modality":"SHALL","statement":"Inadequate or missing feedback must be recognized and compensated for. Sensor plausibility checks with redundant measurements. Timeout detection: 50ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0023","modality":"UNSTRUCTURED","statement":"Continuous and sufficient power supply for steering-internal sensors. Redundant power supply with automatic switchover <10ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0024","modality":"UNSTRUCTURED","statement":"Sufficient measurement accuracy for steering operation. Position accuracy: ±0.5°, velocity accuracy: ±1°/s."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0025","modality":"UNSTRUCTURED","statement":"Control algorithm robust against uncertainties of the vehicle dynamics model and disturbances. Trajectory tracking error <0.5m at speeds up to 130 km/h."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0026","modality":"SHALL","statement":"Sufficiently precise and validated vehicle dynamics model. Process variables must comply with the physical process state. Model validated through hardware-in-the-loop testing."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0027","modality":"UNSTRUCTURED","statement":"Fail-operational design of vehicle dynamics controller. Dual-redundant processing with diverse algorithms. Cross-checking every cycle."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0028","modality":"UNSTRUCTURED","statement":"Fault-tolerant vehicle dynamics control algorithm capable of handling degraded actuation (e.g., loss of one steering actuator or brake circuit)."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0029","modality":"SHALL","statement":"Inadequate or missing feedback must be recognized. Sensor fusion from multiple sources (IMU, wheel speeds, GNSS). Fault detection within 100ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0030","modality":"UNSTRUCTURED","statement":"Sufficient measurement accuracy for vehicle dynamics control. Lateral acceleration: ±0.1 m/s², yaw rate: ±0.5°/s, velocity: ±0.1 m/s."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0031","modality":"UNSTRUCTURED","statement":"Updated feedback available in required cycle time and jitter. Sensor data age <10ms, synchronized across all sensors with <1ms skew."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0032","modality":"SHALL","statement":"Inadequate or missing wheel speed feedback must be recognized and compensated. Redundant sensing per wheel with plausibility checking against vehicle sensors."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0033","modality":"UNSTRUCTURED","statement":"Continuous and sufficient power supply for wheel motion sensors. Battery-backed power during transients. Voltage regulation ±5%."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0034","modality":"SHALL","statement":"Fault-tolerant wheel rotational dynamics control algorithm. Algorithm shall detect and compensate for single wheel actuator failures while maintaining vehicle stability."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0035","modality":"UNSTRUCTURED","statement":"Fail-operational design of wheel rotational dynamics controller. Redundant processing elements with cross-monitoring. Switchover time <20ms."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0036","modality":"UNSTRUCTURED","statement":"Sufficiently precise and validated wheel rotational dynamics model. Tire friction estimation accuracy ±10% across all surface conditions."},{"applies":"applies","area":"safety-example/fsr","evidence":"machine","id":"REQ-0037","modality":"SHALL","statement":"Operation must be provided in required cycle time and jitter. Control loop: 5ms ± 0.5ms. Anti-lock/anti-spin response time <20ms."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0038","modality":"UNSTRUCTURED","statement":"The system shall detect lane markings and provide corrective steering input to keep the vehicle within the lane."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0039","modality":"SHALL","statement":"The system shall automatically adjust the vehicle's speed to maintain a safe distance from the vehicle ahead."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0040","modality":"SHALL","statement":"The system shall detect potential collisions and apply the brakes autonomously to avoid or mitigate the impact."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0041","modality":"SHALL","statement":"The system shall identify pedestrians in the vehicle's path and issue warnings or initiate braking to prevent collisions."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0042","modality":"SHALL","statement":"The system shall recognize traffic signs, with a focus on posted speed limits, so that downstream driving assistance functions can react appropriately."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0043","modality":"SHALL","statement":"The system shall monitor zones to the rear and sides of the vehicle that are not directly visible to the driver, and warn the driver when another road user enters those zones while a lane change is intended."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0044","modality":"SHALL","statement":"The system shall observe driver state via the cabin camera and warn the driver, and optionally suggest a break, when sustained signs of drowsiness or inattention are detected."},{"applies":"applies","area":"automotive-adas/sys-1-req-elicitation","evidence":"machine","id":"REQ-0045","modality":"SHALL","statement":"The system shall identify suitable parallel and perpendicular parking slots and semi-autonomously steer, accelerate, and brake the vehicle into the selected slot under driver supervision."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0046","modality":"SHALL","statement":"The lane detection software shall process camera input and accurately identify lane markings under various lighting conditions."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0047","modality":"UNSTRUCTURED","statement":"The steering control software shall provide smooth and precise steering corrections based on detected lane positions."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0048","modality":"SHALL","statement":"The distance measurement software shall measure the distance to the vehicle ahead using radar or LiDAR sensors for adaptive cruise control."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0049","modality":"SHALL","statement":"The speed control software shall adjust vehicle speed dynamically while maintaining a safe following distance."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0050","modality":"SHALL","statement":"The collision detection software shall identify potential collisions using sensor data and predict the time-to-impact."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0051","modality":"SHALL","statement":"The autonomous braking software shall apply the brakes autonomously when a collision is imminent, based on predictions from the collision detection module."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0052","modality":"SHALL","statement":"The pedestrian detection software shall detect pedestrians in the vehicle's path using machine learning and sensor fusion."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0053","modality":"SHALL","statement":"The alerting software shall issue audio or visual alerts when pedestrians are detected near the vehicle."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0054","modality":"SHALL","statement":"The emergency braking software shall initiate emergency braking when a pedestrian is in the collision path."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0055","modality":"SHALL","statement":"The speed limit recognition software shall detect posted speed limit signs from camera input and provide the extracted limit to driver assistance functions."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0056","modality":"SHALL","statement":"The blind spot detection software shall detect vehicles, motorcycles, and bicycles entering the blind spot zones using rear-corner radar sensors and side-view cameras."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0057","modality":"SHALL","statement":"The blind spot warning software shall issue a driver warning when the turn signal is engaged toward a blind spot zone that is currently occupied by another road user."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0058","modality":"SHALL","statement":"The drowsiness monitoring software shall estimate driver eye-aspect ratio and gaze direction from the cabin camera at the cadence required for drowsiness scoring."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0059","modality":"SHALL","statement":"The drowsiness alerting software shall issue progressive driver alerts and propose a break when the drowsiness score exceeds the configured threshold for longer than the calibrated dwell time."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0060","modality":"SHALL","statement":"The parking slot detection software shall detect parallel and perpendicular parking slots from ultrasonic distance sensors fused with the surround-view camera system."},{"applies":"applies","area":"automotive-adas/sys-2-req-analysis","evidence":"machine","id":"REQ-0061","modality":"UNSTRUCTURED","statement":"The parking control software shall plan a feasible park trajectory into the chosen slot and command steering, throttle, and braking actuators to follow it within configured speed and clearance bounds."},{"applies":"applies","area":"coffee-machine/requirements","evidence":"machine","id":"REQ-0062","modality":"SHALL","statement":"The coffee machine shall be able to brew coffee with user-selected strength (weak, medium, strong)."},{"applies":"applies","area":"coffee-machine/requirements","evidence":"machine","id":"REQ-0063","modality":"SHALL","statement":"The coffee machine shall heat water to the appropriate temperature (85-95°C) for brewing coffee."},{"applies":"applies","area":"coffee-machine/requirements","evidence":"machine","id":"REQ-0064","modality":"SHALL","statement":"The coffee machine shall automatically shut down if the water temperature exceeds 100°C or if no water is detected."},{"applies":"applies","area":"coffee-machine/requirements","evidence":"machine","id":"REQ-0065","modality":"SHALL","statement":"The coffee machine shall provide a user interface with buttons for selecting coffee strength and starting the brewing process."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0066","modality":"SHALL","statement":"The Vehicle Dynamics Controller must set a new target wheel torque when required for safe trajectory following. Failure to provide necessary torque commands can result in trajectory deviation."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0067","modality":"SHALL","statement":"The Vehicle Dynamics Controller must set a new target wheel torque only when required. Unintended torque changes can cause unexpected vehicle behavior."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0068","modality":"SHALL","statement":"The Vehicle Dynamics Controller must set a new target steering angle when required for trajectory execution. Missing steering commands prevent proper path following."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0069","modality":"SHALL","statement":"The Vehicle Dynamics Controller must set a new target steering angle only when required. Unintended steering changes are hazardous to vehicle control."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0070","modality":"SHALL","statement":"The Wheel Rotational Dynamics Controller must change target brake torque when required for proper vehicle speed control along the trajectory."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0071","modality":"SHALL","statement":"The Wheel Rotational Dynamics Controller must change target brake torque only when required. Unintended braking can cause trajectory deviation or collision."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0072","modality":"SHALL","statement":"The Wheel Rotational Dynamics Controller must change target drive torque when required for maintaining the planned velocity profile."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0073","modality":"SHALL","statement":"The Wheel Rotational Dynamics Controller must change target drive torque only when required to prevent unintended acceleration or deceleration."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0074","modality":"SHALL","statement":"Anti-lock control must be performed only when wheel lock is imminent. Unnecessary ABS activation can reduce braking efficiency and affect trajectory control."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0075","modality":"SHALL","statement":"Anti-lock control must be performed when required to prevent wheel lock during braking, maintaining vehicle controllability."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0076","modality":"SHALL","statement":"Anti-spin control must be performed only when wheel spin is detected. Unnecessary intervention can affect acceleration performance and trajectory execution."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0077","modality":"SHALL","statement":"Anti-spin control must be performed when required to prevent excessive wheel spin during acceleration, ensuring stable trajectory following."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0078","modality":"SHALL","statement":"The Drive Controller must apply drive torque when required to execute the commanded velocity profile along the trajectory."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0079","modality":"SHALL","statement":"The Drive Controller must apply drive torque only when required. Unintended drive torque can cause dangerous acceleration."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0080","modality":"SHALL","statement":"The Brake Controller must engage brake when required for deceleration or emergency stopping to prevent collision."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0081","modality":"SHALL","statement":"The Brake Controller must engage brake only when required. Unintended braking can cause loss of vehicle control or rear-end collisions."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0082","modality":"SHALL","statement":"The Steering Controller must change steering angle when required to follow the commanded path. Failure prevents proper trajectory execution."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0083","modality":"SHALL","statement":"The Steering Controller must change steering angle only when required. Unintended steering changes are extremely hazardous."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0084","modality":"SHALL","statement":"The Steering Controller must hold steering angle when required to maintain straight-line travel or constant-radius turns."},{"applies":"applies","area":"safety-example/safety-goals","evidence":"machine","id":"REQ-0085","modality":"SHALL","statement":"The Steering Controller must hold steering angle only when required. Locked steering prevents necessary corrections and causes trajectory deviation."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0086","modality":"SHALL","statement":"The lane detection software shall process camera inputs and accurately identify lane markings under various environmental conditions."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0087","modality":"SHALL","statement":"The lane keeping software shall trigger a warning if the vehicle deviates from its lane without proper signaling."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0088","modality":"UNSTRUCTURED","statement":"The lane keeping software shall calculate and apply corrective steering actions to maintain the vehicle within the detected lane boundaries."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0089","modality":"SHALL","statement":"The distance measurement software shall process radar inputs and measure the distance to objects ahead with high precision."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0090","modality":"SHALL","statement":"The speed control software shall dynamically adjust the vehicle's speed based on distance measurements and the desired following distance."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0091","modality":"SHALL","statement":"The collision risk software shall estimate collision risk using real-time sensor data and predictive analytics."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0092","modality":"SHALL","statement":"The emergency braking software shall autonomously apply the brakes when a collision is imminent."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0093","modality":"SHALL","statement":"The pedestrian detection software shall detect pedestrians using sensor fusion techniques that combine camera, LiDAR, and radar data."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0094","modality":"SHALL","statement":"The alerting software shall issue audio and visual alerts when pedestrians are detected near the vehicle's path."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0095","modality":"SHALL","statement":"The emergency braking software shall apply emergency braking when a pedestrian is detected in the collision path."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0096","modality":"SHALL","statement":"The dashboard software shall provide a visual representation of detected lane markings for driver awareness."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0097","modality":"SHALL","statement":"The lane detection software shall adapt lane marking detection under challenging conditions, such as rain or fog."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0098","modality":"SHALL","statement":"The speed control software shall adjust vehicle speed based on detected speed limits and road conditions."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0099","modality":"SHALL","statement":"The driver alert software shall create alerts when objects come within a critical distance."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0100","modality":"SHALL","statement":"The object tracking software shall track multiple objects simultaneously and evaluate their threat level."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0101","modality":"SHALL","statement":"The emergency braking software shall optimize braking force during emergency stops to minimize impact risks."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0102","modality":"SHALL","statement":"The pedestrian detection software shall use machine learning models to predict pedestrian movements and improve detection accuracy."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0103","modality":"SHALL","statement":"The alerting software shall combine audio, visual, and haptic alerts into a unified system for enhanced driver awareness."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0104","modality":"SHALL","statement":"The emergency braking software shall anticipate emergencies and initiate braking earlier to prevent accidents."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0105","modality":"SHALL","statement":"The pedestrian detection software shall identify crosswalks and prioritize pedestrian safety in such zones."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0106","modality":"SHALL","statement":"The speed limit recognition software shall detect speed limit signs in camera frames and publish the recognized limit."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0107","modality":"SHALL","statement":"The blind spot detection software shall fuse rear-corner radar tracks and side-view camera detections into a single per-zone occupancy state with confidence scoring."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0108","modality":"SHALL","statement":"The blind spot warning software shall activate the blind spot warning only when the turn signal points toward an occupied zone, suppressing nuisance alerts otherwise."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0109","modality":"SHALL","statement":"The drowsiness monitoring software shall estimate per-frame eye-aspect ratio and gaze direction from cabin camera input under varying lighting conditions."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0110","modality":"SHALL","statement":"The drowsiness monitoring software shall aggregate per-frame eye-state observations into a smoothed drowsiness score and emit progressive alerts when the score exceeds calibrated thresholds for the required dwell time."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0111","modality":"SHALL","statement":"The parking slot detection software shall recognize parallel and perpendicular parking slots from fused ultrasonic ranging and surround-view camera input and rank them by feasibility."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0112","modality":"UNSTRUCTURED","statement":"The parking control software shall plan and follow a smooth park trajectory into the selected slot, respecting clearance margins, maximum speed, and steering rate limits, with abort behavior on detected obstacles."},{"applies":"applies","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0113","modality":"SHALL","statement":"The turn signal logic for left-hand drive vehicles shall prioritize right-side mirror checks for overtaking maneuvers."},{"applies":"applies","area":"coffee-machine/sw-requirements","evidence":"machine","id":"REQ-0114","modality":"SHALL","statement":"The software shall process button inputs with debouncing and trigger appropriate actions (strength selection, start brewing, stop/cancel)."},{"applies":"applies","area":"coffee-machine/sw-requirements","evidence":"machine","id":"REQ-0115","modality":"SHALL","statement":"The software shall continuously monitor water temperature and trigger an emergency shutdown within 100ms if temperature exceeds 100°C to prevent boiling and potential hazards."},{"applies":"applies","area":"coffee-machine/sw-requirements","evidence":"machine","id":"REQ-0116","modality":"UNSTRUCTURED","statement":"The temperature control software shall monitor the water temperature sensor and regulate the heating element to maintain temperature between 85-95°C using PID control."},{"applies":"applies","area":"coffee-machine/sw-requirements","evidence":"machine","id":"REQ-0117","modality":"SHALL","statement":"The software shall continuously monitor the water level sensor and prevent brewing operations when water level is below minimum threshold."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0118","modality":"UNSTRUCTURED","statement":"The brake system shall implement X-split dual hydraulic circuits (FL-RR, FR-RL) with independent pressure generation and control. Each circuit shall be capable of achieving minimum 0.3g deceleration independently. Electronic control units are dual-redundant with independent power supplies."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0119","modality":"SHALL","statement":"The brake controller shall adapt pressure modulation strategy based on estimated surface friction coefficient across full range µ=0.2 (ice) to µ=1.0 (dry asphalt). Adaptation includes: brake force distribution, pressure ramp rates, and ABS threshold tuning. Transition time between friction regimes: <100ms."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0120","modality":"SHALL","statement":"The brake system shall continuously monitor: brake pad wear (thickness sensors), hydraulic fluid level and pressure, brake disc temperature (IR sensors), actuator health (current, position feedback, response time). Monitoring cycle: 100ms. Fault detection and reporting to VDC within 200ms."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0121","modality":"UNSTRUCTURED","statement":"The drive controller shall maintain torque control accuracy ±5% of commanded value across full speed-torque envelope: 0-200 km/h, -100% to +100% torque (regen to full power). Control bandwidth: 20Hz. Response time from command to 90% torque achievement: <150ms."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0122","modality":"SHALL","statement":"The drive system shall implement fail-operational architecture with graceful degradation to limp-home mode upon component failure. Limp-home mode capabilities: minimum 20% of maximum torque, maximum speed 30 km/h, sufficient power to reach safe stopping location. Mode transition time: <500ms."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0123","modality":"UNSTRUCTURED","statement":"The drive controller shall implement protection systems: (1) Overspeed: limit at 210 km/h with soft cutoff; (2) Overcurrent: inverter current limit with 10µs response time; (3) Overtemperature: motor 180°C, inverter 125°C with thermal derating starting at 80% limits. All limits shall trigger safe state transition and fault reporting."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0124","modality":"UNSTRUCTURED","statement":"The steering controller shall implement H-infinity robust control algorithm with guaranteed stability and performance under parameter variations of ±20% from nominal values. Parameters include: steering inertia, friction, assist motor torque constant, and rack geometry. Control bandwidth: 10Hz minimum."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0125","modality":"UNSTRUCTURED","statement":"The steering system shall use physics-based dynamics model validated through physical testing with maximum modeling error <5% across operational envelope: steering angle ±540°, steering rate ±200°/s, vehicle speed 0-130 km/h, lateral acceleration ±8 m/s²."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0126","modality":"SHALL","statement":"The steering controller shall implement dual-channel architecture with independent power supplies, processors, and motor windings. Each channel capable of providing minimum 50% of maximum steering torque. Channels operate in active-active mode with continuous cross-monitoring. Switchover time <10ms."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0127","modality":"SHALL","statement":"The steering system shall provide redundant position and velocity feedback with specifications: position accuracy ±0.5° (absolute), velocity accuracy ±1°/s, update rate 1kHz, latency <1ms. Dual absolute encoders with diverse sensing principles (magnetic + optical)."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0128","modality":"SHALL","statement":"The VDC shall track the commanded trajectory with maximum lateral error ≤0.5m and longitudinal error ≤0.3m at speeds up to 130 km/h under nominal conditions. Performance degradation allowed under adverse conditions (reduced visibility, low friction surfaces) with notification to supervision layer."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0129","modality":"UNSTRUCTURED","statement":"The VDC shall implement dual-redundant processing with two independent processors executing diverse control algorithms. Cross-checking shall occur every control cycle (10ms) with automatic switchover to healthy processor within 20ms upon detection of discrepancy >10%."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0130","modality":"UNSTRUCTURED","statement":"The VDC shall implement sensor fusion combining IMU (6-axis accelerometer/gyro), individual wheel speed sensors, and GNSS/INS using Extended Kalman Filter. System shall detect sensor failures within 100ms and maintain state estimation with degraded accuracy using remaining sensors."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0131","modality":"SHALL","statement":"The VDC shall maintain trajectory control capability with single actuator or sensor failure. Degraded modes: (1) Single wheel actuator failure: redistribute torque to remaining wheels; (2) Steering actuator failure: trajectory control via differential braking; (3) Single sensor failure: continue with reduced accuracy."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0132","modality":"UNSTRUCTURED","statement":"The WRDC shall compensate for failed wheel actuator through coordinated control of remaining three wheels. System shall detect actuator failure within 50ms (via feedback comparison) and redistribute target torques to maintain yaw stability within ±2° and lateral acceleration within ±0.5 m/s² of commanded values."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0133","modality":"UNSTRUCTURED","statement":"The WRDC shall implement real-time tire-road friction coefficient (µ) estimation with ±10% accuracy across all surface conditions (dry asphalt µ=1.0 to ice µ=0.2). Estimation algorithm shall use wheel slip ratio, longitudinal/lateral forces, and vehicle dynamics model. Update rate: 100Hz."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0134","modality":"SHALL","statement":"The WRDC shall implement integrated anti-lock braking (ABS) and anti-slip regulation (ASR) with coordinated control logic. Wheel lock detection threshold: slip ratio >0.15. Wheel spin detection threshold: slip ratio >0.10. Control response time from detection to pressure modulation: <20ms."},{"applies":"applies","area":"safety-example/system-requirements","evidence":"machine","id":"REQ-0135","modality":"UNSTRUCTURED","statement":"The WRDC control loop shall execute with 5ms cycle time and maximum jitter ±0.5ms. Sensor data age shall not exceed 10ms. Anti-lock and anti-spin response time from wheel slip detection to first pressure modulation: <20ms."},{"applies":"does_not_apply","area":"automotive-adas/swe-1-sw-req-analysis","evidence":"machine","id":"REQ-0136","modality":"SHALL","statement":"The turn signal logic for right-hand drive vehicles shall prioritize left-side mirror checks for overtaking maneuvers."}],"dangling_links":[],"design":[{"component":null,"id":"design/architecture/ARCH_001.md"},{"component":null,"id":"design/architecture/ARCH_002.md"},{"component":null,"id":"design/architecture/ARCH_003.md"},{"component":null,"id":"design/architecture/ARCH_004.md"},{"component":null,"id":"design/architecture/ARCH_005.md"},{"component":null,"id":"design/architecture/ARCH_006.md"},{"component":null,"id":"design/architecture/ARCH_007.md"},{"component":null,"id":"design/architecture/ARCH_008.md"},{"component":null,"id":"design/architecture/ARCH_009.md"},{"component":null,"id":"design/architecture/ARCH_010.md"},{"component":{"id":"lane","label":"Lane detection","page":"components"},"id":"design/architecture/SWARCH_001.md"},{"component":{"id":"acc","label":"Adaptive cruise","page":"components"},"id":"design/architecture/SWARCH_002.md"},{"component":{"id":"collision","label":"Collision avoidance","page":"components"},"id":"design/architecture/SWARCH_003.md"},{"component":{"id":"pedestrian","label":"Pedestrian detection","page":"components"},"id":"design/architecture/SWARCH_004.md"},{"component":{"id":"alerting","label":"Driver alerting","page":"components"},"id":"design/architecture/SWARCH_005.md"},{"component":null,"id":"design/architecture/SWARCH_006.md"},{"component":{"id":"traffic","label":"Traffic sign recognition","page":"components"},"id":"design/architecture/SWARCH_007.md"},{"component":{"id":"blind","label":"Blind spot monitoring","page":"components"},"id":"design/architecture/SWARCH_008.md"},{"component":{"id":"drowsy","label":"Drowsiness monitoring","page":"components"},"id":"design/architecture/SWARCH_009.md"},{"component":{"id":"parking","label":"Parking assist","page":"components"},"id":"design/architecture/SWARCH_010.md"},{"component":null,"id":"design/architecture/SWARCH_011.md"},{"component":{"id":"acc","label":"Adaptive cruise","page":"components"},"id":"design/code/acc.c"},{"component":{"id":"lane","label":"Lane detection","page":"components"},"id":"design/code/lane_keeping.c"},{"component":{"id":"coffee","label":"Coffee machine control","page":"components"},"id":"design/components/COMP_SAFETY_MON.md"},{"component":{"id":"coffee","label":"Coffee machine control","page":"components"},"id":"design/components/COMP_TEMP_CTRL.md"},{"component":{"id":"coffee","label":"Coffee machine control","page":"components"},"id":"design/components/COMP_UI_MODULE.md"},{"component":{"id":"turn","label":"Turn signal logic","page":"components"},"id":"design/components/TURN_SIGNAL_LEFT.md"},{"component":{"id":"turn","label":"Turn signal logic","page":"components"},"id":"design/components/TURN_SIGNAL_RIGHT.md"}],"edges":{"satisfied_by":[{"claim":"REQ-0046","design":"design/architecture/ARCH_001.md","line":9,"outcome":"holds"},{"claim":"REQ-0047","design":"design/architecture/ARCH_001.md","line":10,"outcome":"holds"},{"claim":"REQ-0048","design":"design/architecture/ARCH_002.md","line":9,"outcome":"holds"},{"claim":"REQ-0049","design":"design/architecture/ARCH_002.md","line":10,"outcome":"holds"},{"claim":"REQ-0050","design":"design/architecture/ARCH_003.md","line":9,"outcome":"holds"},{"claim":"REQ-0051","design":"design/architecture/ARCH_003.md","line":10,"outcome":"holds"},{"claim":"REQ-0052","design":"design/architecture/ARCH_004.md","line":9,"outcome":"holds"},{"claim":"REQ-0053","design":"design/architecture/ARCH_004.md","line":10,"outcome":"holds"},{"claim":"REQ-0053","design":"design/architecture/ARCH_005.md","line":9,"outcome":"holds"},{"claim":"REQ-0054","design":"design/architecture/ARCH_004.md","line":11,"outcome":"holds"},{"claim":"REQ-0054","design":"design/architecture/ARCH_006.md","line":9,"outcome":"holds"},{"claim":"REQ-0055","design":"design/architecture/ARCH_007.md","line":9,"outcome":"holds"},{"claim":"REQ-0056","design":"design/architecture/ARCH_008.md","line":9,"outcome":"holds"},{"claim":"REQ-0057","design":"design/architecture/ARCH_008.md","line":10,"outcome":"holds"},{"claim":"REQ-0058","design":"design/architecture/ARCH_009.md","line":9,"outcome":"holds"},{"claim":"REQ-0059","design":"design/architecture/ARCH_009.md","line":10,"outcome":"holds"},{"claim":"REQ-0060","design":"design/architecture/ARCH_010.md","line":9,"outcome":"holds"},{"claim":"REQ-0061","design":"design/architecture/ARCH_010.md","line":10,"outcome":"holds"},{"claim":"REQ-0086","design":"design/architecture/SWARCH_001.md","line":9,"outcome":"holds"},{"claim":"REQ-0086","design":"design/architecture/SWARCH_011.md","line":9,"outcome":"holds"},{"claim":"REQ-0086","design":"design/code/lane_keeping.c","line":1,"outcome":"holds"},{"claim":"REQ-0087","design":"design/architecture/SWARCH_001.md","line":10,"outcome":"holds"},{"claim":"REQ-0087","design":"design/code/lane_keeping.c","line":2,"outcome":"holds"},{"claim":"REQ-0088","design":"design/architecture/SWARCH_001.md","line":11,"outcome":"holds"},{"claim":"REQ-0088","design":"design/code/lane_keeping.c","line":3,"outcome":"holds"},{"claim":"REQ-0089","design":"design/architecture/SWARCH_002.md","line":9,"outcome":"holds"},{"claim":"REQ-0089","design":"design/code/acc.c","line":1,"outcome":"holds"},{"claim":"REQ-0090","design":"design/architecture/SWARCH_002.md","line":10,"outcome":"holds"},{"claim":"REQ-0090","design":"design/code/acc.c","line":2,"outcome":"holds"},{"claim":"REQ-0091","design":"design/architecture/SWARCH_003.md","line":9,"outcome":"holds"},{"claim":"REQ-0091","design":"design/code/acc.c","line":3,"outcome":"holds"},{"claim":"REQ-0092","design":"design/architecture/SWARCH_003.md","line":10,"outcome":"holds"},{"claim":"REQ-0092","design":"design/code/acc.c","line":4,"outcome":"holds"},{"claim":"REQ-0093","design":"design/architecture/SWARCH_004.md","line":9,"outcome":"holds"},{"claim":"REQ-0094","design":"design/architecture/SWARCH_005.md","line":9,"outcome":"holds"},{"claim":"REQ-0095","design":"design/architecture/SWARCH_006.md","line":9,"outcome":"holds"},{"claim":"REQ-0098","design":"design/architecture/SWARCH_002.md","line":11,"outcome":"holds"},{"claim":"REQ-0098","design":"design/code/acc.c","line":5,"outcome":"holds"},{"claim":"REQ-0099","design":"design/architecture/SWARCH_005.md","line":10,"outcome":"holds"},{"claim":"REQ-0100","design":"design/architecture/SWARCH_006.md","line":10,"outcome":"holds"},{"claim":"REQ-0101","design":"design/architecture/SWARCH_003.md","line":11,"outcome":"holds"},{"claim":"REQ-0102","design":"design/architecture/SWARCH_004.md","line":10,"outcome":"holds"},{"claim":"REQ-0103","design":"design/architecture/SWARCH_005.md","line":11,"outcome":"holds"},{"claim":"REQ-0104","design":"design/architecture/SWARCH_006.md","line":11,"outcome":"holds"},{"claim":"REQ-0105","design":"design/architecture/SWARCH_004.md","line":11,"outcome":"holds"},{"claim":"REQ-0106","design":"design/architecture/SWARCH_007.md","line":9,"outcome":"holds"},{"claim":"REQ-0107","design":"design/architecture/SWARCH_008.md","line":9,"outcome":"holds"},{"claim":"REQ-0108","design":"design/architecture/SWARCH_008.md","line":10,"outcome":"holds"},{"claim":"REQ-0109","design":"design/architecture/SWARCH_009.md","line":9,"outcome":"holds"},{"claim":"REQ-0110","design":"design/architecture/SWARCH_009.md","line":10,"outcome":"holds"},{"claim":"REQ-0111","design":"design/architecture/SWARCH_010.md","line":9,"outcome":"holds"},{"claim":"REQ-0112","design":"design/architecture/SWARCH_010.md","line":10,"outcome":"holds"},{"claim":"REQ-0113","design":"design/components/TURN_SIGNAL_LEFT.md","line":9,"outcome":"holds"},{"claim":"REQ-0114","design":"design/components/COMP_UI_MODULE.md","line":9,"outcome":"holds"},{"claim":"REQ-0115","design":"design/components/COMP_SAFETY_MON.md","line":9,"outcome":"holds"},{"claim":"REQ-0116","design":"design/components/COMP_TEMP_CTRL.md","line":9,"outcome":"holds"},{"claim":"REQ-0117","design":"design/components/COMP_SAFETY_MON.md","line":10,"outcome":"holds"},{"claim":"REQ-0136","design":"design/components/TURN_SIGNAL_RIGHT.md","line":9,"outcome":"holds"}],"source_of":[{"claim":"REQ-0002","source":"S0001"},{"claim":"REQ-0003","source":"S0002"},{"claim":"REQ-0004","source":"S0003"},{"claim":"REQ-0005","source":"S0004"},{"claim":"REQ-0006","source":"S0005"},{"claim":"REQ-0007","source":"S0006"},{"claim":"REQ-0008","source":"S0007"},{"claim":"REQ-0009","source":"S0008"},{"claim":"REQ-0010","source":"S0009"},{"claim":"REQ-0011","source":"S0010"},{"claim":"REQ-0012","source":"S0011"},{"claim":"REQ-0013","source":"S0012"},{"claim":"REQ-0014","source":"S0013"},{"claim":"REQ-0015","source":"S0014"},{"claim":"REQ-0016","source":"S0015"},{"claim":"REQ-0017","source":"S0016"},{"claim":"REQ-0018","source":"S0017"},{"claim":"REQ-0019","source":"S0018"},{"claim":"REQ-0020","source":"S0019"},{"claim":"REQ-0021","source":"S0020"},{"claim":"REQ-0022","source":"S0021"},{"claim":"REQ-0023","source":"S0022"},{"claim":"REQ-0024","source":"S0023"},{"claim":"REQ-0025","source":"S0024"},{"claim":"REQ-0026","source":"S0025"},{"claim":"REQ-0027","source":"S0026"},{"claim":"REQ-0028","source":"S0027"},{"claim":"REQ-0029","source":"S0028"},{"claim":"REQ-0030","source":"S0029"},{"claim":"REQ-0031","source":"S0030"},{"claim":"REQ-0032","source":"S0031"},{"claim":"REQ-0033","source":"S0032"},{"claim":"REQ-0034","source":"S0033"},{"claim":"REQ-0035","source":"S0034"},{"claim":"REQ-0036","source":"S0035"},{"claim":"REQ-0037","source":"S0036"},{"claim":"REQ-0038","source":"S0037"},{"claim":"REQ-0039","source":"S0038"},{"claim":"REQ-0040","source":"S0039"},{"claim":"REQ-0041","source":"S0040"},{"claim":"REQ-0042","source":"S0041"},{"claim":"REQ-0043","source":"S0042"},{"claim":"REQ-0044","source":"S0043"},{"claim":"REQ-0045","source":"S0044"},{"claim":"REQ-0046","source":"S0045"},{"claim":"REQ-0047","source":"S0046"},{"claim":"REQ-0048","source":"S0047"},{"claim":"REQ-0049","source":"S0048"},{"claim":"REQ-0050","source":"S0049"},{"claim":"REQ-0051","source":"S0050"},{"claim":"REQ-0052","source":"S0051"},{"claim":"REQ-0053","source":"S0052"},{"claim":"REQ-0054","source":"S0053"},{"claim":"REQ-0055","source":"S0054"},{"claim":"REQ-0056","source":"S0055"},{"claim":"REQ-0057","source":"S0056"},{"claim":"REQ-0058","source":"S0057"},{"claim":"REQ-0059","source":"S0058"},{"claim":"REQ-0060","source":"S0059"},{"claim":"REQ-0061","source":"S0060"},{"claim":"REQ-0062","source":"S0061"},{"claim":"REQ-0063","source":"S0062"},{"claim":"REQ-0064","source":"S0063"},{"claim":"REQ-0065","source":"S0064"},{"claim":"REQ-0066","source":"S0065"},{"claim":"REQ-0067","source":"S0066"},{"claim":"REQ-0068","source":"S0067"},{"claim":"REQ-0069","source":"S0068"},{"claim":"REQ-0070","source":"S0069"},{"claim":"REQ-0071","source":"S0070"},{"claim":"REQ-0072","source":"S0071"},{"claim":"REQ-0073","source":"S0072"},{"claim":"REQ-0074","source":"S0073"},{"claim":"REQ-0075","source":"S0074"},{"claim":"REQ-0076","source":"S0075"},{"claim":"REQ-0077","source":"S0076"},{"claim":"REQ-0078","source":"S0077"},{"claim":"REQ-0079","source":"S0078"},{"claim":"REQ-0080","source":"S0079"},{"claim":"REQ-0081","source":"S0080"},{"claim":"REQ-0082","source":"S0081"},{"claim":"REQ-0083","source":"S0082"},{"claim":"REQ-0084","source":"S0083"},{"claim":"REQ-0085","source":"S0084"},{"claim":"REQ-0086","source":"S0085"},{"claim":"REQ-0087","source":"S0086"},{"claim":"REQ-0088","source":"S0087"},{"claim":"REQ-0089","source":"S0088"},{"claim":"REQ-0090","source":"S0089"},{"claim":"REQ-0091","source":"S0090"},{"claim":"REQ-0092","source":"S0091"},{"claim":"REQ-0093","source":"S0092"},{"claim":"REQ-0094","source":"S0093"},{"claim":"REQ-0095","source":"S0094"},{"claim":"REQ-0096","source":"S0095"},{"claim":"REQ-0097","source":"S0096"},{"claim":"REQ-0098","source":"S0097"},{"claim":"REQ-0099","source":"S0098"},{"claim":"REQ-0100","source":"S0099"},{"claim":"REQ-0101","source":"S0100"},{"claim":"REQ-0102","source":"S0101"},{"claim":"REQ-0103","source":"S0102"},{"claim":"REQ-0104","source":"S0103"},{"claim":"REQ-0105","source":"S0104"},{"claim":"REQ-0106","source":"S0105"},{"claim":"REQ-0107","source":"S0106"},{"claim":"REQ-0108","source":"S0107"},{"claim":"REQ-0109","source":"S0108"},{"claim":"REQ-0110","source":"S0109"},{"claim":"REQ-0111","source":"S0110"},{"claim":"REQ-0112","source":"S0111"},{"claim":"REQ-0113","source":"S0112"},{"claim":"REQ-0114","source":"S0113"},{"claim":"REQ-0115","source":"S0114"},{"claim":"REQ-0116","source":"S0115"},{"claim":"REQ-0117","source":"S0116"},{"claim":"REQ-0118","source":"S0117"},{"claim":"REQ-0119","source":"S0118"},{"claim":"REQ-0120","source":"S0119"},{"claim":"REQ-0121","source":"S0120"},{"claim":"REQ-0122","source":"S0121"},{"claim":"REQ-0123","source":"S0122"},{"claim":"REQ-0124","source":"S0123"},{"claim":"REQ-0125","source":"S0124"},{"claim":"REQ-0126","source":"S0125"},{"claim":"REQ-0127","source":"S0126"},{"claim":"REQ-0128","source":"S0127"},{"claim":"REQ-0129","source":"S0128"},{"claim":"REQ-0130","source":"S0129"},{"claim":"REQ-0131","source":"S0130"},{"claim":"REQ-0132","source":"S0131"},{"claim":"REQ-0133","source":"S0132"},{"claim":"REQ-0134","source":"S0133"},{"claim":"REQ-0135","source":"S0134"},{"claim":"REQ-0136","source":"S0135"}],"verified_by":[{"claim":"REQ-0046","group":"T:REQ-0046"},{"claim":"REQ-0047","group":"T:REQ-0047"},{"claim":"REQ-0048","group":"T:REQ-0048"},{"claim":"REQ-0049","group":"T:REQ-0049"},{"claim":"REQ-0050","group":"T:REQ-0050"},{"claim":"REQ-0051","group":"T:REQ-0051"},{"claim":"REQ-0052","group":"T:REQ-0052"},{"claim":"REQ-0053","group":"T:REQ-0053"},{"claim":"REQ-0054","group":"T:REQ-0054"},{"claim":"REQ-0114","group":"T:REQ-0114"},{"claim":"REQ-0115","group":"T:REQ-0115"},{"claim":"REQ-0116","group":"T:REQ-0116"},{"claim":"REQ-0117","group":"T:REQ-0117"}]},"gaps":[{"claim":"REQ-0002","kinds":["no_design","no_test"]},{"claim":"REQ-0003","kinds":["no_design","no_test"]},{"claim":"REQ-0004","kinds":["no_design","no_test"]},{"claim":"REQ-0005","kinds":["no_design","no_test"]},{"claim":"REQ-0006","kinds":["no_design","no_test"]},{"claim":"REQ-0007","kinds":["no_design","no_test"]},{"claim":"REQ-0008","kinds":["no_design","no_test"]},{"claim":"REQ-0009","kinds":["no_design","no_test"]},{"claim":"REQ-0010","kinds":["no_design","no_test"]},{"claim":"REQ-0011","kinds":["no_design","no_test"]},{"claim":"REQ-0012","kinds":["no_design","no_test"]},{"claim":"REQ-0013","kinds":["no_design","no_test"]},{"claim":"REQ-0014","kinds":["no_design","no_test"]},{"claim":"REQ-0015","kinds":["no_design","no_test"]},{"claim":"REQ-0016","kinds":["no_design","no_test"]},{"claim":"REQ-0017","kinds":["no_design","no_test"]},{"claim":"REQ-0018","kinds":["no_design","no_test"]},{"claim":"REQ-0019","kinds":["no_design","no_test"]},{"claim":"REQ-0020","kinds":["no_design","no_test"]},{"claim":"REQ-0021","kinds":["no_design","no_test"]},{"claim":"REQ-0022","kinds":["no_design","no_test"]},{"claim":"REQ-0023","kinds":["no_design","no_test"]},{"claim":"REQ-0024","kinds":["no_design","no_test"]},{"claim":"REQ-0025","kinds":["no_design","no_test"]},{"claim":"REQ-0026","kinds":["no_design","no_test"]},{"claim":"REQ-0027","kinds":["no_design","no_test"]},{"claim":"REQ-0028","kinds":["no_design","no_test"]},{"claim":"REQ-0029","kinds":["no_design","no_test"]},{"claim":"REQ-0030","kinds":["no_design","no_test"]},{"claim":"REQ-0031","kinds":["no_design","no_test"]},{"claim":"REQ-0032","kinds":["no_design","no_test"]},{"claim":"REQ-0033","kinds":["no_design","no_test"]},{"claim":"REQ-0034","kinds":["no_design","no_test"]},{"claim":"REQ-0035","kinds":["no_design","no_test"]},{"claim":"REQ-0036","kinds":["no_design","no_test"]},{"claim":"REQ-0037","kinds":["no_design","no_test"]},{"claim":"REQ-0038","kinds":["no_design","no_test"]},{"claim":"REQ-0039","kinds":["no_design","no_test"]},{"claim":"REQ-0040","kinds":["no_design","no_test"]},{"claim":"REQ-0041","kinds":["no_design","no_test"]},{"claim":"REQ-0042","kinds":["no_design","no_test"]},{"claim":"REQ-0043","kinds":["no_design","no_test"]},{"claim":"REQ-0044","kinds":["no_design","no_test"]},{"claim":"REQ-0045","kinds":["no_design","no_test"]},{"claim":"REQ-0055","kinds":["no_test"]},{"claim":"REQ-0056","kinds":["no_test"]},{"claim":"REQ-0057","kinds":["no_test"]},{"claim":"REQ-0058","kinds":["no_test"]},{"claim":"REQ-0059","kinds":["no_test"]},{"claim":"REQ-0060","kinds":["no_test"]},{"claim":"REQ-0061","kinds":["no_test"]},{"claim":"REQ-0062","kinds":["no_design","no_test"]},{"claim":"REQ-0063","kinds":["no_design","no_test"]},{"claim":"REQ-0064","kinds":["no_design","no_test"]},{"claim":"REQ-0065","kinds":["no_design","no_test"]},{"claim":"REQ-0066","kinds":["no_design","no_test"]},{"claim":"REQ-0067","kinds":["no_design","no_test"]},{"claim":"REQ-0068","kinds":["no_design","no_test"]},{"claim":"REQ-0069","kinds":["no_design","no_test"]},{"claim":"REQ-0070","kinds":["no_design","no_test"]},{"claim":"REQ-0071","kinds":["no_design","no_test"]},{"claim":"REQ-0072","kinds":["no_design","no_test"]},{"claim":"REQ-0073","kinds":["no_design","no_test"]},{"claim":"REQ-0074","kinds":["no_design","no_test"]},{"claim":"REQ-0075","kinds":["no_design","no_test"]},{"claim":"REQ-0076","kinds":["no_design","no_test"]},{"claim":"REQ-0077","kinds":["no_design","no_test"]},{"claim":"REQ-0078","kinds":["no_design","no_test"]},{"claim":"REQ-0079","kinds":["no_design","no_test"]},{"claim":"REQ-0080","kinds":["no_design","no_test"]},{"claim":"REQ-0081","kinds":["no_design","no_test"]},{"claim":"REQ-0082","kinds":["no_design","no_test"]},{"claim":"REQ-0083","kinds":["no_design","no_test"]},{"claim":"REQ-0084","kinds":["no_design","no_test"]},{"claim":"REQ-0085","kinds":["no_design","no_test"]},{"claim":"REQ-0086","kinds":["no_test"]},{"claim":"REQ-0087","kinds":["no_test"]},{"claim":"REQ-0088","kinds":["no_test"]},{"claim":"REQ-0089","kinds":["no_test"]},{"claim":"REQ-0090","kinds":["no_test"]},{"claim":"REQ-0091","kinds":["no_test"]},{"claim":"REQ-0092","kinds":["no_test"]},{"claim":"REQ-0093","kinds":["no_test"]},{"claim":"REQ-0094","kinds":["no_test"]},{"claim":"REQ-0095","kinds":["no_test"]},{"claim":"REQ-0096","kinds":["no_design","no_test"]},{"claim":"REQ-0097","kinds":["no_design","no_test"]},{"claim":"REQ-0098","kinds":["no_test"]},{"claim":"REQ-0099","kinds":["no_test"]},{"claim":"REQ-0100","kinds":["no_test"]},{"claim":"REQ-0101","kinds":["no_test"]},{"claim":"REQ-0102","kinds":["no_test"]},{"claim":"REQ-0103","kinds":["no_test"]},{"claim":"REQ-0104","kinds":["no_test"]},{"claim":"REQ-0105","kinds":["no_test"]},{"claim":"REQ-0106","kinds":["no_test"]},{"claim":"REQ-0107","kinds":["no_test"]},{"claim":"REQ-0108","kinds":["no_test"]},{"claim":"REQ-0109","kinds":["no_test"]},{"claim":"REQ-0110","kinds":["no_test"]},{"claim":"REQ-0111","kinds":["no_test"]},{"claim":"REQ-0112","kinds":["no_test"]},{"claim":"REQ-0113","kinds":["no_test"]},{"claim":"REQ-0118","kinds":["no_design","no_test"]},{"claim":"REQ-0119","kinds":["no_design","no_test"]},{"claim":"REQ-0120","kinds":["no_design","no_test"]},{"claim":"REQ-0121","kinds":["no_design","no_test"]},{"claim":"REQ-0122","kinds":["no_design","no_test"]},{"claim":"REQ-0123","kinds":["no_design","no_test"]},{"claim":"REQ-0124","kinds":["no_design","no_test"]},{"claim":"REQ-0125","kinds":["no_design","no_test"]},{"claim":"REQ-0126","kinds":["no_design","no_test"]},{"claim":"REQ-0127","kinds":["no_design","no_test"]},{"claim":"REQ-0128","kinds":["no_design","no_test"]},{"claim":"REQ-0129","kinds":["no_design","no_test"]},{"claim":"REQ-0130","kinds":["no_design","no_test"]},{"claim":"REQ-0131","kinds":["no_design","no_test"]},{"claim":"REQ-0132","kinds":["no_design","no_test"]},{"claim":"REQ-0133","kinds":["no_design","no_test"]},{"claim":"REQ-0134","kinds":["no_design","no_test"]},{"claim":"REQ-0135","kinds":["no_design","no_test"]}],"not_asked":[],"pages":{"components":"https://fadasr.github.io/req-demo/components.html"},"rules_v":9,"schema":"req.explorer/1","selection":{"steering_side":"left"},"sources":[{"id":"S0001","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_BRAKE_CTRL_01"},{"id":"S0002","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_BRAKE_CTRL_02"},{"id":"S0003","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_BRAKE_CTRL_03"},{"id":"S0004","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_BRAKE_PROC_01"},{"id":"S0005","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_BRAKE_PROC_02"},{"id":"S0006","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_DRIVE_CTRL_01"},{"id":"S0007","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_DRIVE_CTRL_02"},{"id":"S0008","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_DRIVE_CTRL_03"},{"id":"S0009","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_DRIVE_PROC_01"},{"id":"S0010","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_DRIVE_PROC_02"},{"id":"S0011","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_POWER_01"},{"id":"S0012","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_POWER_02"},{"id":"S0013","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_PROC_CONFLICT_01"},{"id":"S0014","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_PROC_CONFLICT_02"},{"id":"S0015","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_CTRL_01"},{"id":"S0016","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_CTRL_02"},{"id":"S0017","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_CTRL_03"},{"id":"S0018","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_CTRL_04"},{"id":"S0019","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_PROC_01"},{"id":"S0020","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_PROC_02"},{"id":"S0021","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_SENS_01"},{"id":"S0022","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_SENS_02"},{"id":"S0023","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_STEER_SENS_03"},{"id":"S0024","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VDC_CTRL_01"},{"id":"S0025","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VDC_CTRL_02"},{"id":"S0026","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VDC_CTRL_03"},{"id":"S0027","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VDC_CTRL_04"},{"id":"S0028","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VEHICLE_SENS_01"},{"id":"S0029","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VEHICLE_SENS_02"},{"id":"S0030","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_VEHICLE_SENS_03"},{"id":"S0031","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_WHEEL_SENS_01"},{"id":"S0032","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_WHEEL_SENS_02"},{"id":"S0033","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_WRDC_CTRL_01"},{"id":"S0034","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_WRDC_CTRL_02"},{"id":"S0035","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_WRDC_CTRL_03"},{"id":"S0036","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#FSR_WRDC_CTRL_04"},{"id":"S0037","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_001"},{"id":"S0038","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_002"},{"id":"S0039","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_003"},{"id":"S0040","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_004"},{"id":"S0041","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_005"},{"id":"S0042","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_006"},{"id":"S0043","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_007"},{"id":"S0044","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#NEED_008"},{"id":"S0045","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_001"},{"id":"S0046","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_002"},{"id":"S0047","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_003"},{"id":"S0048","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_004"},{"id":"S0049","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_005"},{"id":"S0050","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_006"},{"id":"S0051","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_007"},{"id":"S0052","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_008"},{"id":"S0053","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_009"},{"id":"S0054","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_010"},{"id":"S0055","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_011"},{"id":"S0056","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_012"},{"id":"S0057","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_013"},{"id":"S0058","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_014"},{"id":"S0059","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_015"},{"id":"S0060","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_016"},{"id":"S0061","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_BREW_COFFEE"},{"id":"S0062","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_HEAT_WATER"},{"id":"S0063","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_SAFETY_SHUTDOWN"},{"id":"S0064","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#REQ_USER_INTERFACE"},{"id":"S0065","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_01"},{"id":"S0066","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_02"},{"id":"S0067","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_03"},{"id":"S0068","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_04"},{"id":"S0069","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_05"},{"id":"S0070","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_06"},{"id":"S0071","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_07"},{"id":"S0072","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_08"},{"id":"S0073","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_09"},{"id":"S0074","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_10"},{"id":"S0075","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_11"},{"id":"S0076","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_12"},{"id":"S0077","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_13"},{"id":"S0078","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_14"},{"id":"S0079","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_15"},{"id":"S0080","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_16"},{"id":"S0081","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_17"},{"id":"S0082","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_18"},{"id":"S0083","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_19"},{"id":"S0084","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SG_20"},{"id":"S0085","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_001"},{"id":"S0086","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_002"},{"id":"S0087","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_003"},{"id":"S0088","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_004"},{"id":"S0089","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_005"},{"id":"S0090","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_006"},{"id":"S0091","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_007"},{"id":"S0092","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_008"},{"id":"S0093","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_009"},{"id":"S0094","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_010"},{"id":"S0095","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_011"},{"id":"S0096","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_012"},{"id":"S0097","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_013"},{"id":"S0098","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_014"},{"id":"S0099","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_015"},{"id":"S0100","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_016"},{"id":"S0101","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_017"},{"id":"S0102","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_018"},{"id":"S0103","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_019"},{"id":"S0104","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_020"},{"id":"S0105","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_021"},{"id":"S0106","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_022"},{"id":"S0107","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_023"},{"id":"S0108","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_024"},{"id":"S0109","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_025"},{"id":"S0110","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_026"},{"id":"S0111","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_027"},{"id":"S0112","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_028"},{"id":"S0113","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_BUTTON_INPUT"},{"id":"S0114","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_OVERTEMP_SHUTDOWN"},{"id":"S0115","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_TEMP_REGULATION"},{"id":"S0116","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SWREQ_WATER_LEVEL"},{"id":"S0117","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_BRAKE_01"},{"id":"S0118","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_BRAKE_02"},{"id":"S0119","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_BRAKE_03"},{"id":"S0120","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_DRIVE_01"},{"id":"S0121","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_DRIVE_02"},{"id":"S0122","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_DRIVE_03"},{"id":"S0123","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_STEER_01"},{"id":"S0124","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_STEER_02"},{"id":"S0125","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_STEER_03"},{"id":"S0126","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_STEER_04"},{"id":"S0127","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_VDC_01"},{"id":"S0128","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_VDC_02"},{"id":"S0129","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_VDC_03"},{"id":"S0130","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_VDC_04"},{"id":"S0131","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_WRDC_01"},{"id":"S0132","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_WRDC_02"},{"id":"S0133","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_WRDC_03"},{"id":"S0134","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285#SYSREQ_WRDC_04"},{"id":"S0135","text":"https://github.com/useblocks/sphinx-needs-demo@3c602bfedf710d2304d22a93049d7233bba93285?variant=eu_right#SWREQ_029"}],"tests":[{"claim":"REQ-0046","id":"T:REQ-0046","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_001"]},{"claim":"REQ-0047","id":"T:REQ-0047","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_001"]},{"claim":"REQ-0048","id":"T:REQ-0048","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_002"]},{"claim":"REQ-0049","id":"T:REQ-0049","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_002"]},{"claim":"REQ-0050","id":"T:REQ-0050","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_003"]},{"claim":"REQ-0051","id":"T:REQ-0051","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_003"]},{"claim":"REQ-0052","id":"T:REQ-0052","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_004"]},{"claim":"REQ-0053","id":"T:REQ-0053","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_004"]},{"claim":"REQ-0054","id":"T:REQ-0054","ids":["com.example.tests.ExampleTest::TEST_SYS_QUAL_004"]},{"claim":"REQ-0114","id":"T:REQ-0114","ids":["interfaces::tests::test_user_command_variants::TEST_BUTTON_DEBOUNCE"]},{"claim":"REQ-0115","id":"T:REQ-0115","ids":["interfaces::tests::test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN","interfaces::tests::test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN"]},{"claim":"REQ-0116","id":"T:REQ-0116","ids":["interfaces::tests::test_sensor_data_creation::TEST_TEMP_CONTROL","interfaces::tests::test_temperature_status_conversions::TEST_TEMP_CONTROL"]},{"claim":"REQ-0117","id":"T:REQ-0117","ids":["interfaces::tests::test_brew_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN","interfaces::tests::test_temp_ctrl_status_fault_detection::TEST_SAFETY_SHUTDOWN"]}]}</script>
+<script>
+(function () {
+  'use strict';
+
+  // The most nodes the page draws at once. Past it the reader is asked to narrow, never shown an unreadable graph
+  // (ADR 0054 decision 4). Set by measurement on a 5,000-claim corpus; the measurement is in the ADR's implementation note.
+  var NODE_LIMIT = 2000;
+  var ROW = 40, NODE_H = 34, PAD = 16, HEAD_H = 30;
+  var COLS = { source: 200, claim: 230, design: 230, tests: 180 };   // column widths
+  var GAPS = { source: 36, claim: 96, design: 36 };                    // the space after each column; claim's holds the outcome labels
+  var CHANNEL = NODE_H + 3;                              // the lane between two rows a claim -> tests edge runs along
+
+  var OUTCOMES = {
+    holds: 'holds', holds_weakened: 'holds (weakened)', suspect: 'suspect', unratified: 'unratified',
+    orphaned: 'orphaned', unknown_claim: 'unknown claim'
+  };
+  var KIND_TEXT = { no_source: 'no source', no_design: 'no design element', no_test: 'no test' };
+
+  var data = JSON.parse(document.getElementById('req-explorer-data').textContent);
+
+  // ---- the graph, indexed -------------------------------------------------------------------------------------------
+  var claimById = new Map();
+  var claims = data.claims;
+  claims.forEach(function (c) {
+    c.area_key = c.area || '';
+    c.source = null; c.group = null; c.links = []; c.gaps = [];
+    claimById.set(c.id, c);
+  });
+  var sourceById = new Map();
+  data.sources.forEach(function (s) { s.claims = []; sourceById.set(s.id, s); });
+  data.edges.source_of.forEach(function (e) {
+    var c = claimById.get(e.claim), s = sourceById.get(e.source);
+    c.source = s; s.claims.push(c);
+  });
+  var designById = new Map();
+  data.design.forEach(function (d) { d.links = []; designById.set(d.id, d); });
+  data.edges.satisfied_by.forEach(function (e) {
+    var link = { claim: claimById.get(e.claim), design: designById.get(e.design), outcome: e.outcome, line: e.line };
+    link.claim.links.push(link); link.design.links.push(link);
+  });
+  var groupById = new Map();
+  data.tests.forEach(function (t) {
+    t.claimObj = claimById.get(t.claim); t.claimObj.group = t; groupById.set(t.id, t);
+    t.low = t.ids.join('\n').toLowerCase();
+  });
+  data.gaps.forEach(function (g) { claimById.get(g.claim).gaps = g.kinds; });
+  var notAsked = new Map();
+  data.not_asked.forEach(function (n) { notAsked.set(n.claim, n.evidence); });
+
+  // Areas: the registry's, in its order; then undeclared ones, sorted; then claims with none.
+  var areas = [], areaByKey = new Map();
+  function addArea(key, label) {
+    var a = { key: key, label: label, depth: key === '' ? 0 : key.split('/').length - 1, claims: [] };
+    areas.push(a); areaByKey.set(key, a); return a;
+  }
+  data.areas.forEach(function (a) { addArea(a.path, a.label); });
+  var undeclared = [];
+  claims.forEach(function (c) { if (c.area_key !== '' && !areaByKey.has(c.area_key) && undeclared.indexOf(c.area_key) < 0) undeclared.push(c.area_key); });
+  undeclared.sort().forEach(function (k) { addArea(k, k); });
+  if (claims.some(function (c) { return c.area_key === ''; })) addArea('', 'no area');
+  claims.forEach(function (c) { areaByKey.get(c.area_key).claims.push(c); });
+  areas = areas.filter(function (a) { return a.claims.length > 0 || a.key === ''; });
+  areas.forEach(function (a) {
+    a.gapClaims = a.claims.filter(function (c) { return c.gaps.length > 0; }).length;
+    a.gapCount = { no_design: 0, no_source: 0, no_test: 0 };
+    a.claims.forEach(function (c) { c.gaps.forEach(function (k) { a.gapCount[k]++; }); });
+  });
+  var areaOrder = new Map();
+  areas.forEach(function (a, i) { areaOrder.set(a.key, i); });
+
+  // ---- state --------------------------------------------------------------------------------------------------------
+  var state = { expanded: new Set(), focus: null, layers: { source: true, design: true, tests: true },
+                outcome: '', area: '', gapsOnly: false, q: '' };
+  var el = function (id) { return document.getElementById(id); };
+  var svg = el('graph');
+
+  // ---- helpers ------------------------------------------------------------------------------------------------------
+  function esc(text) {
+    return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function clip(text, max) {
+    text = String(text).replace(/\s+/g, ' ');
+    return text.length > max ? text.slice(0, max - 1) + '…' : text;
+  }
+  function clipStart(text, max) { return text.length > max ? '…' + text.slice(text.length - max + 1) : text; }
+  function outcomeText(o) { return Object.prototype.hasOwnProperty.call(OUTCOMES, o) ? OUTCOMES[o] : String(o); }
+  // The class an outcome is drawn with: from a closed list, so a value of the data is never a class name of its own.
+  var OUTCOME_CLASSES = { holds: 1, holds_weakened: 1, suspect: 1, unratified: 1, orphaned: 1, unknown_claim: 1 };
+  function outcomeClass(o) { return 'o-' + (Object.prototype.hasOwnProperty.call(OUTCOME_CLASSES, o) ? o : 'other'); }
+  function plural(n, one, many) { return n + ' ' + (n === 1 ? one : (many || one + 's')); }
+  function componentUrl(d) {
+    var c = d.component;
+    return c ? data.pages[c.page] + '#focus=' + encodeURIComponent(c.id) : null;
+  }
+  function selectionText() {
+    var keys = Object.keys(data.selection).sort();
+    return keys.length ? keys.map(function (k) { return k + '=' + data.selection[k]; }).join(' ') : 'the default selection (no variant words)';
+  }
+
+  // ---- search and focus ---------------------------------------------------------------------------------------------
+  function searchClaims(q) {
+    q = q.toLowerCase();
+    var found = new Set();
+    claims.forEach(function (c) { if (c.id.toLowerCase().indexOf(q) >= 0) found.add(c); });
+    data.design.forEach(function (d) {
+      if (d.id.toLowerCase().indexOf(q) >= 0) d.links.forEach(function (l) { found.add(l.claim); });
+    });
+    data.tests.forEach(function (t) { if (t.low.indexOf(q) >= 0) found.add(t.claimObj); });
+    return found;
+  }
+  // A node key says its kind: a: area, c: claim, s: source, d: design, t: test group, g: a drawn gap (g:<kind>:<claim id>).
+  function nodeOf(key) {
+    var kind = key.charAt(0), rest = key.slice(2);
+    if (kind === 'c') return claimById.get(rest) || null;
+    if (kind === 's') return sourceById.get(rest) || null;
+    if (kind === 'd') return designById.get(rest) || null;
+    if (kind === 't') return groupById.get(rest) || null;
+    if (kind === 'g') return claimById.get(rest.slice(rest.indexOf(':') + 1)) || null;
+    return null;
+  }
+  // The chain of a focused node: the claims it touches and every node of the other layers on those claims; the focused
+  // node's own layer contributes only itself (a design element does not drag in the other design elements of its claims).
+  function chainOf(key) {
+    var kind = key.charAt(0), node = nodeOf(key), cs = [];
+    if (!node) return null;
+    if (kind === 'c' || kind === 'g') cs = [node];
+    else if (kind === 's') cs = node.claims;
+    else if (kind === 'd') cs = node.links.map(function (l) { return l.claim; });
+    else if (kind === 't') cs = [node.claimObj];
+    var keys = new Set([key]), hotClaims = new Set(cs);
+    cs.forEach(function (c) {
+      keys.add('c:' + c.id);
+      if (kind !== 's' && c.source) keys.add('s:' + c.source.id);
+      if (kind !== 'd') c.links.forEach(function (l) { keys.add('d:' + l.design.id); });
+      if (kind !== 't' && c.group) keys.add('t:' + c.group.id);
+      c.gaps.forEach(function (g) { keys.add('g:' + g + ':' + c.id); });
+      if (notAsked.has(c.id)) keys.add('g:ask:' + c.id);
+    });
+    return { claims: hotClaims, keys: keys, node: node, kind: kind };
+  }
+
+  // ---- the view: what is asked for, then what fits -------------------------------------------------------------------
+  function passes(c) {
+    if (state.area !== '' && c.area_key !== state.area) return false;
+    if (state.gapsOnly && c.gaps.length === 0) return false;
+    if (state.outcome !== '' && !c.links.some(function (l) { return l.outcome === state.outcome; })) return false;
+    return true;
+  }
+  function linksShown(c) {
+    return state.outcome === '' ? c.links : c.links.filter(function (l) { return l.outcome === state.outcome; });
+  }
+  // The nodes one claim brings, given the layers: [source key or null, design keys, tests key] and its placeholders.
+  function needs(c) {
+    var out = [], asked = c.applies === 'applies';   // a claim the selection does not apply is not asked for coverage (ADR 0053)
+    if (state.layers.source) { if (c.source) out.push('s:' + c.source.id); else if (asked) out.push('g:no_source:' + c.id); }
+    if (state.layers.design) {
+      var shown = linksShown(c);
+      if (shown.length === 0 && asked) out.push('g:no_design:' + c.id);
+      shown.forEach(function (l) { out.push('d:' + l.design.id); });
+    }
+    if (state.layers.tests) {
+      if (c.group) out.push('t:' + c.group.id);
+      else if (asked) out.push(notAsked.has(c.id) ? 'g:ask:' + c.id : 'g:no_test:' + c.id);
+    }
+    return out;
+  }
+
+  function view() {
+    var filtering = state.q !== '' || state.gapsOnly || state.outcome !== '' || state.area !== '';
+    var chain = state.focus ? chainOf(state.focus) : null;
+    var candidate = new Set();
+    var matched = null;
+    if (state.q !== '') { matched = searchClaims(state.q); matched.forEach(function (c) { candidate.add(c); }); }
+    else if (filtering) claims.forEach(function (c) { candidate.add(c); });
+    else areas.forEach(function (a) { if (state.expanded.has(a.key)) a.claims.forEach(function (c) { candidate.add(c); }); });
+    if (chain) chain.claims.forEach(function (c) { candidate.add(c); });
+
+    var drawn = 0, total = 0, full = true, totalClaims = 0, drawnClaims = 0;
+    var seenAll = new Set(), seenDrawn = new Set();
+    var plan = [];
+    areas.forEach(function (a) {
+      var inArea = a.claims.filter(function (c) { return candidate.has(c) && passes(c); });
+      if (filtering && inArea.length === 0) return;
+      var entry = { area: a, claims: [], matching: a.claims.filter(passes).length };
+      total += 1;
+      if (full && drawn + 1 > NODE_LIMIT) full = false;
+      if (full) { drawn += 1; plan.push(entry); }
+      inArea.forEach(function (c) {
+        var keys = needs(c), cost = 1, costDrawn = 1;
+        keys.forEach(function (k) { if (k.charAt(0) === 'g' || !seenAll.has(k)) cost += 1; });
+        keys.forEach(function (k) { if (k.charAt(0) === 'g' || !seenDrawn.has(k)) costDrawn += 1; });
+        total += cost; totalClaims += 1;
+        keys.forEach(function (k) { seenAll.add(k); });
+        if (full && drawn + costDrawn > NODE_LIMIT) full = false;
+        if (full) {
+          drawn += costDrawn; drawnClaims += 1;
+          keys.forEach(function (k) { seenDrawn.add(k); });
+          entry.claims.push(c);
+        }
+      });
+    });
+    return { plan: plan, drawn: drawn, total: total, hidden: total - drawn, totalClaims: totalClaims, drawnClaims: drawnClaims,
+             chain: chain, filtering: filtering, matched: matched };
+  }
+
+  // ---- layout and drawing -------------------------------------------------------------------------------------------
+  function render() {
+    var v = view();
+    var cols = [];
+    if (state.layers.source) cols.push('source');
+    cols.push('claim');
+    if (state.layers.design) cols.push('design');
+    if (state.layers.tests) cols.push('tests');
+    var x = {}, cursorX = PAD;
+    cols.forEach(function (name) { x[name] = cursorX; cursorX += COLS[name] + (GAPS[name] || 0); });
+    var width = cursorX - (GAPS[cols[cols.length - 1]] || 0) + PAD;
+
+    var y0 = HEAD_H + 8, cursor = y0;
+    var rows = [];                 // claim-column rows: area headers and claims, with y
+    var claimY = new Map();
+    v.plan.forEach(function (entry) {
+      rows.push({ type: 'area', entry: entry, y: cursor }); cursor += ROW;
+      entry.claims.forEach(function (c) { claimY.set(c, cursor); rows.push({ type: 'claim', claim: c, y: cursor }); cursor += ROW; });
+    });
+
+    // Source and design nodes sit on the claim grid, at the mean row of the claims they connect, never closer than one row.
+    function stack(items) {
+      items.sort(function (a, b) { return a.anchor - b.anchor || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0); });
+      var last = -Infinity;
+      items.forEach(function (it) {
+        var snapped = y0 + Math.round((it.anchor - y0) / ROW) * ROW;
+        it.y = Math.max(snapped, last + ROW); last = it.y;
+      });
+      return last;
+    }
+    var srcItems = new Map(), desItems = new Map(), gapItems = { source: [], design: [], tests: [] };
+    var edgesSource = [], edgesSat = [], edgesVer = [];
+    function bump(map, key, kind, node, y) {
+      var it = map.get(key);
+      if (!it) { it = { key: key, node: node, sum: 0, n: 0 }; map.set(key, it); }
+      it.sum += y; it.n += 1; it.anchor = it.sum / it.n;
+    }
+    rows.forEach(function (row) {
+      if (row.type !== 'claim') return;
+      var c = row.claim, y = row.y;
+      if (state.layers.source) {
+        if (c.source) { bump(srcItems, 's:' + c.source.id, 's', c.source, y); edgesSource.push({ from: 's:' + c.source.id, to: c, y: y }); }
+        else if (c.applies === 'applies') gapItems.source.push({ key: 'g:no_source:' + c.id, claim: c, kind: 'no_source', anchor: y });
+      }
+      if (state.layers.design) {
+        var shown = linksShown(c);
+        if (shown.length === 0 && c.applies === 'applies') gapItems.design.push({ key: 'g:no_design:' + c.id, claim: c, kind: 'no_design', anchor: y });
+        shown.forEach(function (l) { bump(desItems, 'd:' + l.design.id, 'd', l.design, y); edgesSat.push({ link: l, y: y, key: 'd:' + l.design.id }); });
+      }
+    });
+    var placed = { source: [], design: [] };
+    srcItems.forEach(function (it) { placed.source.push(it); });
+    gapItems.source.forEach(function (it) { placed.source.push(it); });
+    desItems.forEach(function (it) { placed.design.push(it); });
+    gapItems.design.forEach(function (it) { placed.design.push(it); });
+    var bottomS = stack(placed.source), bottomD = stack(placed.design);
+    var pos = new Map();
+    placed.source.concat(placed.design).forEach(function (it) { pos.set(it.key, it.y); });
+    var height = Math.max(cursor, bottomS + ROW, bottomD + ROW, y0 + ROW) + 12;
+
+    var hot = v.chain ? v.chain.keys : null;
+    var out = [];
+    function hotClass(key) { return hot && hot.has(key) ? ' hot' : ''; }
+    function edgeHot(a, b) { return hot && hot.has(a) && hot.has(b) ? ' hot' : ''; }
+
+    // Edges first, so a node is never under a line.
+    var edgeParts = [], labelParts = [];
+    edgesSource.forEach(function (e) {
+      var x1 = x.source + COLS.source, y1 = pos.get(e.from) + NODE_H / 2, x2 = x.claim, y2 = e.y + NODE_H / 2, xm = (x1 + x2) / 2;
+      edgeParts.push('<path class="e e-source' + edgeHot(e.from, 'c:' + e.to.id) + '" d="M' + x1 + ' ' + y1 + 'C' + xm + ' ' + y1 + ' ' + xm + ' ' + y2 + ' ' + x2 + ' ' + y2 + '"><title>source of ' + esc(e.to.id) + '</title></path>');
+    });
+    edgesSat.forEach(function (e) {
+      var x1 = x.claim + COLS.claim, y1 = e.y + NODE_H / 2, x2 = x.design, y2 = pos.get(e.key) + NODE_H / 2, xm = (x1 + x2) / 2;
+      var cls = 'e e-sat ' + outcomeClass(e.link.outcome) + edgeHot('c:' + e.link.claim.id, e.key);
+      edgeParts.push('<path class="' + cls + '" d="M' + x1 + ' ' + y1 + 'C' + xm + ' ' + y1 + ' ' + xm + ' ' + y2 + ' ' + x2 + ' ' + y2 + '"><title>' +
+        esc(e.link.claim.id + ' satisfied by ' + e.link.design.id + ': ' + outcomeText(e.link.outcome)) + '</title></path>');
+      labelParts.push('<text class="elabel' + edgeHot('c:' + e.link.claim.id, e.key) + '" x="' + xm + '" y="' + ((y1 + y2) / 2 + 3.5) + '" text-anchor="middle">' + esc(outcomeText(e.link.outcome)) + '</text>');
+    });
+    if (state.layers.tests) {
+      rows.forEach(function (row) {
+        if (row.type !== 'claim' || !row.claim.group) return;
+        var c = row.claim, ch = row.y + CHANNEL, x1 = x.claim + COLS.claim, x2 = x.tests;
+        edgeParts.push('<path class="e e-ver' + edgeHot('c:' + c.id, 't:' + c.group.id) + '" d="M' + x1 + ' ' + (row.y + NODE_H - 6) + 'L' + (x1 + 6) + ' ' + ch + 'L' + (x2 - 6) + ' ' + ch + 'L' + x2 + ' ' + (row.y + NODE_H - 6) + '"><title>' + esc(c.id + ' verified by ' + plural(c.group.ids.length, 'test')) + '</title></path>');
+      });
+    }
+    out.push(edgeParts.join(''), labelParts.join(''));
+
+    // A node of column `col` at row `ny`: two lines of text cut to the column's width (the title carries the whole text).
+    function node(cls, key, col, ny, line1, line2, title, extra, tail) {
+      var w = COLS[col], n1 = Math.floor((w - 20) / 6.4), n2 = Math.floor((w - 14) / 5.5);
+      return '<g class="n ' + cls + hotClass(key) + (state.focus === key ? ' focus' : '') + '" data-k="' + esc(key) + '" tabindex="0" role="button" transform="translate(' + x[col] + ' ' + ny +
+        ')" aria-label="' + esc(title) + '"><title>' + esc(title) + '</title><rect width="' + w + '" height="' + NODE_H + '" rx="6"/><text class="t1" x="8" y="14">' +
+        esc(tail ? clipStart(line1, n1) : clip(line1, n1)) + '</text><text class="t2" x="8" y="28">' + esc(clip(line2, n2)) + '</text>' + (extra || '') + '</g>';
+    }
+    rows.forEach(function (row) {
+      if (row.type === 'area') {
+        var a = row.entry.area;
+        var shown = row.entry.claims.length, of = row.entry.matching;
+        var line2 = (shown > 0 ? shown + ' of ' + plural(a.claims.length, 'claim') : plural(a.claims.length, 'claim')) + ' · ' + (a.gapClaims === 0 ? 'no gaps' : a.gapClaims + ' with a gap');
+        if (v.filtering && of !== a.claims.length) line2 = of + ' of ' + plural(a.claims.length, 'claim') + ' match · ' + a.gapClaims + ' with a gap';
+        var title = a.label + ': ' + plural(a.claims.length, 'claim') + '; ' + a.gapCount.no_design + ' with no design element, ' + a.gapCount.no_source + ' with no source, ' + a.gapCount.no_test + ' with no test. ' +
+          (state.expanded.has(a.key) ? 'Open: Enter collapses it.' : 'Collapsed: Enter opens it.');
+        out.push(node('n-area', 'a:' + a.key, 'claim', row.y, (shown > 0 ? '▾ ' : '▸ ') + a.label, line2, title));
+      } else {
+        var c = row.claim;
+        var na = c.applies !== 'applies';
+        var t = c.id + (c.modality ? ' (' + c.modality + ')' : '') + ': ' + c.statement + (na ? ' [does not apply in this selection]' : '');
+        out.push(node('n-claim' + (na ? ' n-na' : ''), 'c:' + c.id, 'claim', row.y, c.id + (na ? ' · not applying' : ''), c.statement, t));
+      }
+    });
+    placed.source.forEach(function (it) {
+      if (it.node) {
+        var s = it.node;
+        out.push(node('n-source', it.key, 'source', it.y, s.text, plural(s.claims.length, 'claim') + ' from this source', 'Source: ' + s.text + ' (' + plural(s.claims.length, 'claim') + ')'));
+      } else {
+        out.push(node('n-gap', it.key, 'source', it.y, KIND_TEXT.no_source, it.claim.id, it.claim.id + ' has no source'));
+      }
+    });
+    placed.design.forEach(function (it) {
+      if (it.node) {
+        var d = it.node, url = componentUrl(d);
+        var label = d.component ? d.component.label : 'not drawn on the architecture pages';
+        var extra = url ? '<a href="' + esc(url) + '"><text class="ext" x="' + (COLS.design - 20) + '" y="14"><title>Open ' + esc(d.component.label) + ' on the architecture page</title>↗</text></a>' : '';
+        out.push(node('n-design', it.key, 'design', it.y, d.id, label, 'Design element ' + d.id + ' (' + label + '), ' + plural(d.links.length, 'link'), extra, true));
+      } else {
+        out.push(node('n-gap', it.key, 'design', it.y, KIND_TEXT.no_design, it.claim.id, it.claim.id + ' has no design element'));
+      }
+    });
+    if (state.layers.tests) {
+      rows.forEach(function (row) {
+        if (row.type !== 'claim') return;
+        var c = row.claim;
+        if (c.applies !== 'applies' && !c.group) return;
+        if (c.group) {
+          out.push(node('n-tests', 't:' + c.group.id, 'tests', row.y, plural(c.group.ids.length, 'test'), c.group.ids[0], c.id + ' is verified by ' + plural(c.group.ids.length, 'test') + ': ' + c.group.ids.join(', ')));
+        } else if (notAsked.has(c.id)) {
+          out.push(node('n-ask', 'g:ask:' + c.id, 'tests', row.y, 'no test asked', notAsked.get(c.id) + ' evidence', c.id + ' has ' + notAsked.get(c.id) + ' evidence: the gate asks it for no test'));
+        } else {
+          out.push(node('n-gap', 'g:no_test:' + c.id, 'tests', row.y, KIND_TEXT.no_test, c.id, c.id + ' has no test'));
+        }
+      });
+    }
+    var heads = cols.map(function (name) {
+      var label = { source: 'Source', claim: 'Claim', design: 'Design · satisfied by', tests: 'Tests · verified by' }[name];
+      return '<text class="colhead" x="' + x[name] + '" y="' + (HEAD_H - 8) + '">' + label + '</text>';
+    }).join('');
+    svg.setAttribute('class', v.chain ? 'has-focus' : '');
+    svg.setAttribute('width', width);
+    svg.setAttribute('height', height);
+    svg.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    svg.innerHTML = heads + out.join('');
+    status(v);
+    detail(v);
+    el('layout').className = 'layout' + (v.chain ? ' has-focus' : '');
+    return v;
+  }
+
+  // ---- text: status, detail, legend ---------------------------------------------------------------------------------
+  function status(v) {
+    var box = el('status'), text, limit = v.hidden > 0;
+    if (v.plan.length === 0 || (v.totalClaims === 0 && v.filtering)) {
+      text = state.q !== '' ? 'Nothing matches “' + state.q + '”.' : 'No claim matches these filters.';
+    } else if (limit) {
+      text = 'Narrow the view to see ' + plural(v.hidden, 'hidden node') + ': the page draws at most ' + NODE_LIMIT + ' nodes at once (' + v.drawn +
+        ' drawn, ' + plural(v.totalClaims - v.drawnClaims, 'claim') + ' not drawn). Use a filter, an area or the search.';
+    } else if (!v.filtering && state.expanded.size === 0 && !v.chain) {
+      text = 'Open an area to see its claims, or search, or use a filter. ' + plural(claims.length, 'claim') + ' are collapsed into ' + plural(areas.length, 'area') + '.';
+    } else {
+      text = 'Drawing ' + plural(v.drawn, 'node') + ' (limit ' + NODE_LIMIT + '), ' + plural(v.drawnClaims, 'claim') + '.' +
+        (v.matched ? ' ' + plural(v.matched.size, 'claim') + ' match “' + state.q + '”.' : '');
+    }
+    box.textContent = text;
+    box.className = 'status' + (limit ? ' limit' : '');
+  }
+
+  function claimItem(c, extra) {
+    return '<li><button type="button" data-focus="c:' + esc(c.id) + '">' + esc(c.id) + '</button> ' + esc(clip(c.statement, 90)) + (extra || '') + '</li>';
+  }
+  function detail(v) {
+    var box = el('detail'), ch = v.chain;
+    if (!ch) {
+      box.innerHTML = '<h2>Focus a node</h2><p>Click a node, or press Enter on it, to follow its chain: the rest dims. Esc clears. A dashed red node is a gap, named, never left out.</p>' +
+        '<p>An area row opens or collapses its claims. <code>#focus=REQ-0001</code> in the address opens the page with a claim focused.</p>';
+      return;
+    }
+    var n = ch.node, kind = ch.kind, h = [];
+    function list(title, items, max) {
+      if (items.length === 0) return;
+      var shown = items.slice(0, max || 60);
+      h.push('<h3>' + esc(title) + ' (' + items.length + ')</h3><ul class="scroll">' + shown.join('') + (items.length > shown.length ? '<li>…and ' + (items.length - shown.length) + ' more</li>' : '') + '</ul>');
+    }
+    var first = kind === 'c' || kind === 'g' ? n : kind === 't' ? n.claimObj : null;
+    if (kind === 'c' || kind === 'g' || kind === 't') {
+      var c = first;
+      h.push('<h2>' + esc(c.id) + '</h2><p>' + esc(c.statement) + '</p><p><span class="tag">' + esc(c.modality || 'claim') + '</span> <span class="tag">' + esc(c.evidence) + ' evidence</span>' +
+        (c.applies !== 'applies' ? ' <span class="tag">does not apply here</span>' : '') + (c.area ? ' <span class="tag">' + esc(c.area) + '</span>' : '') + '</p>');
+      h.push('<h3>Source</h3><p>' + (c.source ? esc(c.source.text) : 'no source') + '</p>');
+      list('Satisfied by', c.links.map(function (l) {
+        var u = componentUrl(l.design);
+        return '<li><button type="button" data-focus="d:' + esc(l.design.id) + '">' + esc(l.design.id) + '</button> ' + esc(outcomeText(l.outcome)) +
+          (l.design.component ? ' · ' + (u ? '<a href="' + esc(u) + '">' + esc(l.design.component.label) + '</a>' : esc(l.design.component.label)) : '') + '</li>';
+      }));
+      if (c.links.length === 0) h.push('<h3>Satisfied by</h3><p>no design element</p>');
+      if (c.group) list('Verified by', c.group.ids.map(function (t) { return '<li>' + esc(t) + '</li>'; }), 80);
+      else h.push('<h3>Verified by</h3><p>' + (notAsked.has(c.id) ? esc(notAsked.get(c.id)) + ' evidence, no test asked' : 'no test') + '</p>');
+    } else if (kind === 's') {
+      h.push('<h2>Source</h2><p>' + esc(n.text) + '</p>');
+      list('Claims from this source', n.claims.map(function (c) { return claimItem(c); }));
+    } else if (kind === 'd') {
+      var u2 = componentUrl(n);
+      h.push('<h2>' + esc(n.id) + '</h2><p>' + (n.component ? 'Component: <a href="' + esc(u2) + '">' + esc(n.component.label) + '</a> on the architecture page.' : 'Not drawn on the architecture pages.') + '</p>');
+      list('Claims it is satisfied for', n.links.map(function (l) { return claimItem(l.claim, ' <span class="tag">' + esc(outcomeText(l.outcome)) + '</span>'); }));
+    }
+    h.push('<p><button type="button" id="clear-focus">Clear focus</button></p>');
+    box.innerHTML = h.join('');
+  }
+
+  function legend() {
+    var items = [['o-holds', 'holds'], ['o-holds_weakened', 'holds (weakened)'], ['o-suspect', 'suspect'], ['o-unratified', 'unratified / orphaned']];
+    el('legend').innerHTML = items.map(function (it) {
+      return '<li><svg viewBox="0 0 34 8" aria-hidden="true"><path class="e e-sat ' + it[0] + '" d="M0 4H34"/></svg>' + esc(it[1]) + '</li>';
+    }).join('') + '<li>dashed red node: a gap, named</li>';
+  }
+
+  // ---- controls -----------------------------------------------------------------------------------------------------
+  function syncHash() {
+    try {
+      var raw = state.focus ? state.focus.slice(2) : '';
+      history.replaceState(null, '', raw ? '#focus=' + encodeURIComponent(raw) : location.pathname + location.search);
+    } catch (e) { /* a file: page may refuse; the view still works */ }
+  }
+  function keyFromHash() {
+    var m = /(?:^|[#&])focus=([^&]*)/.exec(location.hash || '');
+    if (!m) return null;
+    var raw;
+    try { raw = decodeURIComponent(m[1]); } catch (e) { return null; }
+    if (claimById.has(raw)) return 'c:' + raw;
+    if (designById.has(raw)) return 'd:' + raw;
+    if (sourceById.has(raw)) return 's:' + raw;
+    if (groupById.has(raw)) return 't:' + raw;
+    return null;
+  }
+  function focusOn(key, keepKeys) {
+    if (key && key.charAt(0) === 'a') { toggleArea(key.slice(2)); return; }
+    if (key && key.charAt(0) === 'g') key = 'c:' + key.slice(key.lastIndexOf(':') + 1);
+    state.focus = state.focus === key ? null : key;
+    syncHash();
+    render();
+    if (keepKeys && state.focus) { var again = svg.querySelector('[data-k="' + CSS.escape(state.focus) + '"]'); if (again) again.focus({ preventScroll: true }); }
+  }
+  function toggleArea(key, keepKeys) {
+    if (state.expanded.has(key)) state.expanded.delete(key); else state.expanded.add(key);
+    render();
+    if (keepKeys) { var again = svg.querySelector('[data-k="a:' + CSS.escape(key) + '"]'); if (again) again.focus({ preventScroll: true }); }
+  }
+  function clearFocus() { if (state.focus) { state.focus = null; syncHash(); render(); } }
+  function readControls() {
+    state.q = el('q').value.trim();
+    state.layers.source = el('l-source').checked;
+    state.layers.design = el('l-design').checked;
+    state.layers.tests = el('l-tests').checked;
+    state.outcome = el('outcome').value;
+    state.area = el('area').value;
+    state.gapsOnly = el('gaps').checked;
+  }
+  function reset() {
+    el('q').value = ''; el('l-source').checked = el('l-design').checked = el('l-tests').checked = true;
+    el('outcome').value = ''; el('area').value = ''; el('gaps').checked = false;
+    state.expanded = new Set(); state.focus = null; readControls(); syncHash(); render();
+  }
+
+  function init() {
+    el('selection').textContent = 'Selection: ' + selectionText() + ' (the first line of .req/variants, the one docs/trace.md is made with). One selection is shown; variants are not switched here.';
+    var gapClaims = data.gaps.length, links = data.edges.satisfied_by.length;
+    el('counts').textContent = plural(claims.length, 'claim') + ' in ' + plural(areas.length, 'area') + ' · ' + plural(data.sources.length, 'source') + ' · ' +
+      plural(data.design.length, 'design element') + ' with ' + plural(links, 'satisfied-by link') + ' · ' + plural(data.tests.length, 'claim') + ' with tests · ' +
+      plural(gapClaims, 'claim') + ' with a gap' + (data.dangling_links.length ? ' · ' + plural(data.dangling_links.length, 'link') + ' name a claim this selection does not hold (not drawn)' : '') + '.';
+    var outcomes = []; data.edges.satisfied_by.forEach(function (e) { if (outcomes.indexOf(e.outcome) < 0) outcomes.push(e.outcome); });
+    outcomes.sort().forEach(function (o) { var opt = document.createElement('option'); opt.value = o; opt.textContent = outcomeText(o); el('outcome').appendChild(opt); });
+    areas.forEach(function (a) { var opt = document.createElement('option'); opt.value = a.key; opt.textContent = new Array(a.depth + 1).join('— ') + a.label; el('area').appendChild(opt); });
+    legend();
+    var fromHash = keyFromHash();
+    if (fromHash) state.focus = fromHash;
+    readControls();
+    render();
+    requestAnimationFrame(function () { performance.mark('req-explorer-first-draw'); });
+  }
+
+  var controls = el('controls');
+  el('q').addEventListener('input', function () { readControls(); render(); });
+  controls.addEventListener('change', function (e) { if (e.target.id !== 'q') { readControls(); render(); } });
+  el('q').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      var found = state.q !== '' ? searchClaims(state.q) : null;
+      if (found && found.size === 1) focusOn('c:' + Array.from(found)[0].id);
+    } else if (e.key === 'Escape') { clearFocus(); }
+  });
+  el('reset').addEventListener('click', reset);
+  svg.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('a')) return;
+    var g = e.target.closest ? e.target.closest('[data-k]') : null;
+    if (g) focusOn(g.getAttribute('data-k'), false); else clearFocus();
+  });
+  svg.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { clearFocus(); return; }
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (e.target.closest && e.target.closest('a')) return;
+    var g = e.target.closest ? e.target.closest('[data-k]') : null;
+    if (!g) return;
+    e.preventDefault();
+    var key = g.getAttribute('data-k');
+    if (key.charAt(0) === 'a') toggleArea(key.slice(2), true); else focusOn(key, true);
+  });
+  el('detail').addEventListener('click', function (e) {
+    var b = e.target.closest ? e.target.closest('button') : null;
+    if (!b) return;
+    if (b.id === 'clear-focus') { clearFocus(); return; }
+    var key = b.getAttribute('data-focus');
+    if (key) { state.focus = key; syncHash(); render(); }
+  });
+  window.addEventListener('hashchange', function () {
+    var k = keyFromHash(); if (k && k !== state.focus) { state.focus = k; render(); }
+  });
+  init();
+})();
+</script>
+</body>
+</html>

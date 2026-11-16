@@ -169,6 +169,7 @@ def page(title, body, active, depth=0):
   <a class="brand" href="{prefix}index.html"><span class="mark">req</span><span>demo</span></a>
   <nav>
     <a href="{prefix}index.html#projects">Projects</a>
+    <a href="{prefix}explorer.html">Explorer</a>
     <a href="{prefix}matrix.html">Matrix</a>
     <a href="{prefix}variants.html">Variants</a>
     <a href="{prefix}comparison.html">Compare</a>
@@ -280,11 +281,12 @@ def index_page(trace, satisfy):
 
 <section class="section split">
   <div>
-    <h2>The three views</h2>
+    <h2>The views</h2>
     <p>A claim is an obligation with a stable id and a content-addressed meaning. Everything else is a view over it.</p>
     <ul class="links">
       <li><a href="v-model.html">The V-model</a><span>The layer map: needs → system → software → architecture → code, with tests and ISO safety.</span></li>
       <li><a href="components.html">Component overlay</a><span>req's own <code>arch_overlay.py</code>: each component colored by the worst satisfaction outcome.</span></li>
+      <li><a href="explorer.html">Coverage explorer</a><span>A claim across source, design and tests; filter by area or outcome, jump to the graph.</span></li>
       <li><a href="matrix.html">Coverage matrix</a><span>Every claim, its design/code elements, its linked tests and its derived requirements.</span></li>
       <li><a href="https://github.com/fadasr/req-demo/blob/main/docs/spec.md">Spec projection</a><span><code>req render</code>: the human-readable selection, regenerated, never hand-edited.</span></li>
     </ul>

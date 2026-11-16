@@ -47,7 +47,7 @@ After the authoring pass, 39 of 135 statements have no modality req can hold (it
 remaining ones are honest: the ISO FSRs and system requirements are sentence clusters, and a few
 ADAS qualifiers ("smooth", "robust") need a person to state a bound.
 
-`req canon --by-area` (landing in [`req#89`](https://github.com/autox-my/req/pull/89)) showed the
+`req canon --by-area` (released in `rev-3294a46`, PR [#89](https://github.com/autox-my/req/pull/89)) showed the
 work in order: ADAS software requirements **0 of 29** structured, ADAS SYS.2 **0 of 16**, ISO FSRs
 **13 of 36** — and after the pass: **27 of 29**, **14 of 16**, ISO still **13 of 36**. The work
 list now points at the ISO examples.

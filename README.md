@@ -9,9 +9,9 @@ it through [`req`](https://github.com/autox-my/req): import, canonicalization, t
 drift, gate, audit.
 
 The point is to **pressure-test req on other people's prose** and turn what hurts into small
-changes. The first such change is [PR #86](https://github.com/autox-my/req/pull/86): the importer
-now carries typed links (`--links`) and JUnit evidence (`--tests`), because without them this
-corpus had 220 trace edges, an empty traceability matrix, and no test evidence. See
+changes. The importer now carries typed links (`--links`) and JUnit evidence (`--tests`)
+(released in `rev-3294a46`, PR [#86](https://github.com/autox-my/req/pull/86)), because without them
+this corpus had 220 trace edges, an empty traceability matrix, and no test evidence. See
 [`FINDINGS.md`](FINDINGS.md) for everything the demo exposed.
 
 ## What is here
@@ -30,6 +30,7 @@ corpus had 220 trace edges, an empty traceability matrix, and no test evidence. 
 | `docs/v-model.html` | a rendered architecture graph of the same three views (`archify`) |
 | `docs/components.html` | the req-native component overlay: `arch_overlay.py` colors each software component by its satisfaction outcome |
 | `docs/index.html`, `docs/matrix.html` | the GitHub Pages landing page and global matrix |
+| `docs/explorer.html` | req's coverage explorer over the claim/design/test graph (ADR 0054) |
 | `docs/variants.html` | req selectors vs Sphinx-Needs variant builds, including architecture/design/code |
 | `docs/comparison.html` | the bounded req vs Sphinx-Needs evaluation |
 | `docs/<project>/` | one page, requirement graph and (where it exists) component overlay per upstream example |
@@ -37,7 +38,8 @@ corpus had 220 trace edges, an empty traceability matrix, and no test evidence. 
 | `docs/components.archify.json` | the component diagram the overlay is built from |
 | `docs/design.md` | how `design/` maps to `req satisfy`, and the token trap |
 | `tools/needs_import.py` | the importer from req, at the commit that added `--links` and `--tests` |
-| `tools/req-graph/` | req's graph converters, copied at the same commit |
+| `tools/req-graph/` | req's graph converters, copied at the same release |
+| `tools/explorer/` | req's coverage-explorer builder, adapted to this site |
 | `data/` | the two upstream JUnit reports, committed so the test links are reproducible |
 | `scripts/` | rebuild, import, design build, satisfaction record, trace matrix, project graphs, site, drift |
 
@@ -51,6 +53,8 @@ req trace --format json > build/trace.json
 req satisfy --format json > build/satisfy.json
 scripts/fetch-archify.sh                  # archify 7e45f36, the pin req's graph tools name
 python3 scripts/build-project-graphs.py   # docs/<project>/graph.html + components.html
+scripts/fetch-req.sh                      # req rev-3294a46 (macOS arm64 pin)
+python3 tools/explorer/build.py --req build/req-release/req --out docs/explorer.html
 python3 scripts/build-site.py             # docs/index.html, docs/matrix.html, project pages
 ```
 
@@ -151,9 +155,9 @@ scripts/build-upstream.sh eu_right        # the right-hand-drive variant; writes
 
 ## Reproduce the corpus
 
-`req` must be on `PATH` (this demo was drafted with `req 0.1.0`, rules_v 9, built from `dd78c81`;
-it was re-verified with `cc35d81` — latest `main` plus PR #86 — same rules_v 9, and no address or
-projection moved. `req --version` is the provenance). The importer refuses to draft over an
+`req` must be on `PATH` (this demo was drafted with `req 0.1.0`, rules_v 9, and is now built and
+re-verified with the `rev-3294a46` release; same rules_v 9, and no address or projection moved.
+`req --version` is the provenance). The importer refuses to draft over an
 existing corpus, so a fresh import means a fresh `claims/`:
 
 ```bash
@@ -196,7 +200,7 @@ not a bug: the skipped item is a decision for a person.
 
 ```bash
 req canon                                  # 135 claims, 39 unstructured, 22 with lints
-req canon --by-area                        # the work list (req#89): ISO FSR 13/36 structured
+req canon --by-area                        # the work list: ISO FSR 13/36 structured
 req trace | head -40                       # 220 stored edges, 66 targets receive one
 req impact REQ-0038                        # 7 dependents, nearest first
 req satisfy                                # 58 design/code links, all HOLD

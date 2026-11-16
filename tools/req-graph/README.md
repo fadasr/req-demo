@@ -1,6 +1,6 @@
 # tools/req-graph/
 
-Copied from [`autox-my/req`](https://github.com/autox-my/req) at `main` after PR #89, so the demo
+Copied from [`autox-my/req`](https://github.com/autox-my/req) at the `rev-3294a46` release, so the demo
 can regenerate its graphs without a local checkout of the tool:
 
 - `trace_to_archify.py` — `req.trace/1` → archify architecture pages (ADR 0046/0050).
